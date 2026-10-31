@@ -1,0 +1,54 @@
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { ArrowLeft } from "lucide-react-native";
+import { Pressable, RefreshControl, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import useSWR from "swr";
+
+import { PublicVerdictRow } from "@/components/public-verdict-row";
+import { Card, Notice, Section, Step, T, styles } from "@/components/ui";
+import { ago } from "@/lib/format";
+import { t } from "@/lib/i18n/fr";
+import { publicFetcher, type TipStatus } from "@/lib/public";
+import { fonts, useTheme } from "@/lib/theme";
+
+const ORDER = ["to_check", "in_progress", "verified", "published"];
+
+/** Where a citizen's tip stands, refreshed every 30 s; its verdict once published. */
+export default function FollowTip() {
+  const c = useTheme();
+  const router = useRouter();
+  const { token } = useLocalSearchParams<{ token: string }>();
+  const { data, error, isLoading, mutate } = useSWR<TipStatus>(`/tips/${token}`, publicFetcher, { refreshInterval: 30_000 });
+  const reached = data ? ORDER.indexOf(data.status) : -1;
+
+  return (
+    <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
+      <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 48 }} refreshControl={<RefreshControl refreshing={isLoading && !!data} onRefresh={() => void mutate()} />}>
+        <View style={styles.row}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
+            <ArrowLeft size={24} color={c.foreground} />
+          </Pressable>
+          <T tone="title" style={{ flex: 1 }}>
+            {t.follow.title}
+          </T>
+          {data?.ref && <T tone="tabular">{data.ref}</T>}
+        </View>
+        {error && <Notice tone="error">{t.follow.unknown}</Notice>}
+        {data && (
+          <>
+            <T style={{ fontFamily: fonts.semibold, fontSize: 18 }}>{data.title}</T>
+            <T tone="muted">
+              {data.newsroom.name} · {t.follow.received(ago(data.received_at))}
+            </T>
+            <Card>
+              {ORDER.map((s, i) => (
+                <Step key={s} label={t.follow.steps[s]} state={i < reached || (i === reached && s === "published") ? "done" : i === reached ? "running" : "waiting"} />
+              ))}
+            </Card>
+            <Section title={t.follow.verdict}>{data.verdict ? <PublicVerdictRow v={data.verdict} /> : <T tone="muted">{t.follow.waiting}</T>}</Section>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+}

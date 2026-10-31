@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { useState } from "react";
+import { Link, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 
 import { Brand } from "@/components/brand";
@@ -7,6 +7,7 @@ import { Button, Field, Notice, Screen, T } from "@/components/ui";
 import { clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
 import { t } from "@/lib/i18n/fr";
+import { useMode } from "@/lib/mode";
 
 export function AuthForm({ mode }: { mode: "in" | "up" }) {
   const [name, setName] = useState("");
@@ -14,6 +15,13 @@ export function AuthForm({ mode }: { mode: "in" | "up" }) {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { mode: who, setMode } = useMode();
+
+  // The citizen screens only exist in citizen mode, so move once the mode has switched.
+  useEffect(() => {
+    if (who === "citizen") router.replace("/citoyen");
+  }, [who, router]);
 
   async function submit() {
     setBusy(true);
@@ -80,6 +88,7 @@ export function AuthForm({ mode }: { mode: "in" | "up" }) {
         <Link href={mode === "in" ? "/inscription" : "/connexion"} replace style={{ alignSelf: "center", padding: 12 }}>
           <T style={{ textDecorationLine: "underline" }}>{mode === "in" ? t.auth.noAccount : t.auth.haveAccount}</T>
         </Link>
+        <Button label={t.auth.citizen} variant="outline" onPress={() => setMode("citizen")} />
       </Screen>
     </KeyboardAvoidingView>
   );
