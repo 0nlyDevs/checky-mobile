@@ -114,6 +114,7 @@ export const t = {
     shareImage: "Partager l'image",
     shareText: "Partager le texte",
     failed: "Le texte n'a pas pu être rédigé. Réessayez.",
+    aiDown: "Aucun modèle d'IA ne répond. Réessayez plus tard.",
     exportFailed: "L'image n'a pas pu être créée.",
     words: {
       fr: {

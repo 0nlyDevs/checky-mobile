@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import useSWR from "swr";
 
+import { ShareVerdict } from "@/components/share-verdict";
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictBadge, styles } from "@/components/ui";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
@@ -198,6 +199,20 @@ export default function ClaimDetail() {
           </View>
         )}
       </Section>
+
+      {!!d.verdict && (
+        <Section title={t.card.title}>
+          <ShareVerdict
+            key={d.verdict}
+            ws={ws}
+            item={item}
+            verdict={d.verdict}
+            sources={sources ?? []}
+            desk={current?.name ?? t.app.name}
+            onShared={() => item.status === "verified" && canEdit && patch({ status: "published" })}
+          />
+        </Section>
+      )}
 
       <Section title={t.detail.status}>
         <View style={styles.wrap}>
