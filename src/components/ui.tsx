@@ -59,7 +59,8 @@ type ButtonProps = PressableProps & { label: string; icon?: Icon; variant?: "pri
 
 export function Button({ label, icon: Icon, variant = "primary", busy, disabled, style, ...rest }: ButtonProps) {
   const c = useTheme();
-  const fg = variant === "primary" ? c.primaryForeground : c.foreground;
+  const off = !!disabled && !busy;
+  const fg = off ? c.mutedForeground : variant === "primary" ? c.primaryForeground : c.foreground;
   return (
     <Pressable
       accessibilityRole="button"
@@ -74,10 +75,9 @@ export function Button({ label, icon: Icon, variant = "primary", busy, disabled,
           alignItems: "center",
           justifyContent: "center",
           gap: 8,
-          backgroundColor: variant === "primary" ? c.primary : "transparent",
+          backgroundColor: off ? c.muted : variant === "primary" ? (state.pressed ? c.primaryPressed : c.primary) : state.pressed ? c.accent : "transparent",
           borderWidth: variant === "outline" ? 1 : 0,
           borderColor: c.input,
-          opacity: disabled ? 0.6 : state.pressed ? 0.85 : 1,
         },
         typeof style === "function" ? style(state) : style,
       ]}
@@ -96,7 +96,8 @@ export function Field({ label, style, ...rest }: TextInputProps & { label?: stri
       {label && <T style={{ fontFamily: fonts.medium, fontSize: 15 }}>{label}</T>}
       <TextInput
         placeholderTextColor={c.mutedForeground}
-        selectionColor={c.input}
+        selectionColor={c.primary + "59"}
+        cursorColor={c.primary}
         style={[
           {
             minHeight: 48,

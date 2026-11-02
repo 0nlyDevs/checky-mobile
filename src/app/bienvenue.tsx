@@ -62,7 +62,7 @@ export default function Welcome() {
           <T>{t.welcome.demo}</T>
           <T tone="muted">{t.welcome.demoHint}</T>
         </View>
-        <Switch value={demo} onValueChange={setDemo} trackColor={{ true: c.primary, false: c.input }} />
+        <Switch value={demo} onValueChange={setDemo} trackColor={{ true: c.primary, false: c.input }} thumbColor={demo ? c.primaryForeground : c.card} />
       </Pressable>
       <Button label={t.welcome.create} busy={busy === "create"} disabled={!name.trim() || !!busy} onPress={create} />
       <T tone="muted" style={{ textAlign: "center" }}>
