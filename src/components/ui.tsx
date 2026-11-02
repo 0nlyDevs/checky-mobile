@@ -1,5 +1,5 @@
 import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass, Question, SealCheck, SpinnerGap, Warning, X, XCircle } from "@/lib/icons";
-import { type ComponentProps, type ReactNode, useEffect } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -84,7 +84,7 @@ export function Button({ label, icon: Icon, variant = "primary", busy, disabled,
       {...rest}
     >
       {busy ? <ActivityIndicator color={fg} /> : Icon ? <Icon size={18} color={fg} style={{ flexShrink: 0 }} /> : null}
-      <Text style={{ fontFamily: fonts.semibold, fontSize: 16, color: fg, flexShrink: 1, textAlign: "center" }}>{label}</Text>
+      <Text style={{ fontFamily: fonts.semibold, fontSize: 16, color: fg, flexShrink: 1, textAlign: "center" }} numberOfLines={1}>{label}</Text>
     </Pressable>
   );
 }
@@ -148,11 +148,11 @@ export const VERDICT_ICON: Record<Verdict, Icon> = {
 };
 
 /** Never colour alone: icon + label. Confirmed = solid fill; AI suggestion = dashed outline on soft ground. */
-export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; suggested?: boolean; large?: boolean }) {
+export function VerdictBadge({ verdict, suggested, large, bare }: { verdict: Verdict; suggested?: boolean; large?: boolean; bare?: boolean }) {
   const c = useTheme();
   const v = c.verdict[verdict];
   const Icon = VERDICT_ICON[verdict];
-  const fg = suggested ? v.ink : v.on;
+  const fg = suggested || bare ? v.ink : v.on;
   return (
     <View
       style={{
@@ -160,11 +160,11 @@ export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; 
         alignItems: "center",
         alignSelf: "flex-start",
         gap: 6,
-        paddingHorizontal: large ? 12 : 8,
+        paddingHorizontal: bare ? 0 : large ? 12 : 8,
         paddingVertical: large ? 7 : 3,
-        borderRadius: radius.control,
-        backgroundColor: suggested ? v.soft : v.fill,
-        borderWidth: suggested ? 1.5 : 0,
+        borderRadius: radius.tag,
+        backgroundColor: bare ? "transparent" : suggested ? v.soft : v.fill,
+        borderWidth: suggested && !bare ? 2 : 0,
         borderStyle: "dashed",
         borderColor: v.ink,
       }}
@@ -174,6 +174,29 @@ export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; 
         {t.verdict[verdict]}
         {suggested ? ` · ${t.verdict.suggested}` : ""}
       </Text>
+    </View>
+  );
+}
+
+/** Spec 4.5: a suggestion is a dashed 2 px frame in the verdict ink on its wash; a confirmed verdict is solid. */
+export function VerdictPanel({ verdict, suggested, children }: { verdict: Verdict; suggested?: boolean; children?: ReactNode }) {
+  const c = useTheme();
+  const v = c.verdict[verdict];
+  return (
+    <View
+      style={{
+        gap: 10,
+        padding: 14,
+        borderRadius: radius.card,
+        borderWidth: 2,
+        borderStyle: suggested ? "dashed" : "solid",
+        borderColor: v.ink,
+        backgroundColor: v.soft,
+      }}
+    >
+      <VerdictBadge verdict={verdict} large bare />
+      <T style={{ fontFamily: fonts.medium, fontSize: 14, lineHeight: 20, color: v.ink }}>{suggested ? t.verdict.suggestedLabel : t.verdict.confirmedLabel}</T>
+      {children}
     </View>
   );
 }
@@ -251,23 +274,28 @@ export function Section({ title, children, note }: { title: string; children: Re
 
 export function Chip({ label, selected, onPress }: { label: string; selected?: boolean; onPress?: () => void }) {
   const c = useTheme();
+  const [pressed, setPressed] = useState(false);
+  const on = selected || pressed;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       style={{
-        minHeight: 36,
-        paddingHorizontal: 14,
+        minHeight: 44,
+        paddingHorizontal: 16,
         justifyContent: "center",
         borderRadius: radius.control,
         borderWidth: 1,
-        // Selected = the ink primary with its paired label.
-        borderColor: selected ? c.primary : c.border,
-        backgroundColor: selected ? c.primary : c.card,
+        // Selected = the ink primary with its paired label; pressed = primaryPressed fill.
+        borderColor: selected || pressed ? c.primary : c.border,
+        backgroundColor: pressed ? c.primaryPressed : selected ? c.primary : c.card,
+        transform: [{ scale: pressed ? 0.97 : 1 }],
       }}
     >
-      <Text style={{ fontFamily: selected ? fonts.semibold : fonts.medium, fontSize: 14, color: selected ? c.primaryForeground : c.foreground }}>{label}</Text>
+      <Text style={{ fontFamily: selected ? fonts.semibold : fonts.medium, fontSize: 14, color: on ? c.primaryForeground : c.foreground }}>{label}</Text>
     </Pressable>
   );
 }

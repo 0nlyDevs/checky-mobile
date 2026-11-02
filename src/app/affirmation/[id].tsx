@@ -7,7 +7,7 @@ import useSWR from "swr";
 
 import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
-import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictBadge, styles } from "@/components/ui";
+import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictPanel, styles } from "@/components/ui";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
@@ -163,9 +163,9 @@ export default function ClaimDetail() {
       {notice && <Notice tone="error">{notice}</Notice>}
 
       <Section title={t.detail.verdict}>
-        <View style={{ flexDirection: "row", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          {d.verdict ? <VerdictBadge verdict={d.verdict} large /> : <T tone="muted">{t.verdict.none}</T>}
-          {d.verdict_suggested && d.verdict_suggested !== d.verdict && <VerdictBadge verdict={d.verdict_suggested} suggested />}
+        <View style={{ gap: 10 }}>
+          {d.verdict ? <VerdictPanel verdict={d.verdict} /> : <T tone="muted">{t.verdict.none}</T>}
+          {d.verdict_suggested && d.verdict_suggested !== d.verdict && <VerdictPanel verdict={d.verdict_suggested} suggested />}
         </View>
         {canEdit && (
           <View style={{ gap: 8 }}>
@@ -289,9 +289,10 @@ export default function ClaimDetail() {
         )}
         <Field placeholder={t.detail.linkPlaceholder} value={link} onChangeText={setLink} autoCapitalize="none" keyboardType="url" onSubmitEditing={addLink} />
         <View style={{ flexDirection: "row", gap: 8 }}>
-          <Button label={t.detail.addLink} icon={Link} variant="outline" disabled={!/^https?:\/\//i.test(link.trim())} onPress={addLink} style={{ flex: 1 }} />
+          <Button label={t.detail.addLink} accessibilityLabel={t.detail.addLinkLong} icon={Link} variant="outline" disabled={!/^https?:\/\//i.test(link.trim())} onPress={addLink} style={{ flex: 1 }} />
           <Button
             label={upload !== null ? t.detail.uploading(t.check.percent(upload)) : t.detail.attachFile}
+            accessibilityLabel={t.detail.attachFileLong}
             icon={Paperclip}
             variant="outline"
             busy={upload !== null}
