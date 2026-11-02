@@ -1,11 +1,12 @@
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ClipboardText, Images, ShareNetwork } from "@/lib/icons";
-import { useState } from "react";
-import { View } from "react-native";
+import { type ComponentRef, useEffect, useRef, useState } from "react";
+import { TextInput, View } from "react-native";
 
 import { OfflineNotice, OutboxList } from "@/components/outbox";
+import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
 import { handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
@@ -15,9 +16,19 @@ import { useTheme } from "@/lib/theme";
 export default function AnalyseHome() {
   const c = useTheme();
   const router = useRouter();
+  const inset = useTabInset();
+  const { focus } = useLocalSearchParams<{ focus?: string }>();
+  const urlField = useRef<ComponentRef<typeof TextInput>>(null);
   const [url, setUrl] = useState("");
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  // The Checky button navigates here with a fresh `focus` value each press.
+  useEffect(() => {
+    if (!focus) return;
+    const id = setTimeout(() => urlField.current?.focus(), 50);
+    return () => clearTimeout(id);
+  }, [focus]);
 
   function go() {
     const u = url.trim();
@@ -45,7 +56,7 @@ export default function AnalyseHome() {
   }
 
   return (
-    <Screen>
+    <Screen bottomInset={inset}>
       <View style={{ gap: 6 }}>
         <T tone="title">{t.analyse.title}</T>
         <T tone="muted">{t.analyse.lead}</T>
@@ -59,6 +70,7 @@ export default function AnalyseHome() {
       <Button label={t.analyse.pick} icon={Images} onPress={pick} />
       <View style={{ gap: 12 }}>
         <Field
+          ref={urlField}
           label={t.analyse.url}
           placeholder={t.analyse.urlPlaceholder}
           value={url}

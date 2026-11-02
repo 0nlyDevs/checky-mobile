@@ -1,5 +1,5 @@
 import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass, Question, SealCheck, SpinnerGap, Warning, X, XCircle } from "@/lib/icons";
-import { type ReactNode, useEffect } from "react";
+import { type ComponentProps, type ReactNode, useEffect } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -35,12 +35,12 @@ export function T({ tone = "default", style, ...rest }: TextProps & { tone?: Ton
   return <Text style={[base, style]} {...rest} />;
 }
 
-export function Screen({ children, scroll = true, ...rest }: ScrollViewProps & { scroll?: boolean }) {
+export function Screen({ children, scroll = true, bottomInset = 48, ...rest }: ScrollViewProps & { scroll?: boolean; bottomInset?: number }) {
   const c = useTheme();
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
       {scroll ? (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: 48, gap: 16 }} {...rest}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: bottomInset, gap: 16 }} {...rest}>
           {children}
         </ScrollView>
       ) : (
@@ -89,7 +89,7 @@ export function Button({ label, icon: Icon, variant = "primary", busy, disabled,
   );
 }
 
-export function Field({ label, style, ...rest }: TextInputProps & { label?: string }) {
+export function Field({ label, style, ...rest }: TextInputProps & { label?: string; ref?: ComponentProps<typeof TextInput>["ref"] }) {
   const c = useTheme();
   return (
     <View style={{ gap: 6 }}>

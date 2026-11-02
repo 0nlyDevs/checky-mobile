@@ -23,13 +23,6 @@ export type Palette = {
   navForeground: string;
   navActive: string;
   navActiveForeground: string;
-  // Aliases kept until Task 4 replaces their users.
-  rail: string;
-  railForeground: string;
-  railMuted: string;
-  manila: string;
-  signal: string;
-  signalInk: string;
   verdict: Record<VerdictKey, VerdictTone>;
 };
 
@@ -52,12 +45,6 @@ export const light: Palette = {
   navForeground: "#b9b8b2",
   navActive: "#f3f2ee",
   navActiveForeground: "#0a0a0b",
-  rail: "#0a0a0b",
-  railForeground: "#b9b8b2",
-  railMuted: "#b9b8b2",
-  manila: "#f3f2ee",
-  signal: "#0a0a0b",
-  signalInk: "#0a0a0b",
   verdict: {
     true: { fill: "#0b6b3a", on: "#ffffff", soft: "#e1f3e8", ink: "#0b6b3a" },
     misleading: { fill: "#8a5700", on: "#ffffff", soft: "#f9ecd2", ink: "#8a5700" },
@@ -85,12 +72,6 @@ export const dark: Palette = {
   navForeground: "#b4b3ad",
   navActive: "#f3f2ee",
   navActiveForeground: "#0a0a0b",
-  rail: "#1c1c1f",
-  railForeground: "#b4b3ad",
-  railMuted: "#b4b3ad",
-  manila: "#f3f2ee",
-  signal: "#f3f2ee",
-  signalInk: "#f3f2ee",
   verdict: {
     true: { fill: "#3ddc84", on: "#0a0a0b", soft: "#0f2219", ink: "#3ddc84" },
     misleading: { fill: "#ffb224", on: "#0a0a0b", soft: "#29200c", ink: "#ffb224" },

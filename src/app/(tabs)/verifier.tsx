@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 
+import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, Section, T } from "@/components/ui";
 import { ApiError } from "@/lib/api";
 import { t } from "@/lib/i18n/fr";
@@ -12,6 +13,7 @@ type Passage = { n: number; source_title?: string; title?: string; text: string 
 
 /** Ask every source of the newsroom: the answer streams in, and cites its passages. */
 export default function Ask() {
+  const inset = useTabInset();
   const ws = useWs();
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -47,7 +49,7 @@ export default function Ask() {
   }
 
   return (
-    <Screen>
+    <Screen bottomInset={inset}>
       <View style={{ gap: 6 }}>
         <T tone="title">{t.ask.title}</T>
         <T tone="muted">{t.ask.lead}</T>

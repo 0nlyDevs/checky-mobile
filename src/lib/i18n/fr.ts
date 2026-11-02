@@ -133,7 +133,7 @@ export const t = {
       },
     },
   },
-  tabs: { analyse: "Analyser", claims: "Affirmations", ask: "Vérifier", settings: "Réglages" },
+  tabs: { analyse: "Analyser", claims: "Affirmations", ask: "Vérifier", settings: "Réglages", checky: "Nouvelle vérification avec Checky" },
   analyse: {
     title: "Analyser",
     lead: "Une vidéo, une photo ou un lien reçu sur WhatsApp, Facebook ou TikTok ? Partagez-le vers Checky, ou choisissez-le ici.",
@@ -237,6 +237,7 @@ export const t = {
     confirmBody: "Le verdict sera visible par toute la rédaction et l'affirmation passera à Vérifié.",
     againstAi: (v: string) => `L'IA suggérait « ${v} ».`,
     confirm: "Confirmer",
+    signSuggested: (v: string) => `Confirmer « ${v} »`,
     clear: "Retirer le verdict",
     analysis: "Analyse des sources",
     analyse: "Analyser les sources",

@@ -2,6 +2,7 @@ import Constants from "expo-constants";
 import { Alert, View } from "react-native";
 import useSWR from "swr";
 
+import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Chip, Notice, Screen, Section, T, styles } from "@/components/ui";
 import { api, clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
@@ -16,6 +17,7 @@ import { useWorkspace } from "@/lib/workspace";
 type Check = { status: string; latency_ms?: number | null };
 
 export default function Settings() {
+  const inset = useTabInset();
   const { me, current, choose, refresh } = useWorkspace();
   const outbox = useOutbox();
   const unsent = outbox.entries.filter((e) => e.state !== "done").length;
@@ -58,7 +60,7 @@ export default function Settings() {
   const word = (s: string) => (s === "up" ? t.settings.up : s === "down" ? t.settings.down : t.settings.notConfigured);
 
   return (
-    <Screen>
+    <Screen bottomInset={inset}>
       <T tone="title">{t.settings.title}</T>
       <Section title={t.settings.account}>
         <Card>

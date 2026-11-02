@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import useSWR from "swr";
 
+import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictBadge, styles } from "@/components/ui";
 import { api, ApiError, fetcher } from "@/lib/api";
@@ -136,10 +137,12 @@ export default function ClaimDetail() {
   }
 
   const a = d.analysis;
+  const awaiting = canEdit && !d.verdict && !!d.verdict_suggested;
   const sourceTitle = (sid?: string) => sources?.find((s) => s.id === sid)?.title;
 
   return (
-    <Screen>
+    <>
+    <Screen bottomInset={awaiting ? SIGN_BAR_ROOM + 48 : 48}>
       <View style={styles.row}>
         <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
@@ -313,5 +316,7 @@ export default function ClaimDetail() {
         <Button label={t.detail.send} disabled={!comment.trim()} onPress={send} />
       </Section>
     </Screen>
+    {awaiting && d.verdict_suggested && <SignBar label={t.detail.signSuggested(t.verdict[d.verdict_suggested])} onPress={() => decide(d.verdict_suggested!)} />}
+    </>
   );
 }
