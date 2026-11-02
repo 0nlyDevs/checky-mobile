@@ -121,14 +121,21 @@ export function Field({ label, style, ...rest }: TextInputProps & { label?: stri
 
 export function Notice({ children, tone = "default" }: { children: ReactNode; tone?: "default" | "error" }) {
   const c = useTheme();
-  const v = c.verdict.false;
   return (
     <View
       accessibilityRole={tone === "error" ? "alert" : undefined}
-      style={{ flexDirection: "row", gap: 8, padding: 14, borderRadius: radius.card, backgroundColor: tone === "error" ? v.soft : c.muted }}
+      style={{
+        flexDirection: "row",
+        gap: 8,
+        padding: 14,
+        borderRadius: radius.card,
+        backgroundColor: tone === "error" ? c.card : c.muted,
+        borderWidth: tone === "error" ? 1 : 0,
+        borderColor: c.destructive,
+      }}
     >
-      {tone === "error" && <Warning size={16} color={v.ink} style={{ marginTop: 3 }} />}
-      <T style={{ flex: 1, color: tone === "error" ? v.ink : c.foreground, fontSize: 15 }}>{children}</T>
+      {tone === "error" && <Warning size={16} color={c.destructive} style={{ marginTop: 3 }} />}
+      <T style={{ flex: 1, color: tone === "error" ? c.destructive : c.foreground, fontSize: 15 }}>{children}</T>
     </View>
   );
 }
@@ -217,7 +224,7 @@ export function Step({ label, state, detail }: { label: string; state: StepState
         ) : state === "done" ? (
           <CheckCircle size={18} color={c.foreground} />
         ) : state === "failed" ? (
-          <XCircle size={18} color={c.verdict.false.ink} />
+          <XCircle size={18} color={c.destructive} />
         ) : (
           <CircleDashed size={18} color={c.mutedForeground} />
         )}

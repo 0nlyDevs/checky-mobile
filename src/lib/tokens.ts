@@ -99,6 +99,8 @@ export const PAIRS: readonly [string, string][] = [
   ["primaryForeground", "primaryPressed"],
   ["navForeground", "nav"],
   ["navActiveForeground", "navActive"],
+  ["destructive", "card"],
+  ["destructive", "background"],
   ["foreground", "image.1"],
   ["foreground", "image.2"],
   ["foreground", "image.3"],
