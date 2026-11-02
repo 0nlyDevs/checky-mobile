@@ -148,11 +148,11 @@ export const VERDICT_ICON: Record<Verdict, Icon> = {
 };
 
 /** Never colour alone: icon + label. Confirmed = solid fill; AI suggestion = dashed outline on soft ground. */
-export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; suggested?: boolean; large?: boolean }) {
+export function VerdictBadge({ verdict, suggested, large, bare }: { verdict: Verdict; suggested?: boolean; large?: boolean; bare?: boolean }) {
   const c = useTheme();
   const v = c.verdict[verdict];
   const Icon = VERDICT_ICON[verdict];
-  const fg = suggested ? v.ink : v.on;
+  const fg = suggested || bare ? v.ink : v.on;
   return (
     <View
       style={{
@@ -160,11 +160,11 @@ export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; 
         alignItems: "center",
         alignSelf: "flex-start",
         gap: 6,
-        paddingHorizontal: large ? 12 : 8,
+        paddingHorizontal: bare ? 0 : large ? 12 : 8,
         paddingVertical: large ? 7 : 3,
         borderRadius: radius.control,
-        backgroundColor: suggested ? v.soft : v.fill,
-        borderWidth: suggested ? 1.5 : 0,
+        backgroundColor: bare ? "transparent" : suggested ? v.soft : v.fill,
+        borderWidth: suggested && !bare ? 2 : 0,
         borderStyle: "dashed",
         borderColor: v.ink,
       }}
@@ -174,6 +174,29 @@ export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; 
         {t.verdict[verdict]}
         {suggested ? ` · ${t.verdict.suggested}` : ""}
       </Text>
+    </View>
+  );
+}
+
+/** Spec 4.5: a suggestion is a dashed 2 px frame in the verdict ink on its wash; a confirmed verdict is solid. */
+export function VerdictPanel({ verdict, suggested, children }: { verdict: Verdict; suggested?: boolean; children?: ReactNode }) {
+  const c = useTheme();
+  const v = c.verdict[verdict];
+  return (
+    <View
+      style={{
+        gap: 10,
+        padding: 14,
+        borderRadius: radius.card,
+        borderWidth: 2,
+        borderStyle: suggested ? "dashed" : "solid",
+        borderColor: v.ink,
+        backgroundColor: v.soft,
+      }}
+    >
+      <VerdictBadge verdict={verdict} large bare />
+      <T style={{ fontFamily: fonts.medium, fontSize: 14, lineHeight: 20, color: v.ink }}>{suggested ? t.verdict.suggestedLabel : t.verdict.confirmedLabel}</T>
+      {children}
     </View>
   );
 }

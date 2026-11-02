@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 
 import { OfflineNotice } from "@/components/outbox";
-import { Button, Card, Field, Notice, Screen, Section, Step, type StepState, T, VerdictBadge, styles } from "@/components/ui";
+import { Button, Card, Field, Notice, Screen, Section, Step, type StepState, T, VerdictPanel, styles } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
 import { host } from "@/lib/format";
 import { type Check, openWeb, pickUp } from "@/lib/handoff";
@@ -251,8 +251,7 @@ export default function Analyse() {
 
           {a ? (
             <Section title={t.check.suggestion}>
-              <View style={{ borderWidth: 1.5, borderStyle: "dashed", borderColor: c.verdict[a.verdict].ink, backgroundColor: c.verdict[a.verdict].soft, borderRadius: radius.card, padding: 14, gap: 10 }}>
-                <VerdictBadge verdict={a.verdict} suggested large />
+              <VerdictPanel verdict={a.verdict} suggested>
                 {!!a.reason && <T>{a.reason}</T>}
                 {a.evidence.length > 0 && (
                   <View style={{ gap: 8 }}>
@@ -276,7 +275,7 @@ export default function Analyse() {
                   </T>
                 )}
                 <T tone="muted">{t.check.humanConfirms}</T>
-              </View>
+              </VerdictPanel>
             </Section>
           ) : (
             !!result.claims?.length && <Notice>{t.check.noVerdict}</Notice>

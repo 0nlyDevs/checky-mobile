@@ -319,7 +319,7 @@ export const t = {
     } as Record<string, string>,
   },
   status: { to_check: "À vérifier", in_progress: "En cours", verified: "Vérifié", published: "Publié" } as Record<string, string>,
-  verdict: { true: "Vrai", misleading: "Trompeur", false: "Faux", unverifiable: "Invérifiable", none: "Sans verdict", suggested: "suggéré" } as Record<string, string>,
+  verdict: { true: "Vrai", misleading: "Trompeur", false: "Faux", unverifiable: "Invérifiable", none: "Sans verdict", suggested: "suggéré", suggestedLabel: "Lecture de Checky, à signer par un journaliste", confirmedLabel: "Verdict confirmé" } as Record<string, string>,
   origin: { facebook: "Facebook", whatsapp: "WhatsApp", tiktok: "TikTok", radio: "Radio", press: "Presse", other: "Autre" } as Record<string, string>,
   time: {
     now: "à l'instant",

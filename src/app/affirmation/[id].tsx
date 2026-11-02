@@ -7,7 +7,7 @@ import useSWR from "swr";
 
 import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
-import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictBadge, styles } from "@/components/ui";
+import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictPanel, styles } from "@/components/ui";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
@@ -163,9 +163,9 @@ export default function ClaimDetail() {
       {notice && <Notice tone="error">{notice}</Notice>}
 
       <Section title={t.detail.verdict}>
-        <View style={{ flexDirection: "row", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-          {d.verdict ? <VerdictBadge verdict={d.verdict} large /> : <T tone="muted">{t.verdict.none}</T>}
-          {d.verdict_suggested && d.verdict_suggested !== d.verdict && <VerdictBadge verdict={d.verdict_suggested} suggested />}
+        <View style={{ gap: 10 }}>
+          {d.verdict ? <VerdictPanel verdict={d.verdict} /> : <T tone="muted">{t.verdict.none}</T>}
+          {d.verdict_suggested && d.verdict_suggested !== d.verdict && <VerdictPanel verdict={d.verdict_suggested} suggested />}
         </View>
         {canEdit && (
           <View style={{ gap: 8 }}>
