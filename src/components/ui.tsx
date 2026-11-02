@@ -84,7 +84,7 @@ export function Button({ label, icon: Icon, variant = "primary", busy, disabled,
       {...rest}
     >
       {busy ? <ActivityIndicator color={fg} /> : Icon ? <Icon size={18} color={fg} style={{ flexShrink: 0 }} /> : null}
-      <Text style={{ fontFamily: fonts.semibold, fontSize: 16, color: fg, flexShrink: 1, textAlign: "center" }}>{label}</Text>
+      <Text style={{ fontFamily: fonts.semibold, fontSize: 16, color: fg, flexShrink: 1, textAlign: "center" }} numberOfLines={1}>{label}</Text>
     </Pressable>
   );
 }

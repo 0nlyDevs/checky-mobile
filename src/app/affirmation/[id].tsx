@@ -289,9 +289,10 @@ export default function ClaimDetail() {
         )}
         <Field placeholder={t.detail.linkPlaceholder} value={link} onChangeText={setLink} autoCapitalize="none" keyboardType="url" onSubmitEditing={addLink} />
         <View style={{ flexDirection: "row", gap: 8 }}>
-          <Button label={t.detail.addLink} icon={Link} variant="outline" disabled={!/^https?:\/\//i.test(link.trim())} onPress={addLink} style={{ flex: 1 }} />
+          <Button label={t.detail.addLink} accessibilityLabel={t.detail.addLinkLong} icon={Link} variant="outline" disabled={!/^https?:\/\//i.test(link.trim())} onPress={addLink} style={{ flex: 1 }} />
           <Button
             label={upload !== null ? t.detail.uploading(t.check.percent(upload)) : t.detail.attachFile}
+            accessibilityLabel={t.detail.attachFileLong}
             icon={Paperclip}
             variant="outline"
             busy={upload !== null}
