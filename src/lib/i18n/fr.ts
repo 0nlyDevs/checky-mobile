@@ -237,6 +237,7 @@ export const t = {
     confirmBody: "Le verdict sera visible par toute la rédaction et l'affirmation passera à Vérifié.",
     againstAi: (v: string) => `L'IA suggérait « ${v} ».`,
     confirm: "Confirmer",
+    signSuggested: (v: string) => `Confirmer « ${v} »`,
     clear: "Retirer le verdict",
     analysis: "Analyse des sources",
     analyse: "Analyser les sources",
