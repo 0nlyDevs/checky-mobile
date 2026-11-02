@@ -166,6 +166,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/workspaces/{ws}/items/similar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Similar Items
+         * @description Claims of the desk that share most of their words with `q`: a duplicate warning while
+         *     a new claim is typed. Word overlap only, so it answers at once and without any AI.
+         */
+        get: operations["similar_items_api_v1_workspaces__ws__items_similar_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspaces/{ws}/items/{item_id}": {
         parameters: {
             query?: never;
@@ -376,10 +397,11 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * Attach Source
-         * @description Attach a source to a claim, e.g. a video analysed from the phone and then followed.
+         * Update Source
+         * @description Set a source's publication date by hand (a pasted text, a page that does not say it), or
+         *     attach it to a claim (the phone app attaches the file it analysed to the claim it follows).
          */
-        patch: operations["attach_source_api_v1_workspaces__ws__sources__source_id__patch"];
+        patch: operations["update_source_api_v1_workspaces__ws__sources__source_id__patch"];
         trace?: never;
     };
     "/api/v1/workspaces/{ws}/sources/{source_id}/text": {
@@ -971,6 +993,11 @@ export interface components {
              * @default []
              */
             tips: string[];
+            /**
+             * Voice
+             * @default false
+             */
+            voice: boolean;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1198,6 +1225,8 @@ export interface components {
             kind: string;
             /** Url */
             url: string | null;
+            /** Published At */
+            published_at?: string | null;
             /** Text */
             text: string;
             /** Start S */
@@ -1252,6 +1281,12 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** SimilarOut */
+        SimilarOut: {
+            /** Score */
+            score: number;
+            item: components["schemas"]["ItemOut"];
+        };
         /** SourceIn */
         SourceIn: {
             /** Item Id */
@@ -1262,6 +1297,8 @@ export interface components {
             text?: string | null;
             /** Title */
             title?: string | null;
+            /** Published At */
+            published_at?: string | null;
         };
         /** SourceOut */
         SourceOut: {
@@ -1307,13 +1344,15 @@ export interface components {
              */
             duplicates: number;
         };
-        /** SourcePatch */
+        /**
+         * SourcePatch
+         * @description Send one field or both; a field left out keeps its value.
+         */
         SourcePatch: {
-            /**
-             * Item Id
-             * Format: uuid
-             */
-            item_id: string;
+            /** Published At */
+            published_at?: string | null;
+            /** Item Id */
+            item_id?: string | null;
         };
         /** SpeakIn */
         SpeakIn: {
@@ -1925,6 +1964,39 @@ export interface operations {
             };
         };
     };
+    similar_items_api_v1_workspaces__ws__items_similar_get: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path: {
+                ws: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimilarOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_item_api_v1_workspaces__ws__items__item_id__get: {
         parameters: {
             query?: never;
@@ -2498,7 +2570,7 @@ export interface operations {
             };
         };
     };
-    attach_source_api_v1_workspaces__ws__sources__source_id__patch: {
+    update_source_api_v1_workspaces__ws__sources__source_id__patch: {
         parameters: {
             query?: never;
             header?: never;
