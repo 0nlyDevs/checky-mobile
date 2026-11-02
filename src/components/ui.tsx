@@ -35,12 +35,12 @@ export function T({ tone = "default", style, ...rest }: TextProps & { tone?: Ton
   return <Text style={[base, style]} {...rest} />;
 }
 
-export function Screen({ children, scroll = true, ...rest }: ScrollViewProps & { scroll?: boolean }) {
+export function Screen({ children, scroll = true, bottomInset = 48, ...rest }: ScrollViewProps & { scroll?: boolean; bottomInset?: number }) {
   const c = useTheme();
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
       {scroll ? (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: 48, gap: 16 }} {...rest}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: bottomInset, gap: 16 }} {...rest}>
           {children}
         </ScrollView>
       ) : (

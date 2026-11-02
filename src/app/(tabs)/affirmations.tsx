@@ -7,6 +7,7 @@ import useSWR from "swr";
 
 import { ClaimRow } from "@/components/claim-row";
 import { OfflineNotice, OutboxList } from "@/components/outbox";
+import { useTabInset } from "@/components/tab-bar";
 import { Button, Chip, Field, Notice, T } from "@/components/ui";
 import { fetcher } from "@/lib/api";
 import { t } from "@/lib/i18n/fr";
@@ -16,6 +17,7 @@ import { useWs } from "@/lib/workspace";
 
 export default function Claims() {
   const c = useTheme();
+  const inset = useTabInset();
   const ws = useWs();
   const router = useRouter();
   const [status, setStatus] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export default function Claims() {
         data={data?.items ?? []}
         keyExtractor={(i) => i.id}
         renderItem={({ item }) => <ClaimRow item={item} />}
-        contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: 48 }}
+        contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: inset }}
         refreshControl={<RefreshControl refreshing={isLoading && !!data} onRefresh={() => void mutate()} />}
         ListHeaderComponent={
           <View style={{ gap: 12, marginBottom: 4 }}>

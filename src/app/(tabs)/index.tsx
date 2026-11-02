@@ -6,6 +6,7 @@ import { type ComponentRef, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 
 import { OfflineNotice, OutboxList } from "@/components/outbox";
+import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
 import { handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
@@ -15,6 +16,7 @@ import { useTheme } from "@/lib/theme";
 export default function AnalyseHome() {
   const c = useTheme();
   const router = useRouter();
+  const inset = useTabInset();
   const { focus } = useLocalSearchParams<{ focus?: string }>();
   const urlField = useRef<ComponentRef<typeof TextInput>>(null);
   const [url, setUrl] = useState("");
@@ -54,7 +56,7 @@ export default function AnalyseHome() {
   }
 
   return (
-    <Screen>
+    <Screen bottomInset={inset}>
       <View style={{ gap: 6 }}>
         <T tone="title">{t.analyse.title}</T>
         <T tone="muted">{t.analyse.lead}</T>
