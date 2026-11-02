@@ -28,6 +28,7 @@ export function CheckyButton() {
         justifyContent: "center",
         backgroundColor: c.primary,
         opacity: pressed ? 0.85 : 1,
+        transform: [{ scale: pressed ? 0.97 : 1 }],
         elevation: 4,
         shadowColor: "#000",
         shadowOpacity: 0.25,

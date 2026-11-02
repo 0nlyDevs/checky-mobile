@@ -78,6 +78,7 @@ export function Button({ label, icon: Icon, variant = "primary", busy, disabled,
           backgroundColor: off ? c.muted : variant === "primary" ? (state.pressed ? c.primaryPressed : c.primary) : state.pressed ? c.accent : "transparent",
           borderWidth: variant === "outline" ? 1 : 0,
           borderColor: c.input,
+          transform: [{ scale: state.pressed ? 0.97 : 1 }],
         },
         typeof style === "function" ? style(state) : style,
       ]}
