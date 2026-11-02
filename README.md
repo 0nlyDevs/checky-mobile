@@ -1,56 +1,98 @@
-# Welcome to your Expo app 👋
+# FANILO mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The FANILO phone app for journalists in Madagascar. A video, photo, voice note or link received on WhatsApp, Facebook or TikTok goes through **Partager → FANILO**. The app then:
 
-## Get started
+1. uploads the file,
+2. transcribes what is said,
+3. picks out the claims and warning signs,
+4. searches fact-checkers, the web and Wikipedia,
+5. suggests a verdict that quotes its sources.
 
-1. Install dependencies
+A journalist always confirms the verdict. One tap follows the claim in the newsroom's desk.
 
-   ```bash
-   npm install
-   ```
+It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the responsive website. It talks to the same backend as the web desk ([`fanilo-base`](https://github.com/0nlyDevs/fanilo-base)):
 
-2. Start the app
+- **Better Auth** (in the Next.js app): email and password sign-in through the Expo plugin; the session cookie is kept in SecureStore.
+- **FastAPI** (`/api/v1`): called with the short-lived JWT from `/api/auth/token`.
 
-   ```bash
-   npx expo start
-   ```
+## Screens
 
-In the output, you'll find options to open the app in a
+| Route | What it does |
+| --- | --- |
+| `/connexion`, `/inscription` | Sign in, sign up (same accounts as the desk) |
+| `/bienvenue` | Create a newsroom (optionally with the demo claims) or join with an invitation link |
+| `/` Analyser | Pick a video/photo from the gallery, or paste a link or text |
+| `/analyse` | The check, step by step: upload → transcription → read → claims and warning signs → search → suggested verdict. Then the content, the dashed AI suggestion and the quotes it rests on, the warning signs, the file's AI traces (C2PA, generator tags such as Sora or Midjourney), reverse image search, and results to tick. **Suivre dans le desk** creates the claim and attaches the file and the ticked sources |
+| `/affirmations` | The newsroom's claims, filtered by status, searchable |
+| `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), status, AI source analysis, sources (add a link or a file), comments |
+| `/verifier` | Ask every source of the newsroom; the answer streams and cites its passages |
+| `/reglages` | Account, newsroom switch, service health, demo reset (admin), sign out |
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link. A share made while signed out waits until sign-in.
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Layout
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/app/            Expo Router screens (see above)
+src/components/     ui.tsx (text, buttons, fields, verdict badge, status, steps), brand, claim row, auth form
+src/lib/            config, auth (Better Auth client), api (JWT + fetch), sse (streams via expo/fetch),
+                    upload (presigned PUT with progress, then wait for the ingest job), workspace context,
+                    theme (DESIGN.md tokens from the desk), types, i18n/fr.ts (every string)
+src/lib/api-schema.d.ts   Generated from fanilo-base's OpenAPI (npm run gen:api)
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Design follows the desk's "Grille d'antenne" (`fanilo-base/apps/web/DESIGN.md`):
 
-### Other setup steps
+- An ink tab bar with a manila marker. Anton for titles, Public Sans for text, Barlow Condensed for FAN refs.
+- Verdicts always show an icon and a label. An AI suggestion is a dashed outline on a soft background.
+- Status uses ink icons, never verdict colours.
+- Signal yellow appears only on selection.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Setup
 
-## Learn more
+Prerequisites: Node 22+, JDK 17 and the Android SDK (platform 36, build-tools 36; Gradle downloads the NDK). You also need a running `fanilo-base`: the web app on :3000 and the API on :8000. Its `apps/web/lib/auth.ts` must include the `expo()` plugin and trust `fanilo://`.
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+npx expo prebuild --platform android      # generates android/ (gitignored)
+npm run android                            # builds, installs on the emulator/phone, starts Metro
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Pointing the app at the backend
 
-## Join the community
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `EXPO_PUBLIC_WEB_URL` | `http://localhost:3000` | Next.js app (Better Auth) |
+| `EXPO_PUBLIC_API_URL` | `http://localhost:8000` | FastAPI |
 
-Join our community of developers creating universal apps.
+The defaults work on an emulator or a USB phone after:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+adb reverse tcp:3000 tcp:3000 && adb reverse tcp:8000 tcp:8000
+```
+
+For a phone on Wi-Fi, use the machine's LAN address. For a deployed backend, use its HTTPS URLs. `EXPO_PUBLIC_*` values are compiled into the JS bundle, so set them before `expo start` or a release build.
+
+### A standalone APK to install on a phone
+
+```bash
+EXPO_PUBLIC_WEB_URL=https://… EXPO_PUBLIC_API_URL=https://… \
+  npx expo prebuild --platform android && cd android && ./gradlew assembleRelease
+# → android/app/build/outputs/apk/release/app-release.apk (signed with the debug key: fine for testing, not for the Play Store)
+```
+
+iOS needs a Mac with Xcode (`npx expo run:ios`) or EAS Build (`npx eas-cli build -p ios`, Apple developer account).
+
+## Checks
+
+```bash
+npx tsc --noEmit && npx eslint src
+npm run gen:api     # after an API schema change in fanilo-base (expects it checked out next to this repo)
+```
+
+## Backend pieces this app relies on (fanilo-base)
+
+- `POST /workspaces/{ws}/files/upload-url` then `…/complete`. Videos (`mp4`, `webm`, `quicktime`, `3gpp`) are accepted. Their soundtrack is pulled out with ffmpeg and transcribed by Groq Whisper; the container's tags are scanned for AI generators.
+- `POST /workspaces/{ws}/link-check {source_id}` checks an uploaded file on its transcript (or text, or EXIF).
+- `PATCH /workspaces/{ws}/sources/{id} {item_id}` attaches the analysed file to the claim created by **Suivre dans le desk**.
+- `POST /workspaces/{ws}/copilot/act` creates the claim (next FAN ref) and attaches links.
