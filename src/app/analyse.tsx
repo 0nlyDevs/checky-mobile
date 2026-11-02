@@ -2,14 +2,17 @@ import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { ArrowLeft, BadgeCheck, CheckSquare, ExternalLink, Sparkles, Square } from "lucide-react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 
+import { OfflineNotice } from "@/components/outbox";
 import { Button, Card, Field, Notice, Screen, Section, Step, type StepState, T, VerdictBadge, styles } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
 import { host } from "@/lib/format";
-import { openWeb, pickUp } from "@/lib/handoff";
+import { type Check, openWeb, pickUp } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
+import { isNetworkError, isOnline } from "@/lib/network";
+import { useOutbox } from "@/lib/outbox";
 import { postStream } from "@/lib/sse";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import type { CheckResult, Origin } from "@/lib/types";
@@ -27,21 +30,27 @@ export default function Analyse() {
   const router = useRouter();
   const ws = useWs();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  // Only checks handed over in memory by the share sheet or the Analyser tab; a bare deep link gets nothing.
-  const job = pickUp(id);
+  const outbox = useOutbox();
+  // Only checks handed over in memory by the share sheet, the Analyser tab or the outbox; a bare deep link gets nothing.
+  const handed = pickUp(id);
+  // Sent from "À envoyer" once the network came back: the result is already there.
+  const entry = handed?.queued ? outbox.entries.find((e) => e.id === handed.queued) : undefined;
+  const job = useMemo<Check | null>(() => (entry ? (entry.check ?? {}) : handed?.queued ? null : handed), [entry, handed]);
   const p = { url: job?.url, text: job?.text, file: job?.file?.uri, mime: job?.file?.mime, name: job?.file?.name, size: job?.file?.size };
   const isFile = !!p.file;
   const order = [...(isFile ? ["upload", "ingest"] : []), "read", "claims", "search", "verdict"];
 
   const [steps, setSteps] = useState<Steps>({});
-  const [result, setResult] = useState<CheckResult | null>(null);
+  const [result, setResult] = useState<CheckResult | null>(entry?.result ?? null);
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [extra, setExtra] = useState("");
   const [claim, setClaim] = useState(0);
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [tracking, setTracking] = useState(false);
-  const sourceId = useRef<string | null>(null);
+  const [queued, setQueued] = useState(false);
+  const [offline, setOffline] = useState(false);
+  const sourceId = useRef<string | null>(entry?.sourceId ?? null);
   const abort = useRef<AbortController | null>(null);
   const started = useRef(false);
 
@@ -95,6 +104,7 @@ export default function Analyse() {
         if (ctrl.signal.aborted) return;
         const code = e instanceof ApiError ? e.code : "";
         setSteps((s) => Object.fromEntries(Object.entries(s).map(([k, v]) => [k, v.state === "running" ? { state: "failed" as const } : v])));
+        setOffline(isNetworkError(e) || !(await isOnline()));
         setError(
           e instanceof ApiError && e.status === 429
             ? t.check.tooMany
@@ -113,12 +123,25 @@ export default function Analyse() {
     [isFile, p.file, p.mime, p.name, p.size, p.text, p.url, ws],
   );
 
+  /** Into "À envoyer": kept on the phone, sent and analysed when the network is back. An upload
+   * that already went through is not sent again. */
+  const later = useCallback(() => {
+    if (!job) return;
+    try {
+      outbox.add({ kind: "check", check: { url: job.url, text: job.text, file: job.file }, sourceId: sourceId.current ?? undefined });
+      setQueued(true);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof ApiError && e.code === "too_large" ? t.check.tooLarge : t.check.failed);
+    }
+  }, [job, outbox]);
+
   useEffect(() => {
-    if (started.current || !job) return;
+    if (started.current || !job || entry) return;
     started.current = true;
-    void run();
+    void isOnline().then((on) => (on ? run() : later()));
     return () => abort.current?.abort();
-  }, [run, job]);
+  }, [run, later, job, entry]);
 
   async function track() {
     if (!result) return;
@@ -138,6 +161,7 @@ export default function Analyse() {
       const links = [result.url, ...picked].filter((u, i, all): u is string => !!u && all.indexOf(u) === i);
       for (const link of links) await act({ kind: "attach_link", item_id: made.item_id, url: link }).catch(() => null);
       router.replace({ pathname: "/affirmation/[id]", params: { id: made.item_id } });
+      if (entry) outbox.remove(entry.id);
     } catch {
       setError(t.check.trackFailed);
       setTracking(false);
@@ -168,6 +192,7 @@ export default function Analyse() {
         {job?.shared && <T tone="muted">{t.check.shared}</T>}
       </View>
 
+      <OfflineNotice />
       {!job && <Notice>{t.analyse.empty}</Notice>}
       {isFile && <Preview uri={p.file!} mime={p.mime ?? ""} />}
       {!isFile && !!p.url && (
@@ -176,15 +201,25 @@ export default function Analyse() {
         </T>
       )}
 
-      <Card>
-        {order.map((k) => (
-          <Step key={k} label={t.check.steps[k]} state={steps[k]?.state ?? "waiting"} detail={steps[k]?.detail} />
-        ))}
-        {running && <Button label={t.check.stop} variant="ghost" onPress={() => abort.current?.abort()} />}
-      </Card>
+      {queued ? (
+        <>
+          <Notice>{t.outbox.queued}</Notice>
+          <Button label={t.outbox.back} onPress={() => router.replace("/")} />
+        </>
+      ) : (
+        (!entry || Object.keys(steps).length > 0) && (
+          <Card>
+            {order.map((k) => (
+              <Step key={k} label={t.check.steps[k]} state={steps[k]?.state ?? "waiting"} detail={steps[k]?.detail} />
+            ))}
+            {running && <Button label={t.check.stop} variant="ghost" onPress={() => abort.current?.abort()} />}
+          </Card>
+        )
+      )}
 
       {error && <Notice tone="error">{error}</Notice>}
       {error && !running && <Button label={t.common.retry} variant="outline" onPress={() => run(extra || undefined)} />}
+      {error && !running && offline && !queued && <Button label={t.outbox.later} onPress={later} />}
 
       {result && (
         <>

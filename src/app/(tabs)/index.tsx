@@ -5,6 +5,7 @@ import { ClipboardPaste, Images, Share2 } from "lucide-react-native";
 import { useState } from "react";
 import { View } from "react-native";
 
+import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
 import { handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
@@ -49,6 +50,8 @@ export default function AnalyseHome() {
         <T tone="title">{t.analyse.title}</T>
         <T tone="muted">{t.analyse.lead}</T>
       </View>
+      <OfflineNotice />
+      <OutboxList />
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
         <Share2 size={20} color={c.foreground} />
         <T style={{ flex: 1, fontSize: 15 }}>{t.analyse.shareHint}</T>

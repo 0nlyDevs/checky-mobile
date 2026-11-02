@@ -41,13 +41,24 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 
 Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link in the desk, or `/citoyen/verifier` in citizen mode. A share made before a mode is chosen, or while a journalist is signed out, waits until then.
 
+## Working without a network
+
+For reporters in areas with weak or no coverage. The checks themselves (AI, search, file reading) run on the server, so the phone does not verify offline. Instead, nothing captured is lost and nothing already opened becomes unreadable.
+
+- **"À envoyer" (`src/lib/outbox.tsx`)**: with no network, `/analyse` and `/nouvelle` put the check or the new claim in a queue saved on the phone (`documentDirectory/outbox/`; files are copied there so a cleared share cache does not lose them). The queue is sent when the network comes back, when the app returns to the front, and every 30 s while something waits. A file is uploaded only once (`sourceId` is kept), and the link check runs in the background. The result shows up on the Analyser tab as "Analyse prête", and "Suivre" works as usual from there. Server failures back off up to 10 min, and refusals (too large, wrong type) are marked failed. Only in-app actions fill the queue, never a deep link. It runs only while the app is open: there is no background task.
+- **Cached reading (`src/lib/cache.ts`)**: the SWR cache is saved to `swr-cache.json`. Claims, files and verdicts already opened stay readable, and the app opens offline because `/me` and the Better Auth session (`fanilo_session_data`) are cached. SWR refetches when the network returns (`initReconnect` via `expo-network`).
+- **Weak networks**: `api()` gives up after 60 s and a queued link check after 5 min, so a stalled request does not block the queue.
+- **Sign-out** wipes the cache and the queue, after a confirmation when something is unsent.
+- Photos are sent uncompressed on purpose: recompressing would strip the EXIF, C2PA and AI markers the server checks.
+
 ## Layout
 
 ```
 src/app/            Expo Router screens (see above)
-src/components/     ui.tsx (text, buttons, fields, verdict badge, status, steps), brand, claim row, auth form
+src/components/     ui.tsx (text, buttons, fields, verdict badge, status, steps), brand, claim row, auth form, outbox
 src/lib/            config, auth (Better Auth client), api (JWT + fetch), sse (streams via expo/fetch),
                     upload (presigned PUT with progress, then wait for the ingest job), workspace context,
+                    network (expo-network), cache (SWR kept on disk), outbox ("À envoyer" queue),
                     theme (DESIGN.md tokens from the desk), types, i18n/fr.ts (every string)
 src/lib/api-schema.d.ts   Generated from fanilo-base's OpenAPI (npm run gen:api)
 ```

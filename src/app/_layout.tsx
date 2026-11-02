@@ -13,9 +13,12 @@ import { SWRConfig } from "swr";
 
 import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
+import { persistentCache } from "@/lib/cache";
 import { type Check, handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
 import { ModeProvider, useMode } from "@/lib/mode";
+import { onReconnect } from "@/lib/network";
+import { OutboxProvider } from "@/lib/outbox";
 import { useTheme } from "@/lib/theme";
 import { WorkspaceProvider, useWorkspace } from "@/lib/workspace";
 
@@ -35,8 +38,9 @@ export default function RootLayout() {
     // Kept until the journalist is signed in, so a share made while signed out is not lost.
     <ShareIntentProvider options={{ resetOnBackground: false }}>
       <SafeAreaProvider>
-        {/* The desk keeps lists fresh over Socket.IO; here a pull or a screen focus refetches. */}
-        <SWRConfig value={{ revalidateOnFocus: false, dedupingInterval: 4000 }}>
+        {/* The desk keeps lists fresh over Socket.IO; here a pull, a screen focus or the network coming back
+            refetches. The cache is kept on the phone so what was opened stays readable offline. */}
+        <SWRConfig value={{ revalidateOnFocus: false, dedupingInterval: 4000, provider: persistentCache, initReconnect: onReconnect }}>
           <ModeProvider>
             <Session />
           </ModeProvider>
@@ -51,7 +55,10 @@ function Session() {
   const signedIn = !!session;
   return (
     <WorkspaceProvider signedIn={signedIn}>
-      <Routes signedIn={signedIn} pending={isPending} />
+      <OutboxProvider>
+        {/* A session cached on the phone opens the app at once: on a weak network the check can take long. */}
+        <Routes signedIn={signedIn} pending={isPending && !signedIn} />
+      </OutboxProvider>
     </WorkspaceProvider>
   );
 }

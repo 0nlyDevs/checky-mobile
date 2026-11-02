@@ -5,6 +5,8 @@ import { View } from "react-native";
 import { Button, Chip, Field, Notice, Screen, T, styles } from "@/components/ui";
 import { api } from "@/lib/api";
 import { t } from "@/lib/i18n/fr";
+import { isNetworkError, isOnline } from "@/lib/network";
+import { useOutbox } from "@/lib/outbox";
 import type { Origin } from "@/lib/types";
 import { useWs } from "@/lib/workspace";
 
@@ -17,10 +19,20 @@ export default function NewClaim() {
   const [origin, setOrigin] = useState<Origin>("whatsapp");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
+  const [queued, setQueued] = useState(false);
+  const outbox = useOutbox();
+
+  /** No network: kept in "À envoyer" and created when it comes back. */
+  function later() {
+    outbox.add({ kind: "claim", claim: { title: title.trim(), origin } });
+    setQueued(true);
+    setBusy(false);
+  }
 
   async function create() {
     setBusy(true);
     setError(false);
+    if (!(await isOnline())) return later();
     try {
       // Same route as the copilot: the API assigns the next FAN ref.
       const made = await api<{ item_id: string }>(`/workspaces/${ws}/copilot/act`, {
@@ -28,10 +40,21 @@ export default function NewClaim() {
         body: JSON.stringify({ kind: "create_claim", title: title.trim(), origin }),
       });
       router.replace({ pathname: "/affirmation/[id]", params: { id: made.item_id } });
-    } catch {
+    } catch (e) {
+      if (isNetworkError(e) || !(await isOnline())) return later();
       setError(true);
       setBusy(false);
     }
+  }
+
+  if (queued) {
+    return (
+      <Screen>
+        <T tone="title">{t.newClaim.title}</T>
+        <Notice>{t.outbox.queuedClaim}</Notice>
+        <Button label={t.outbox.back} onPress={() => router.back()} />
+      </Screen>
+    );
   }
 
   return (

@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useSWR from "swr";
 
 import { ClaimRow } from "@/components/claim-row";
+import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { Button, Chip, Field, Notice, T } from "@/components/ui";
 import { fetcher } from "@/lib/api";
 import { t } from "@/lib/i18n/fr";
@@ -49,7 +50,9 @@ export default function Claims() {
                 <Chip key={s} label={t.claims.filters[s]} selected={status === s} onPress={() => setStatus(s)} />
               ))}
             </ScrollView>
-            {error && <Notice tone="error">{t.common.offline}</Notice>}
+            <OfflineNotice stale={!!data} />
+            {error && !data && <Notice tone="error">{t.common.offline}</Notice>}
+            <OutboxList kind="claim" />
           </View>
         }
         ListEmptyComponent={!isLoading && !error ? <T tone="muted">{t.claims.empty}</T> : undefined}

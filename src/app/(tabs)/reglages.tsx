@@ -5,16 +5,37 @@ import useSWR from "swr";
 import { Button, Card, Chip, Notice, Screen, Section, T, styles } from "@/components/ui";
 import { api, clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
+import { clearCache } from "@/lib/cache";
 import { API_URL } from "@/lib/config";
 import { t } from "@/lib/i18n/fr";
 import { fonts } from "@/lib/theme";
 import type { Health } from "@/lib/types";
+import { useOutbox } from "@/lib/outbox";
 import { useWorkspace } from "@/lib/workspace";
 
 type Check = { status: string; latency_ms?: number | null };
 
 export default function Settings() {
   const { me, current, choose, refresh } = useWorkspace();
+  const outbox = useOutbox();
+  const unsent = outbox.entries.filter((e) => e.state !== "done").length;
+
+  /** Signing out wipes what this phone kept offline: cached claims and files, and unsent items. */
+  async function signOut() {
+    clearApiToken();
+    await authClient.signOut();
+    outbox.clear();
+    clearCache();
+    await refresh();
+  }
+
+  function confirmSignOut() {
+    if (!unsent) return void signOut();
+    Alert.alert(t.settings.signOut, t.settings.signOutPending(unsent), [
+      { text: t.common.cancel, style: "cancel" },
+      { text: t.settings.signOut, style: "destructive", onPress: () => void signOut() },
+    ]);
+  }
   const { data: health, error } = useSWR<Health>("health", () => fetch(`${API_URL}/api/v1/health`).then((r) => r.json()));
 
   function resetDemo() {
@@ -77,11 +98,7 @@ export default function Settings() {
       <Button
         label={t.settings.signOut}
         variant="outline"
-        onPress={async () => {
-          clearApiToken();
-          await authClient.signOut();
-          await refresh();
-        }}
+        onPress={confirmSignOut}
       />
       <T tone="muted" style={{ textAlign: "center" }}>
         FANILO {Constants.expoConfig?.version}

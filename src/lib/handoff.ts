@@ -8,6 +8,8 @@ export type Check = {
   text?: string;
   file?: { uri: string; mime: string; name: string; size?: number | null };
   shared?: boolean;
+  /** An outbox entry (`lib/outbox.tsx`) sent once the network came back. */
+  queued?: string;
 };
 
 const pending = new Map<string, Check>();

@@ -43,14 +43,25 @@ export async function errorFrom(res: Response): Promise<ApiError> {
   return new ApiError(res.status, err.code ?? "http_error", err.message ?? `HTTP ${res.status}`);
 }
 
+/** On a weak network a request can hang with no answer: give up after a minute unless the caller
+ * passes its own signal. */
+const TIMEOUT_MS = 60_000;
+
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = await getApiToken();
-  const res = await fetch(`${API_URL}/api/v1${path}`, {
-    ...init,
-    headers: { "content-type": "application/json", authorization: `Bearer ${token}`, ...init.headers },
-  });
-  if (!res.ok) throw await errorFrom(res);
-  return (res.status === 204 ? null : await res.json()) as T;
+  const ctrl = init.signal ? null : new AbortController();
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), TIMEOUT_MS) : null;
+  try {
+    const res = await fetch(`${API_URL}/api/v1${path}`, {
+      ...init,
+      signal: init.signal ?? ctrl?.signal,
+      headers: { "content-type": "application/json", authorization: `Bearer ${token}`, ...init.headers },
+    });
+    if (!res.ok) throw await errorFrom(res);
+    return (res.status === 204 ? null : await res.json()) as T;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 export const fetcher = <T>(path: string) => api<T>(path);
