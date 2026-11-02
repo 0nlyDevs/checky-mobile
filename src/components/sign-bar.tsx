@@ -1,4 +1,5 @@
-import { View } from "react-native";
+import { useEffect, useState } from "react";
+import { Keyboard, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui";
@@ -8,6 +9,16 @@ import { useTheme } from "@/lib/theme";
 export function SignBar({ label, onPress, busy, disabled }: { label: string; onPress: () => void; busy?: boolean; disabled?: boolean }) {
   const c = useTheme();
   const { bottom } = useSafeAreaInsets();
+  const [typing, setTyping] = useState(false);
+  useEffect(() => {
+    // iOS reports will-show before the animation, Android only did-show.
+    const show = Keyboard.addListener("keyboardDidShow", () => setTyping(true));
+    const willShow = Keyboard.addListener("keyboardWillShow", () => setTyping(true));
+    const hide = Keyboard.addListener("keyboardDidHide", () => setTyping(false));
+    const willHide = Keyboard.addListener("keyboardWillHide", () => setTyping(false));
+    return () => [show, willShow, hide, willHide].forEach((l) => l.remove());
+  }, []);
+  if (typing) return null;
   return (
     <View
       style={{
