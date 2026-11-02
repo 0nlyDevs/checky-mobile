@@ -196,7 +196,7 @@ export default function Analyse() {
       {!job && <Notice>{t.analyse.empty}</Notice>}
       {isFile && <Preview uri={p.file!} mime={p.mime ?? ""} />}
       {!isFile && !!p.url && (
-        <T tone="muted" numberOfLines={1}>
+        <T tone="muted" numberOfLines={1} ellipsizeMode="middle">
           {p.url}
         </T>
       )}

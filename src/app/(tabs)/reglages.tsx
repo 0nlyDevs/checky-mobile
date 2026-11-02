@@ -83,9 +83,11 @@ export default function Settings() {
         ) : (
           <Card style={{ gap: 6 }}>
             {rows.map(([name, check]) => (
-              <View key={name} style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <T>{name}</T>
-                <T tone="muted">
+              <View key={name} style={{ flexDirection: "row", justifyContent: "space-between", gap: 8 }}>
+                <T style={{ flex: 1, minWidth: 0 }} numberOfLines={1}>
+                  {name}
+                </T>
+                <T tone="muted" style={{ flexShrink: 0 }}>
                   {word(check.status)}
                   {check.latency_ms ? ` · ${check.latency_ms} ms` : ""}
                 </T>

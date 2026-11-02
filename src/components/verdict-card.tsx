@@ -72,7 +72,7 @@ function Card({ verdict, title, reason, sources, refLabel, desk, lang }: Props) 
           {t.app.name}
           <Text style={{ fontFamily: fonts.quote }}>.</Text>
         </Text>
-        {!!refLabel && <Text style={{ fontFamily: fonts.semibold, fontSize: 14, color: C.foreground }}>{refLabel}</Text>}
+        {!!refLabel && <Text numberOfLines={1} style={{ fontFamily: fonts.semibold, fontSize: 14, color: C.foreground, flexShrink: 0 }}>{refLabel}</Text>}
         <Text style={{ ...muted, flexShrink: 1, marginLeft: "auto" }} numberOfLines={1}>
           {words.by(desk)}
         </Text>
