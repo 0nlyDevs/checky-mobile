@@ -1,4 +1,4 @@
-import { ImageIcon, PenLine, Share2 } from "lucide-react-native";
+import { ImageSquare, PencilLine, ShareNetwork } from "@/lib/icons";
 import { useRef, useState } from "react";
 import { Share, useWindowDimensions, View } from "react-native";
 
@@ -73,7 +73,7 @@ export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { w
         lang={lang}
       />
       <Field label={t.card.reason} value={reason} onChangeText={(v) => setReason(v.slice(0, 280))} multiline style={{ minHeight: 80, textAlignVertical: "top" }} />
-      <Button label={t.card.shareImage} icon={ImageIcon} busy={sharing} onPress={image} />
+      <Button label={t.card.shareImage} icon={ImageSquare} busy={sharing} onPress={image} />
       <T tone="label">{t.card.post}</T>
       {text ? (
         <Card>
@@ -83,11 +83,11 @@ export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { w
         <T tone="muted">{t.card.postEmpty}</T>
       )}
       <View style={{ flexDirection: "row", gap: 8 }}>
-        <Button label={text ? t.card.rewrite : t.card.write} icon={PenLine} variant="outline" busy={writing} style={{ flex: 1 }} onPress={write} />
+        <Button label={text ? t.card.rewrite : t.card.write} icon={PencilLine} variant="outline" busy={writing} style={{ flex: 1 }} onPress={write} />
         {!!text && (
           <Button
             label={t.card.shareText}
-            icon={Share2}
+            icon={ShareNetwork}
             variant="outline"
             style={{ flex: 1 }}
             onPress={async () => {

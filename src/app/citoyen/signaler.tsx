@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft } from "@/lib/icons";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 import useSWR from "swr";
@@ -14,7 +14,7 @@ import type { Origin } from "@/lib/types";
 
 const ORIGINS: Origin[] = ["whatsapp", "facebook", "tiktok", "radio", "press", "other"];
 
-/** Send a tip to a newsroom; its follow-up link is remembered on this phone. */
+/** PaperPlaneTilt a tip to a newsroom; its follow-up link is remembered on this phone. */
 export default function Report() {
   const c = useTheme();
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon, Newspaper, SearchCheck } from "lucide-react-native";
+import { CaretRight, type Icon, MagnifyingGlass, Newspaper } from "@/lib/icons";
 import { Pressable, View } from "react-native";
 
 import { Brand } from "@/components/brand";
@@ -17,13 +17,13 @@ export default function Start() {
       <Brand />
       <T tone="title">{t.app.tagline}</T>
       <T tone="muted">{t.start.lead}</T>
-      <Choice icon={SearchCheck} title={t.start.citizen} hint={t.start.citizenHint} primary onPress={() => pick("citizen")} />
+      <Choice icon={MagnifyingGlass} title={t.start.citizen} hint={t.start.citizenHint} primary onPress={() => pick("citizen")} />
       <Choice icon={Newspaper} title={t.start.journalist} hint={t.start.journalistHint} onPress={() => pick("journalist")} />
     </Screen>
   );
 }
 
-function Choice({ icon: Icon, title, hint, primary, onPress }: { icon: LucideIcon; title: string; hint: string; primary?: boolean; onPress: () => void }) {
+function Choice({ icon: Icon, title, hint, primary, onPress }: { icon: Icon; title: string; hint: string; primary?: boolean; onPress: () => void }) {
   const c = useTheme();
   const fg = primary ? c.primaryForeground : c.foreground;
   return (
@@ -47,7 +47,7 @@ function Choice({ icon: Icon, title, hint, primary, onPress }: { icon: LucideIco
         <T style={{ color: fg, fontFamily: fonts.semibold, fontSize: 18 }}>{title}</T>
         <T style={{ color: primary ? c.primaryForeground : c.mutedForeground, fontSize: 14, opacity: 1 }}>{hint}</T>
       </View>
-      <ChevronRight size={22} color={fg} />
+      <CaretRight size={22} color={fg} />
     </Pressable>
   );
 }

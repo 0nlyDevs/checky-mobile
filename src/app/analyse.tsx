@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
-import { ArrowLeft, BadgeCheck, CheckSquare, ExternalLink, Sparkles, Square } from "lucide-react-native";
+import { ArrowLeft, ArrowSquareOut, CheckSquare, SealCheck, Sparkle, Square } from "@/lib/icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 
@@ -316,7 +316,7 @@ export default function Analyse() {
               <Card style={{ gap: 8 }}>
                 {fileMeta.ai_markers?.length ? (
                   <View style={styles.row}>
-                    <Sparkles size={16} color={c.verdict.misleading.ink} />
+                    <Sparkle size={16} color={c.verdict.misleading.ink} />
                     <T style={{ flex: 1, color: c.verdict.misleading.ink, fontFamily: fonts.semibold }}>{t.check.markers(fileMeta.ai_markers.join(", "))}</T>
                   </View>
                 ) : (
@@ -324,7 +324,7 @@ export default function Analyse() {
                 )}
                 {fileMeta.content_credentials && (
                   <View style={styles.row}>
-                    <BadgeCheck size={16} color={c.foreground} />
+                    <SealCheck size={16} color={c.foreground} />
                     <T style={{ flex: 1 }}>{t.check.credentials}</T>
                   </View>
                 )}
@@ -382,7 +382,7 @@ function LinkRow({ label, url }: { label: string; url: string }) {
   const c = useTheme();
   return (
     <Pressable accessibilityRole="link" onPress={() => openWeb(url)} style={[styles.row, { paddingVertical: 6 }]}>
-      <ExternalLink size={15} color={c.foreground} />
+      <ArrowSquareOut size={15} color={c.foreground} />
       <T style={{ textDecorationLine: "underline", fontSize: 15 }}>{label}</T>
     </Pressable>
   );

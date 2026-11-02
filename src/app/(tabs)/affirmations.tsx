@@ -1,5 +1,5 @@
 import { useFocusEffect, useRouter } from "expo-router";
-import { Plus } from "lucide-react-native";
+import { Plus } from "@/lib/icons";
 import { useCallback, useState } from "react";
 import { FlatList, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
