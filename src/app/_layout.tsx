@@ -15,6 +15,7 @@ import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
 import { type Check, handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
+import { ModeProvider, useMode } from "@/lib/mode";
 import { useTheme } from "@/lib/theme";
 import { WorkspaceProvider, useWorkspace } from "@/lib/workspace";
 
@@ -36,7 +37,9 @@ export default function RootLayout() {
       <SafeAreaProvider>
         {/* The desk keeps lists fresh over Socket.IO; here a pull or a screen focus refetches. */}
         <SWRConfig value={{ revalidateOnFocus: false, dedupingInterval: 4000 }}>
-          <Session />
+          <ModeProvider>
+            <Session />
+          </ModeProvider>
         </SWRConfig>
       </SafeAreaProvider>
     </ShareIntentProvider>
@@ -56,7 +59,13 @@ function Session() {
 function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) {
   const c = useTheme();
   const { current, loading, error, refresh } = useWorkspace();
-  const ready = !pending && !(signedIn && loading && !current);
+  const { mode, loaded, setMode } = useMode();
+  const ready = loaded && !pending && !(signedIn && loading && !current);
+
+  // Signing out of the desk comes back to the sign-in screen, not the citizen side.
+  useEffect(() => {
+    if (signedIn && mode !== "journalist") setMode("journalist");
+  }, [signedIn, mode, setMode]);
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => null);
@@ -78,11 +87,24 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
     );
   }
   const inDesk = signedIn && !!current;
+  const citizen = !signedIn && mode === "citizen";
   return (
     <>
       <StatusBar style="auto" />
-      {inDesk && <ShareForwarder />}
+      {inDesk && <ShareForwarder to="/analyse" />}
+      {citizen && <ShareForwarder to="/citoyen/verifier" />}
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.background } }}>
+        {/* The first screen allowed is where the app opens. */}
+        <Stack.Protected guard={!signedIn && !mode}>
+          <Stack.Screen name="accueil" />
+        </Stack.Protected>
+        <Stack.Protected guard={citizen}>
+          <Stack.Screen name="citoyen/index" />
+          <Stack.Screen name="citoyen/verifier" />
+          <Stack.Screen name="citoyen/signaler" />
+          <Stack.Screen name="citoyen/suivi/[token]" />
+          <Stack.Screen name="citoyen/verdict/[id]" />
+        </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="connexion" />
           <Stack.Screen name="inscription" />
@@ -101,8 +123,9 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   );
 }
 
-/** Something shared to FANILO from another app (a WhatsApp video, a TikTok link…) opens the analysis. */
-function ShareForwarder() {
+/** Something shared to FANILO from another app (a WhatsApp video, a TikTok link…) opens the analysis
+ * in the desk, or the "already checked?" screen for a citizen. */
+function ShareForwarder({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
   const router = useRouter();
   const { hasShareIntent, shareIntent, resetShareIntent } = useShareIntentContext();
 
@@ -123,8 +146,8 @@ function ShareForwarder() {
       if (text && text !== shareIntent.webUrl) check.text = text;
     }
     resetShareIntent();
-    if (check.file || check.url || check.text) router.push({ pathname: "/analyse", params: { id: handOff(check) } });
-  }, [hasShareIntent, shareIntent, resetShareIntent, router]);
+    if (check.file || check.url || check.text) router.push({ pathname: to, params: { id: handOff(check) } });
+  }, [hasShareIntent, shareIntent, resetShareIntent, router, to]);
 
   return null;
 }

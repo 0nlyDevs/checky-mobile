@@ -10,6 +10,11 @@ The FANILO phone app for journalists in Madagascar. A video, photo, voice note o
 
 A journalist always confirms the verdict. One tap follows the claim in the newsroom's desk.
 
+Citizens use it too, with no account. On first launch the app asks who is using it:
+
+- **Citizen:** a shared post or a pasted rumour is compared with the verdicts newsrooms have published (« Est-ce déjà vérifié ? »). Only published verdicts are shown, never an AI verdict. If nothing matches, the citizen sends it to a newsroom as a tip and follows it until its verdict comes out. A verdict can be passed on as a card image or as text with its link.
+- **Journalist:** the desk, as below.
+
 It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the responsive website. It talks to the same backend as the web desk ([`fanilo-base`](https://github.com/0nlyDevs/fanilo-base)):
 
 - **Better Auth** (in the Next.js app): email and password sign-in through the Expo plugin; the session cookie is kept in SecureStore.
@@ -19,16 +24,22 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 
 | Route | What it does |
 | --- | --- |
+| `/accueil` | First launch: citizen or journalist (kept in SecureStore, `fanilo.mode`) |
+| `/citoyen` | Citizen home: paste a rumour, the tips sent from this phone, the latest published verdicts |
+| `/citoyen/verifier` | Published verdicts that match (`/public/match`) and the public assistant's cited answer (`/public/ask`); otherwise « Signaler à une rédaction » |
+| `/citoyen/signaler` | Send a tip (`/public/tips`); its follow-up token is remembered on the phone |
+| `/citoyen/suivi/[token]` | Where the tip stands, refreshed every 30 s, and its verdict once published |
+| `/citoyen/verdict/[id]` | A published verdict: reason, post, sources; share the card image or the text with its web link |
 | `/connexion`, `/inscription` | Sign in, sign up (same accounts as the desk) |
 | `/bienvenue` | Create a newsroom (optionally with the demo claims) or join with an invitation link |
 | `/` Analyser | Pick a video/photo from the gallery, or paste a link or text |
 | `/analyse` | The check, step by step: upload → transcription → read → claims and warning signs → search → suggested verdict. Then the content, the dashed AI suggestion and the quotes it rests on, the warning signs, the file's AI traces (C2PA, generator tags such as Sora or Midjourney), reverse image search, and results to tick. **Suivre dans le desk** creates the claim and attaches the file and the ticked sources |
 | `/affirmations` | The newsroom's claims, filtered by status, searchable |
-| `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), status, AI source analysis, sources (add a link or a file), comments |
+| `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), **Partager le verdict** (the 1080 × 1080 card in French or Malagasy and the post written from the verdict, through the share sheet; sharing moves a verified claim to Publié, as in the desk), status, AI source analysis, sources (add a link or a file), comments |
 | `/verifier` | Ask every source of the newsroom; the answer streams and cites its passages |
 | `/reglages` | Account, newsroom switch, service health, demo reset (admin), sign out |
 
-Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link. A share made while signed out waits until sign-in.
+Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link in the desk, or `/citoyen/verifier` in citizen mode. A share made before a mode is chosen, or while a journalist is signed out, waits until then.
 
 ## Layout
 
@@ -96,3 +107,5 @@ npm run gen:api     # after an API schema change in fanilo-base (expects it chec
 - `POST /workspaces/{ws}/link-check {source_id}` checks an uploaded file on its transcript (or text, or EXIF).
 - `PATCH /workspaces/{ws}/sources/{id} {item_id}` attaches the analysed file to the claim created by **Suivre dans le desk**.
 - `POST /workspaces/{ws}/copilot/act` creates the claim (next FAN ref) and attaches links.
+- `POST /workspaces/{ws}/items/{id}/post {language}` writes the post for the verdict card.
+- Citizen mode: `/public/newsrooms`, `/public/verdicts`, `/public/match`, `/public/ask`, `/public/tips`, `/public/tips/{token}`. Only newsrooms that publish their verdicts appear.
