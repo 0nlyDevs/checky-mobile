@@ -42,7 +42,7 @@ export default function PublicVerdictScreen() {
   return (
     <Screen>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <View style={{ flex: 1 }} />

@@ -144,7 +144,7 @@ export default function ClaimDetail() {
     <>
     <Screen bottomInset={awaiting ? SIGN_BAR_ROOM + 48 : 48}>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="tabular" style={{ fontSize: 20 }}>
