@@ -237,7 +237,7 @@ export default function ClaimDetail() {
                   {t.check.stance[e.stance] ?? e.stance}
                   {sourceTitle(e.source_id) ? ` · ${sourceTitle(e.source_id)}` : ""}
                 </T>
-                <T style={{ fontStyle: "italic" }}>« {e.quote} »</T>
+                <T style={{ fontFamily: fonts.quote, fontSize: 17, lineHeight: 24 }}>« {e.quote} »</T>
               </View>
             ))}
             {!!a.missing && (

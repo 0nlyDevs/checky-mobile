@@ -264,7 +264,7 @@ export default function Analyse() {
                           <T style={{ fontFamily: fonts.semibold, fontSize: 14 }}>
                             {t.check.stance[e.stance] ?? e.stance} · {r ? host(r.url) : t.check.result(e.result)}
                           </T>
-                          <T style={{ fontStyle: "italic" }}>« {e.quote} »</T>
+                          <T style={{ fontFamily: fonts.quote, fontSize: 17, lineHeight: 24 }}>« {e.quote} »</T>
                         </View>
                       );
                     })}
@@ -303,7 +303,7 @@ export default function Analyse() {
                 result.signals.map((s, i) => (
                   <Card key={i} style={{ gap: 4 }}>
                     <T style={{ fontFamily: fonts.semibold }}>{t.check.signal[s.type] ?? s.type}</T>
-                    <T style={{ fontStyle: "italic" }}>« {s.quote} »</T>
+                    <T style={{ fontFamily: fonts.quote, fontSize: 17, lineHeight: 24 }}>« {s.quote} »</T>
                     {!!s.why && <T tone="muted">{s.why}</T>}
                   </Card>
                 ))

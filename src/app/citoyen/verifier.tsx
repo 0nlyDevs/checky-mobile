@@ -82,7 +82,7 @@ export default function CitizenCheck() {
       {!!answer?.answer && (
         <Section title={t.citizen.answer}>
           <Card>
-            <Text style={{ fontFamily: fonts.body, fontSize: 16, lineHeight: 24, color: c.foreground }}>{answer.answer.replace(/【(\d+)[^】]*】/g, "[$1]")}</Text>
+            <Text style={{ fontFamily: fonts.regular, fontSize: 16, lineHeight: 24, color: c.foreground }}>{answer.answer.replace(/【(\d+)[^】]*】/g, "[$1]")}</Text>
           </Card>
         </Section>
       )}
