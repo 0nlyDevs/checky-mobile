@@ -9,7 +9,7 @@ import { type CardRef, shareCard, VerdictCardView } from "@/components/verdict-c
 import { ago } from "@/lib/format";
 import { t } from "@/lib/i18n/fr";
 import { publicFetcher, type PublicVerdict, verdictLink } from "@/lib/public";
-import { fonts, useTheme } from "@/lib/theme";
+import { fonts, tracking, useTheme } from "@/lib/theme";
 import type { Verdict } from "@/lib/types";
 
 /** A published verdict, as the newsroom wrote it, to read and pass on. */
@@ -49,7 +49,7 @@ export default function PublicVerdictScreen() {
         {v.ref && <T tone="tabular">{v.ref}</T>}
       </View>
       <VerdictBadge verdict={verdict} large />
-      <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29 }}>{v.title}</T>
+      <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29, letterSpacing: tracking(22) }}>{v.title}</T>
       <T tone="muted">
         {t.citizen.by(v.newsroom.name)} · {t.citizen.published(ago(v.published_at))}
       </T>

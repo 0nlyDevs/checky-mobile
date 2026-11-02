@@ -251,7 +251,7 @@ export default function Analyse() {
 
           {a ? (
             <Section title={t.check.suggestion}>
-              <View style={{ borderWidth: 1.5, borderStyle: "dashed", borderColor: c.verdict[a.verdict].ink, backgroundColor: c.verdict[a.verdict].soft, borderRadius: radius, padding: 14, gap: 10 }}>
+              <View style={{ borderWidth: 1.5, borderStyle: "dashed", borderColor: c.verdict[a.verdict].ink, backgroundColor: c.verdict[a.verdict].soft, borderRadius: radius.card, padding: 14, gap: 10 }}>
                 <VerdictBadge verdict={a.verdict} suggested large />
                 {!!a.reason && <T>{a.reason}</T>}
                 {a.evidence.length > 0 && (
@@ -315,7 +315,7 @@ export default function Analyse() {
             <Section title={t.check.file}>
               <Card style={{ gap: 8 }}>
                 {fileMeta.ai_markers?.length ? (
-                  <View style={[styles.row, { alignItems: "flex-start", padding: 12, borderRadius: radius, backgroundColor: c.image[1] }]}>
+                  <View style={[styles.row, { alignItems: "flex-start", padding: 12, borderRadius: radius.card, backgroundColor: c.image[1] }]}>
                     <Sparkle size={16} color={c.image.strong} style={{ marginTop: 3 }} />
                     <T style={{ flex: 1, color: c.foreground, fontFamily: fonts.semibold }}>{t.check.markers(fileMeta.ai_markers.join(", "))}</T>
                   </View>
@@ -390,7 +390,7 @@ function LinkRow({ label, url }: { label: string; url: string }) {
 
 function Preview({ uri, mime }: { uri: string; mime: string }) {
   if (mime.startsWith("image/")) {
-    return <Image source={{ uri }} contentFit="contain" style={{ width: "100%", height: 220, borderRadius: radius }} accessibilityIgnoresInvertColors />;
+    return <Image source={{ uri }} contentFit="contain" style={{ width: "100%", height: 220, borderRadius: radius.card }} accessibilityIgnoresInvertColors />;
   }
   if (mime.startsWith("video/")) return <VideoPreview uri={uri} />;
   return null;
@@ -400,5 +400,5 @@ function VideoPreview({ uri }: { uri: string }) {
   const player = useVideoPlayer(uri, (pl) => {
     pl.muted = true;
   });
-  return <VideoView player={player} nativeControls contentFit="contain" style={{ width: "100%", height: 220, borderRadius: radius, backgroundColor: "#000" }} />;
+  return <VideoView player={player} nativeControls contentFit="contain" style={{ width: "100%", height: 220, borderRadius: radius.card, backgroundColor: "#000" }} />;
 }

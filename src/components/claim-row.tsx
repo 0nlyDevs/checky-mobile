@@ -4,7 +4,7 @@ import { Pressable, View } from "react-native";
 import { StatusLabel, T, VerdictBadge } from "@/components/ui";
 import { span } from "@/lib/format";
 import { t } from "@/lib/i18n/fr";
-import { fonts, useTheme } from "@/lib/theme";
+import { fonts, radius, useTheme } from "@/lib/theme";
 import type { ClaimData, Item } from "@/lib/types";
 
 export function ClaimRow({ item }: { item: Item }) {
@@ -16,7 +16,7 @@ export function ClaimRow({ item }: { item: Item }) {
     <Link href={{ pathname: "/affirmation/[id]", params: { id: item.id } }} asChild>
       <Pressable
         accessibilityRole="button"
-        style={({ pressed }) => ({ backgroundColor: c.card, borderColor: c.border, borderWidth: 1, borderRadius: 5, padding: 14, gap: 8, opacity: pressed ? 0.85 : 1 })}
+        style={({ pressed }) => ({ backgroundColor: c.card, borderColor: c.border, borderWidth: 1, borderRadius: radius.card, padding: 14, gap: 8, opacity: pressed ? 0.85 : 1 })}
       >
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
           <T tone="tabular" style={{ color: c.mutedForeground }}>

@@ -19,4 +19,8 @@ export const fonts = {
   quote: "CormorantGaramond_500Medium_Italic",
 };
 
-export const radius = 5;
+// Spec 4.2: cards 20, controls and chips fully round, small tags 6.
+export const radius = { card: 20, control: 999, tag: 6 } as const;
+
+/** Title tracking, proportional to size: -0.03 em (spec 4.3 asks -0.02 to -0.04). Body stays 0. */
+export const tracking = (size: number) => Math.round(size * -0.03 * 100) / 100;
