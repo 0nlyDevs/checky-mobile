@@ -1,6 +1,6 @@
-# FANILO mobile
+# Checky mobile
 
-The FANILO phone app for journalists in Madagascar. A video, photo, voice note or link received on WhatsApp, Facebook or TikTok goes through **Partager → FANILO**. The app then:
+The Checky phone app for journalists in Madagascar. A video, photo, voice note or link received on WhatsApp, Facebook or TikTok goes through **Partager → Checky**. The app then:
 
 1. uploads the file,
 2. transcribes what is said,

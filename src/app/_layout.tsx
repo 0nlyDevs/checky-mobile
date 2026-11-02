@@ -129,7 +129,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   );
 }
 
-/** Something shared to FANILO from another app (a WhatsApp video, a TikTok link…) opens the analysis
+/** Something shared to Checky from another app (a WhatsApp video, a TikTok link…) opens the analysis
  * in the desk, or the "already checked?" screen for a citizen. */
 function ShareForwarder({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
   const router = useRouter();

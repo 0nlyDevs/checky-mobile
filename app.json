@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FANILO",
+    "name": "Checky",
     "slug": "fanilo",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -49,7 +49,7 @@
       "expo-video",
       [
         "expo-image-picker",
-        { "photosPermission": "FANILO ouvre les photos et vidéos que vous choisissez pour les vérifier." }
+        { "photosPermission": "Checky ouvre les photos et vidéos que vous choisissez pour les vérifier." }
       ],
       [
         "expo-build-properties",

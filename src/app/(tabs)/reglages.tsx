@@ -101,7 +101,7 @@ export default function Settings() {
         onPress={confirmSignOut}
       />
       <T tone="muted" style={{ textAlign: "center" }}>
-        FANILO {Constants.expoConfig?.version}
+        Checky {Constants.expoConfig?.version}
       </T>
     </Screen>
   );
