@@ -10,10 +10,13 @@ export type Palette = {
   raised: string;
   primary: string;
   primaryForeground: string;
+  /** Pressed/hover fill of the ink primary (spec 4.10); the label stays primaryForeground. */
+  primaryPressed: string;
   muted: string;
   mutedForeground: string;
   accent: string;
   border: string;
+  rule: string;
   input: string;
   destructive: string;
   nav: string;
@@ -37,10 +40,12 @@ export const light: Palette = {
   raised: "#e9e8e2",
   primary: "#0a0a0b",
   primaryForeground: "#f3f2ee",
+  primaryPressed: "#1f1f22",
   muted: "#e9e8e2",
   mutedForeground: "#55544e",
   accent: "#e2e1da",
   border: "rgba(10,10,11,0.10)",
+  rule: "rgba(10,10,11,0.07)",
   input: "#c4c3be",
   destructive: "#b3231a",
   nav: "#0a0a0b",
@@ -68,10 +73,12 @@ export const dark: Palette = {
   raised: "#19191c",
   primary: "#f3f2ee",
   primaryForeground: "#0a0a0b",
+  primaryPressed: "#e2e1da",
   muted: "#19191c",
   mutedForeground: "#a6a5a0",
   accent: "#232327",
   border: "rgba(243,242,238,0.10)",
+  rule: "rgba(243,242,238,0.07)",
   input: "#3a3a3c",
   destructive: "#ff6a5f",
   nav: "#1c1c1f",
@@ -101,7 +108,10 @@ export const PAIRS: readonly [string, string][] = [
   ["mutedForeground", "background"],
   ["mutedForeground", "card"],
   ["mutedForeground", "muted"],
+  ["mutedForeground", "accent"],
+  ["foreground", "accent"],
   ["primaryForeground", "primary"],
+  ["primaryForeground", "primaryPressed"],
   ["navForeground", "nav"],
   ["navActiveForeground", "navActive"],
   ...(["true", "misleading", "false", "unverifiable"] as const).flatMap((v): [string, string][] => [
