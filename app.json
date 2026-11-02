@@ -14,7 +14,7 @@
     "android": {
       "package": "org.onlydevs.fanilo",
       "adaptiveIcon": {
-        "backgroundColor": "#dcc9a3",
+        "backgroundColor": "#0a0a0b",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
@@ -25,10 +25,10 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#dcc9a3",
+          "backgroundColor": "#f3f2ee",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 120,
-          "dark": { "backgroundColor": "#0e0d0b", "image": "./assets/images/splash-icon.png" }
+          "dark": { "backgroundColor": "#0a0a0b", "image": "./assets/images/splash-icon-dark.png" }
         }
       ],
       [
