@@ -96,7 +96,8 @@ export function Field({ label, style, ...rest }: TextInputProps & { label?: stri
       {label && <T style={{ fontFamily: fonts.medium, fontSize: 15 }}>{label}</T>}
       <TextInput
         placeholderTextColor={c.mutedForeground}
-        selectionColor={c.input}
+        selectionColor={c.primary + "59"}
+        cursorColor={c.primary}
         style={[
           {
             minHeight: 48,
