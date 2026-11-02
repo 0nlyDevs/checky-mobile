@@ -82,14 +82,14 @@ export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { w
       ) : (
         <T tone="muted">{t.card.postEmpty}</T>
       )}
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <Button label={text ? t.card.rewrite : t.card.write} icon={PencilLine} variant="outline" busy={writing} style={{ flex: 1 }} onPress={write} />
+      {/* Stacked: side by side, "Partager le texte" is cut at 390 and 360 px. */}
+      <View style={{ gap: 8 }}>
+        <Button label={text ? t.card.rewrite : t.card.write} icon={PencilLine} variant="outline" busy={writing} onPress={write} />
         {!!text && (
           <Button
             label={t.card.shareText}
             icon={ShareNetwork}
             variant="outline"
-            style={{ flex: 1 }}
             onPress={async () => {
               const r = await Share.share({ message: text });
               if (r.action === Share.sharedAction) onShared();
