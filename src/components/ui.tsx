@@ -162,7 +162,7 @@ export function VerdictBadge({ verdict, suggested, large, bare }: { verdict: Ver
         gap: 6,
         paddingHorizontal: bare ? 0 : large ? 12 : 8,
         paddingVertical: large ? 7 : 3,
-        borderRadius: radius.control,
+        borderRadius: radius.tag,
         backgroundColor: bare ? "transparent" : suggested ? v.soft : v.fill,
         borderWidth: suggested && !bare ? 2 : 0,
         borderStyle: "dashed",
