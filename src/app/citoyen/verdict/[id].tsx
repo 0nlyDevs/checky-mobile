@@ -66,7 +66,11 @@ export default function PublicVerdictScreen() {
       {v.sources.length > 0 && (
         <Section title={t.citizen.sources}>
           {v.sources.map((s, i) => (
-            <T key={i}>· {s}</T>
+            // The dot hangs on its own column, so a long link wraps under itself instead of leaving the dot alone on a line.
+            <View key={i} style={{ flexDirection: "row", gap: 8 }}>
+              <T>·</T>
+              <T style={{ flex: 1 }}>{s}</T>
+            </View>
           ))}
         </Section>
       )}
