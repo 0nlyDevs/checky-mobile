@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, AudioLines, FileText, ImageIcon, Link2, type LucideIcon, Paperclip, Type, Video } from "lucide-react-native";
+import { ArrowLeft, FileText, type Icon, ImageSquare, Link, Paperclip, TextT, VideoCamera, Waveform } from "@/lib/icons";
 import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import useSWR from "swr";
@@ -16,7 +16,7 @@ import { type ClaimData, type Comment, type Item, type ItemPatch, type Source, S
 import { uploadFile } from "@/lib/upload";
 import { useWorkspace, useWs } from "@/lib/workspace";
 
-const KIND_ICON: Record<string, LucideIcon> = { url: Link2, pdf: FileText, image: ImageIcon, audio: AudioLines, video: Video, text: Type };
+const KIND_ICON: Record<string, Icon> = { url: Link, pdf: FileText, image: ImageSquare, audio: Waveform, video: VideoCamera, text: TextT };
 
 /** Same rule as the desk: a verdict moves the claim to Vérifié, removing it moves it back. */
 function statusAfter(verdict: Verdict | null, status: Status): Status {
@@ -284,7 +284,7 @@ export default function ClaimDetail() {
         )}
         <Field placeholder={t.detail.linkPlaceholder} value={link} onChangeText={setLink} autoCapitalize="none" keyboardType="url" onSubmitEditing={addLink} />
         <View style={{ flexDirection: "row", gap: 8 }}>
-          <Button label={t.detail.addLink} icon={Link2} variant="outline" disabled={!/^https?:\/\//i.test(link.trim())} onPress={addLink} style={{ flex: 1 }} />
+          <Button label={t.detail.addLink} icon={Link} variant="outline" disabled={!/^https?:\/\//i.test(link.trim())} onPress={addLink} style={{ flex: 1 }} />
           <Button
             label={upload !== null ? t.detail.uploading(t.check.percent(upload)) : t.detail.attachFile}
             icon={Paperclip}

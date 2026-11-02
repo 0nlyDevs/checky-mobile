@@ -1,7 +1,7 @@
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
-import { ClipboardPaste, Images, Share2 } from "lucide-react-native";
+import { ClipboardText, Images, ShareNetwork } from "@/lib/icons";
 import { useState } from "react";
 import { View } from "react-native";
 
@@ -53,7 +53,7 @@ export default function AnalyseHome() {
       <OfflineNotice />
       <OutboxList />
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
-        <Share2 size={20} color={c.foreground} />
+        <ShareNetwork size={20} color={c.foreground} />
         <T style={{ flex: 1, fontSize: 15 }}>{t.analyse.shareHint}</T>
       </Card>
       <Button label={t.analyse.pick} icon={Images} onPress={pick} />
@@ -71,7 +71,7 @@ export default function AnalyseHome() {
         />
         <Field label={t.analyse.text} placeholder={t.analyse.textPlaceholder} value={text} onChangeText={setText} multiline style={{ minHeight: 96, textAlignVertical: "top" }} />
         <View style={{ flexDirection: "row", gap: 8 }}>
-          <Button label={t.analyse.paste} icon={ClipboardPaste} variant="outline" onPress={paste} style={{ flex: 1 }} />
+          <Button label={t.analyse.paste} icon={ClipboardText} variant="outline" onPress={paste} style={{ flex: 1 }} />
           <Button label={t.analyse.submit} onPress={go} style={{ flex: 1 }} />
         </View>
         {error && <Notice tone="error">{error}</Notice>}

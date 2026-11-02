@@ -1,4 +1,4 @@
-import { CircleCheck, CircleDashed, CircleHelp, CircleX, LoaderCircle, type LucideIcon, Radio, ShieldCheck, Timer, TriangleAlert } from "lucide-react-native";
+import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass, Question, SealCheck, SpinnerGap, Warning, X, XCircle } from "@/lib/icons";
 import { type ReactNode, useEffect } from "react";
 import {
   ActivityIndicator,
@@ -55,7 +55,7 @@ export function Card({ style, ...rest }: ViewProps) {
   return <View style={[{ backgroundColor: c.card, borderColor: c.border, borderWidth: 1, borderRadius: radius, padding: 14, gap: 10 }, style]} {...rest} />;
 }
 
-type ButtonProps = PressableProps & { label: string; icon?: LucideIcon; variant?: "primary" | "outline" | "ghost"; busy?: boolean };
+type ButtonProps = PressableProps & { label: string; icon?: Icon; variant?: "primary" | "outline" | "ghost"; busy?: boolean };
 
 export function Button({ label, icon: Icon, variant = "primary", busy, disabled, style, ...rest }: ButtonProps) {
   const c = useTheme();
@@ -126,17 +126,17 @@ export function Notice({ children, tone = "default" }: { children: ReactNode; to
       accessibilityRole={tone === "error" ? "alert" : undefined}
       style={{ flexDirection: "row", gap: 8, padding: 12, borderRadius: radius, backgroundColor: tone === "error" ? v.soft : c.muted }}
     >
-      {tone === "error" && <TriangleAlert size={16} color={v.ink} style={{ marginTop: 3 }} />}
+      {tone === "error" && <Warning size={16} color={v.ink} style={{ marginTop: 3 }} />}
       <T style={{ flex: 1, color: tone === "error" ? v.ink : c.foreground, fontSize: 15 }}>{children}</T>
     </View>
   );
 }
 
-export const VERDICT_ICON: Record<Verdict, LucideIcon> = {
-  true: CircleCheck,
-  misleading: TriangleAlert,
-  false: CircleX,
-  unverifiable: CircleHelp,
+export const VERDICT_ICON: Record<Verdict, Icon> = {
+  true: Check,
+  misleading: Warning,
+  false: X,
+  unverifiable: Question,
 };
 
 /** Never colour alone: icon + label. Confirmed = solid fill; AI suggestion = dashed outline on soft ground. */
@@ -170,11 +170,11 @@ export function VerdictBadge({ verdict, suggested, large }: { verdict: Verdict; 
   );
 }
 
-export const STATUS_ICON: Record<Status, LucideIcon> = {
-  to_check: CircleDashed,
-  in_progress: Timer,
-  verified: ShieldCheck,
-  published: Radio,
+export const STATUS_ICON: Record<Status, Icon> = {
+  to_check: Question,
+  in_progress: MagnifyingGlass,
+  verified: SealCheck,
+  published: Broadcast,
 };
 
 /** Status is not truth: ink icons, never verdict colours. */
@@ -198,7 +198,7 @@ function Spinner({ color }: { color: string }) {
   const style = useAnimatedStyle(() => ({ transform: [{ rotate: `${turn.value}deg` }] }));
   return (
     <Animated.View style={style}>
-      <LoaderCircle size={18} color={color} />
+      <SpinnerGap size={18} color={color} />
     </Animated.View>
   );
 }
@@ -214,9 +214,9 @@ export function Step({ label, state, detail }: { label: string; state: StepState
         {state === "running" ? (
           <Spinner color={c.foreground} />
         ) : state === "done" ? (
-          <CircleCheck size={18} color={c.foreground} />
+          <CheckCircle size={18} color={c.foreground} />
         ) : state === "failed" ? (
-          <CircleX size={18} color={c.verdict.false.ink} />
+          <XCircle size={18} color={c.verdict.false.ink} />
         ) : (
           <CircleDashed size={18} color={c.mutedForeground} />
         )}

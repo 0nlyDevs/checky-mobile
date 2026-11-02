@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { CheckCheck, Clock, CloudOff, CloudUpload, type LucideIcon, OctagonAlert } from "lucide-react-native";
+import { Checks, Clock, CloudArrowUp, CloudSlash, type Icon, WarningOctagon } from "@/lib/icons";
 import { Pressable, View } from "react-native";
 
 import { Button, Card, Notice, Section, T } from "@/components/ui";
@@ -33,11 +33,11 @@ function label(e: Entry): { kind: string; title: string } {
 }
 
 /** Status words with ink icons: being queued says nothing about whether a claim is true. */
-function stateOf(e: Entry, online: boolean): { Icon: LucideIcon; word: string } {
-  if (e.state === "done") return { Icon: CheckCheck, word: e.kind === "claim" ? t.outbox.state.created : t.outbox.state.done };
-  if (e.state === "failed") return { Icon: OctagonAlert, word: `${t.outbox.state.failed} · ${t.outbox.errors[e.error ?? "failed"] ?? t.outbox.errors.failed}` };
-  if (e.state === "sending") return { Icon: CloudUpload, word: t.outbox.state.sending };
-  return online ? { Icon: Clock, word: t.outbox.state.waiting } : { Icon: CloudOff, word: t.outbox.state.offline };
+function stateOf(e: Entry, online: boolean): { Icon: Icon; word: string } {
+  if (e.state === "done") return { Icon: Checks, word: e.kind === "claim" ? t.outbox.state.created : t.outbox.state.done };
+  if (e.state === "failed") return { Icon: WarningOctagon, word: `${t.outbox.state.failed} · ${t.outbox.errors[e.error ?? "failed"] ?? t.outbox.errors.failed}` };
+  if (e.state === "sending") return { Icon: CloudArrowUp, word: t.outbox.state.sending };
+  return online ? { Icon: Clock, word: t.outbox.state.waiting } : { Icon: CloudSlash, word: t.outbox.state.offline };
 }
 
 /** "À envoyer": what was captured offline, and what came back once sent. */

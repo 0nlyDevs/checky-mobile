@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, Send } from "lucide-react-native";
+import { ArrowLeft, PaperPlaneTilt } from "@/lib/icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -100,7 +100,7 @@ export default function CitizenCheck() {
       {(verdicts || fileOnly) && (
         <Button
           label={t.citizen.report}
-          icon={Send}
+          icon={PaperPlaneTilt}
           variant={found ? "outline" : "primary"}
           onPress={() => router.push({ pathname: "/citoyen/signaler", params: { id: handOff({ text: job?.url && query === job.url ? "" : query, url: job?.url }) } })}
         />

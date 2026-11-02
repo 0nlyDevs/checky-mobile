@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { ChevronRight, ClipboardPaste, Share2 } from "lucide-react-native";
+import { CaretRight, ClipboardText, ShareNetwork } from "@/lib/icons";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import useSWR from "swr";
@@ -47,12 +47,12 @@ export default function CitizenHome() {
         <T tone="muted">{t.citizen.lead}</T>
       </View>
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
-        <Share2 size={20} color={c.foreground} />
+        <ShareNetwork size={20} color={c.foreground} />
         <T style={{ flex: 1, fontSize: 15 }}>{t.citizen.shareHint}</T>
       </Card>
       <Field placeholder={t.citizen.placeholder} value={text} onChangeText={setText} multiline style={{ minHeight: 96, textAlignVertical: "top" }} />
       <View style={{ flexDirection: "row", gap: 8 }}>
-        <Button label={t.citizen.paste} icon={ClipboardPaste} variant="outline" style={{ flex: 1 }} onPress={async () => setText((await Clipboard.getStringAsync()).trim())} />
+        <Button label={t.citizen.paste} icon={ClipboardText} variant="outline" style={{ flex: 1 }} onPress={async () => setText((await Clipboard.getStringAsync()).trim())} />
         <Button label={t.citizen.check} style={{ flex: 1 }} disabled={!text.trim()} onPress={check} />
       </View>
 
@@ -71,7 +71,7 @@ export default function CitizenHome() {
                       {tip.newsroom} · {ago(tip.at)}
                     </T>
                   </View>
-                  <ChevronRight size={20} color={c.foreground} />
+                  <CaretRight size={20} color={c.foreground} />
                 </Card>
               </Pressable>
             </Link>

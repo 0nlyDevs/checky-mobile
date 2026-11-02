@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { ListChecks, MessageSquareQuote, ScanSearch, Settings } from "lucide-react-native";
+import { ChatTeardropText, Gear, ListChecks, Scan } from "@/lib/icons";
 import { type ColorValue, View } from "react-native";
 
 import { t } from "@/lib/i18n/fr";
@@ -9,7 +9,7 @@ import { fonts, useTheme } from "@/lib/theme";
 export default function TabsLayout() {
   const c = useTheme();
   const icon =
-    (Icon: typeof ScanSearch) =>
+    (Icon: typeof Scan) =>
     // eslint-disable-next-line react/display-name -- a render prop for one tab, not a component
     ({ color, focused }: { color: ColorValue; focused: boolean }) => (
       <View style={{ alignItems: "center", gap: 4 }}>
@@ -28,10 +28,10 @@ export default function TabsLayout() {
         sceneStyle: { backgroundColor: c.background },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: t.tabs.analyse, tabBarIcon: icon(ScanSearch) }} />
+      <Tabs.Screen name="index" options={{ title: t.tabs.analyse, tabBarIcon: icon(Scan) }} />
       <Tabs.Screen name="affirmations" options={{ title: t.tabs.claims, tabBarIcon: icon(ListChecks) }} />
-      <Tabs.Screen name="verifier" options={{ title: t.tabs.ask, tabBarIcon: icon(MessageSquareQuote) }} />
-      <Tabs.Screen name="reglages" options={{ title: t.tabs.settings, tabBarIcon: icon(Settings) }} />
+      <Tabs.Screen name="verifier" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
+      <Tabs.Screen name="reglages" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />
     </Tabs>
   );
 }

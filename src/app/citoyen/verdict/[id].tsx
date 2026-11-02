@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, Image as ImageIcon, Share2 } from "lucide-react-native";
+import { ArrowLeft, ImageSquare, ShareNetwork } from "@/lib/icons";
 import { useRef, useState } from "react";
 import { Pressable, Share, useWindowDimensions, View } from "react-native";
 import useSWR from "swr";
@@ -75,7 +75,7 @@ export default function PublicVerdictScreen() {
         <View style={{ flexDirection: "row", gap: 8 }}>
           <Button
             label={t.citizen.shareCard}
-            icon={ImageIcon}
+            icon={ImageSquare}
             busy={sharing}
             style={{ flex: 1 }}
             onPress={async () => {
@@ -86,7 +86,7 @@ export default function PublicVerdictScreen() {
           />
           <Button
             label={t.card.shareText}
-            icon={Share2}
+            icon={ShareNetwork}
             variant="outline"
             style={{ flex: 1 }}
             onPress={() => Share.share({ message: t.citizen.shareText(t.verdict[verdict], v.title, v.newsroom.name, text, verdictLink(v.id)) })}
