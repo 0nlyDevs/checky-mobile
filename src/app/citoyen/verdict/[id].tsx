@@ -76,12 +76,12 @@ export default function PublicVerdictScreen() {
       )}
       <Section title={t.citizen.share}>
         <VerdictCardView width={width - 32} cardRef={cardRef} verdict={verdict} title={v.title} reason={(v.reason ?? "").slice(0, 280)} sources={v.sources} refLabel={v.ref} desk={v.newsroom.name} lang="fr" />
-        <View style={{ flexDirection: "row", gap: 8 }}>
+        {/* Stacked: side by side, both labels are cut at 390 and 360 px. */}
+        <View style={{ gap: 8 }}>
           <Button
             label={t.citizen.shareCard}
             icon={ImageSquare}
             busy={sharing}
-            style={{ flex: 1 }}
             onPress={async () => {
               setSharing(true);
               await shareCard(cardRef, t.citizen.share).catch(() => null);
@@ -92,7 +92,6 @@ export default function PublicVerdictScreen() {
             label={t.card.shareText}
             icon={ShareNetwork}
             variant="outline"
-            style={{ flex: 1 }}
             onPress={() => Share.share({ message: t.citizen.shareText(t.verdict[verdict], v.title, v.newsroom.name, text, verdictLink(v.id)) })}
           />
         </View>
