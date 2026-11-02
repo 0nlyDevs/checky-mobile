@@ -2,6 +2,7 @@ import { Tabs } from "expo-router/js-tabs";
 import { ChatTeardropText, Gear, ListChecks, Scan } from "@/lib/icons";
 import { type ColorValue, View } from "react-native";
 
+import { CheckyButton } from "@/components/checky-button";
 import { InkTabBar } from "@/components/tab-bar";
 import { t } from "@/lib/i18n/fr";
 import { useTheme } from "@/lib/theme";
@@ -24,6 +25,7 @@ export default function TabsLayout() {
         <Tabs.Screen name="verifier" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
         <Tabs.Screen name="reglages" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />
       </Tabs>
+      <CheckyButton />
     </View>
   );
 }

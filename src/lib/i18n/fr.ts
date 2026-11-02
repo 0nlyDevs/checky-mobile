@@ -133,7 +133,7 @@ export const t = {
       },
     },
   },
-  tabs: { analyse: "Analyser", claims: "Affirmations", ask: "Vérifier", settings: "Réglages" },
+  tabs: { analyse: "Analyser", claims: "Affirmations", ask: "Vérifier", settings: "Réglages", checky: "Nouvelle vérification avec Checky" },
   analyse: {
     title: "Analyser",
     lead: "Une vidéo, une photo ou un lien reçu sur WhatsApp, Facebook ou TikTok ? Partagez-le vers Checky, ou choisissez-le ici.",

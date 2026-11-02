@@ -1,5 +1,5 @@
 import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass, Question, SealCheck, SpinnerGap, Warning, X, XCircle } from "@/lib/icons";
-import { type ReactNode, useEffect } from "react";
+import { type ComponentProps, type ReactNode, useEffect } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -89,7 +89,7 @@ export function Button({ label, icon: Icon, variant = "primary", busy, disabled,
   );
 }
 
-export function Field({ label, style, ...rest }: TextInputProps & { label?: string }) {
+export function Field({ label, style, ...rest }: TextInputProps & { label?: string; ref?: ComponentProps<typeof TextInput>["ref"] }) {
   const c = useTheme();
   return (
     <View style={{ gap: 6 }}>
