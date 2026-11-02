@@ -154,9 +154,11 @@ export default function ClaimDetail() {
         <StatusLabel status={item.status} />
       </View>
       <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29, letterSpacing: tracking(22) }}>{item.title}</T>
+      {!!(d.origin || d.first_seen_at) && (
       <T tone="muted">
         {[d.origin ? t.detail.origin(t.origin[d.origin] ?? d.origin) : "", d.first_seen_at ? t.claims.since(span(d.first_seen_at)) : ""].filter(Boolean).join(" · ")}
       </T>
+      )}
       {!!item.body && <T>{item.body}</T>}
       {notice && <Notice tone="error">{notice}</Notice>}
 
