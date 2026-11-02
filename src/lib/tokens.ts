@@ -23,6 +23,8 @@ export type Palette = {
   navForeground: string;
   navActive: string;
   navActiveForeground: string;
+  /** Teal scale for image examination only (never a verdict hue). strong is for icons, not body text. */
+  image: { 1: string; 2: string; 3: string; strong: string };
   verdict: Record<VerdictKey, VerdictTone>;
 };
 
@@ -45,6 +47,7 @@ export const light: Palette = {
   navForeground: "#b9b8b2",
   navActive: "#f3f2ee",
   navActiveForeground: "#0a0a0b",
+  image: { 1: "#e6f3f6", 2: "#cce7ee", 3: "#a9d6e2", strong: "#04809f" },
   verdict: {
     true: { fill: "#0b6b3a", on: "#ffffff", soft: "#e1f3e8", ink: "#0b6b3a" },
     misleading: { fill: "#8a5700", on: "#ffffff", soft: "#f9ecd2", ink: "#8a5700" },
@@ -72,6 +75,7 @@ export const dark: Palette = {
   navForeground: "#b4b3ad",
   navActive: "#f3f2ee",
   navActiveForeground: "#0a0a0b",
+  image: { 1: "#0f1a1d", 2: "#13272c", 3: "#18383f", strong: "#4cc9e4" },
   verdict: {
     true: { fill: "#3ddc84", on: "#0a0a0b", soft: "#0f2219", ink: "#3ddc84" },
     misleading: { fill: "#ffb224", on: "#0a0a0b", soft: "#29200c", ink: "#ffb224" },
@@ -95,6 +99,9 @@ export const PAIRS: readonly [string, string][] = [
   ["primaryForeground", "primaryPressed"],
   ["navForeground", "nav"],
   ["navActiveForeground", "navActive"],
+  ["foreground", "image.1"],
+  ["foreground", "image.2"],
+  ["foreground", "image.3"],
   ...(["true", "misleading", "false", "unverifiable"] as const).flatMap((v): [string, string][] => [
     [`verdict.${v}.ink`, `verdict.${v}.soft`],
     [`verdict.${v}.ink`, "background"],

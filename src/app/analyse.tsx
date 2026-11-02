@@ -315,16 +315,16 @@ export default function Analyse() {
             <Section title={t.check.file}>
               <Card style={{ gap: 8 }}>
                 {fileMeta.ai_markers?.length ? (
-                  <View style={styles.row}>
-                    <Sparkle size={16} color={c.verdict.misleading.ink} />
-                    <T style={{ flex: 1, color: c.verdict.misleading.ink, fontFamily: fonts.semibold }}>{t.check.markers(fileMeta.ai_markers.join(", "))}</T>
+                  <View style={[styles.row, { alignItems: "flex-start", padding: 12, borderRadius: radius, backgroundColor: c.image[1] }]}>
+                    <Sparkle size={16} color={c.image.strong} style={{ marginTop: 3 }} />
+                    <T style={{ flex: 1, color: c.foreground, fontFamily: fonts.semibold }}>{t.check.markers(fileMeta.ai_markers.join(", "))}</T>
                   </View>
                 ) : (
                   <T tone="muted">{t.check.noMarkers}</T>
                 )}
                 {fileMeta.content_credentials && (
                   <View style={styles.row}>
-                    <SealCheck size={16} color={c.foreground} />
+                    <SealCheck size={16} color={c.image.strong} />
                     <T style={{ flex: 1 }}>{t.check.credentials}</T>
                   </View>
                 )}
