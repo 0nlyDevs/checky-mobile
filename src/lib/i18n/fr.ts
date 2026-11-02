@@ -3,6 +3,7 @@ export const t = {
   app: { name: "Checky", tagline: "Vérifier avant de diffuser." },
   common: {
     cancel: "Annuler",
+    back: "Retour",
     retry: "Réessayer",
     open: "Ouvrir",
     save: "Enregistrer",

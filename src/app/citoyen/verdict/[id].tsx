@@ -9,7 +9,7 @@ import { type CardRef, shareCard, VerdictCardView } from "@/components/verdict-c
 import { ago } from "@/lib/format";
 import { t } from "@/lib/i18n/fr";
 import { publicFetcher, type PublicVerdict, verdictLink } from "@/lib/public";
-import { fonts, useTheme } from "@/lib/theme";
+import { fonts, tracking, useTheme } from "@/lib/theme";
 import type { Verdict } from "@/lib/types";
 
 /** A published verdict, as the newsroom wrote it, to read and pass on. */
@@ -42,14 +42,14 @@ export default function PublicVerdictScreen() {
   return (
     <Screen>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <View style={{ flex: 1 }} />
         {v.ref && <T tone="tabular">{v.ref}</T>}
       </View>
       <VerdictBadge verdict={verdict} large />
-      <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29 }}>{v.title}</T>
+      <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29, letterSpacing: tracking(22) }}>{v.title}</T>
       <T tone="muted">
         {t.citizen.by(v.newsroom.name)} · {t.citizen.published(ago(v.published_at))}
       </T>

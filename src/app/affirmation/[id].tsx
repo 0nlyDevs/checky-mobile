@@ -12,7 +12,7 @@ import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
-import { fonts, radius, useTheme } from "@/lib/theme";
+import { fonts, radius, tracking, useTheme } from "@/lib/theme";
 import { type ClaimData, type Comment, type Item, type ItemPatch, type Source, STATUSES, type Status, type Verdict, VERDICTS } from "@/lib/types";
 import { uploadFile } from "@/lib/upload";
 import { useWorkspace, useWs } from "@/lib/workspace";
@@ -144,7 +144,7 @@ export default function ClaimDetail() {
     <>
     <Screen bottomInset={awaiting ? SIGN_BAR_ROOM + 48 : 48}>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="tabular" style={{ fontSize: 20 }}>
@@ -153,10 +153,12 @@ export default function ClaimDetail() {
         <View style={{ flex: 1 }} />
         <StatusLabel status={item.status} />
       </View>
-      <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29 }}>{item.title}</T>
+      <T style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29, letterSpacing: tracking(22) }}>{item.title}</T>
+      {!!(d.origin || d.first_seen_at) && (
       <T tone="muted">
         {[d.origin ? t.detail.origin(t.origin[d.origin] ?? d.origin) : "", d.first_seen_at ? t.claims.since(span(d.first_seen_at)) : ""].filter(Boolean).join(" · ")}
       </T>
+      )}
       {!!item.body && <T>{item.body}</T>}
       {notice && <Notice tone="error">{notice}</Notice>}
 
@@ -187,7 +189,7 @@ export default function ClaimDetail() {
                       alignItems: "center",
                       justifyContent: "center",
                       gap: 6,
-                      borderRadius: radius,
+                      borderRadius: radius.control,
                       borderWidth: on ? 0 : 1,
                       borderColor: tone.ink,
                       backgroundColor: on ? tone.fill : c.card,

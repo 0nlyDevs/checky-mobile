@@ -35,7 +35,7 @@ function Choice({ icon: Icon, title, hint, primary, onPress }: { icon: Icon; tit
         alignItems: "center",
         gap: 14,
         padding: 18,
-        borderRadius: radius,
+        borderRadius: radius.card,
         backgroundColor: primary ? c.primary : c.card,
         borderWidth: primary ? 0 : 1,
         borderColor: c.input,

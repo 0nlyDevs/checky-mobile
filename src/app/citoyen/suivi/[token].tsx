@@ -25,7 +25,7 @@ export default function FollowTip() {
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 48 }} refreshControl={<RefreshControl refreshing={isLoading && !!data} onRefresh={() => void mutate()} />}>
         <View style={styles.row}>
-          <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
             <ArrowLeft size={24} color={c.foreground} />
           </Pressable>
           <T tone="title" style={{ flex: 1 }}>
