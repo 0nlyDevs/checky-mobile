@@ -13,6 +13,7 @@ import { SWRConfig } from "swr";
 
 import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
+import { type Check, handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
 import { useTheme } from "@/lib/theme";
 import { WorkspaceProvider, useWorkspace } from "@/lib/workspace";
@@ -108,19 +109,21 @@ function ShareForwarder() {
   useEffect(() => {
     if (!hasShareIntent) return;
     const file = shareIntent.files?.[0];
-    const params: Record<string, string> = { shared: "1" };
+    const check: Check = { shared: true };
     if (file) {
-      params.file = file.path.startsWith("/") ? `file://${file.path}` : file.path;
-      params.mime = file.mimeType;
-      params.name = file.fileName;
-      if (file.size) params.size = String(file.size);
+      check.file = {
+        uri: file.path.startsWith("/") ? `file://${file.path}` : file.path,
+        mime: file.mimeType,
+        name: file.fileName,
+        size: file.size,
+      };
     } else {
-      if (shareIntent.webUrl) params.url = shareIntent.webUrl;
+      if (shareIntent.webUrl) check.url = shareIntent.webUrl;
       const text = (shareIntent.text ?? "").trim();
-      if (text && text !== shareIntent.webUrl) params.text = text;
+      if (text && text !== shareIntent.webUrl) check.text = text;
     }
     resetShareIntent();
-    if (params.file || params.url || params.text) router.push({ pathname: "/analyse", params });
+    if (check.file || check.url || check.text) router.push({ pathname: "/analyse", params: { id: handOff(check) } });
   }, [hasShareIntent, shareIntent, resetShareIntent, router]);
 
   return null;

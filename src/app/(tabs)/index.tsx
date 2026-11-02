@@ -6,6 +6,7 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
+import { handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
 import { useTheme } from "@/lib/theme";
 
@@ -22,7 +23,7 @@ export default function AnalyseHome() {
     const x = text.trim();
     if (!u && !x) return setError(t.analyse.empty);
     setError(null);
-    router.push({ pathname: "/analyse", params: { ...(u ? { url: u } : {}), ...(x ? { text: x } : {}) } });
+    router.push({ pathname: "/analyse", params: { id: handOff({ url: u || undefined, text: x || undefined }) } });
   }
 
   async function paste() {
@@ -39,7 +40,7 @@ export default function AnalyseHome() {
     if (res.canceled || !a) return;
     const mime = a.mimeType ?? (a.type === "video" ? "video/mp4" : "image/jpeg");
     const name = a.fileName ?? `${a.type === "video" ? "video" : "photo"}.${mime.split("/")[1] ?? "bin"}`;
-    router.push({ pathname: "/analyse", params: { file: a.uri, mime, name, ...(a.fileSize ? { size: String(a.fileSize) } : {}) } });
+    router.push({ pathname: "/analyse", params: { id: handOff({ file: { uri: a.uri, mime, name, size: a.fileSize } }) } });
   }
 
   return (

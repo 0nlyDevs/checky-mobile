@@ -2,12 +2,13 @@ import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft, AudioLines, FileText, ImageIcon, Link2, type LucideIcon, Paperclip, Type, Video } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, Linking, Pressable, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
 import useSWR from "swr";
 
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictBadge, styles } from "@/components/ui";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
+import { openWeb } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import { type ClaimData, type Comment, type Item, type ItemPatch, type Source, STATUSES, type Status, type Verdict, VERDICTS } from "@/lib/types";
@@ -248,7 +249,7 @@ export default function ClaimDetail() {
             const Icon = KIND_ICON[s.kind] ?? FileText;
             const target = s.url ?? s.file?.download_url;
             return (
-              <Pressable key={s.id} disabled={!target} onPress={() => target && Linking.openURL(target)} accessibilityRole={target ? "link" : undefined}>
+              <Pressable key={s.id} disabled={!target} onPress={() => openWeb(target)} accessibilityRole={target ? "link" : undefined}>
                 <Card style={{ flexDirection: "row", gap: 10 }}>
                   <Icon size={18} color={c.foreground} style={{ marginTop: 3 }} />
                   <View style={{ flex: 1, gap: 2 }}>

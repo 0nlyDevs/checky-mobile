@@ -3,11 +3,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { ArrowLeft, BadgeCheck, CheckSquare, ExternalLink, Sparkles, Square } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Linking, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { Button, Card, Field, Notice, Screen, Section, Step, type StepState, T, VerdictBadge, styles } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
 import { host } from "@/lib/format";
+import { openWeb, pickUp } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
 import { postStream } from "@/lib/sse";
 import { fonts, radius, useTheme } from "@/lib/theme";
@@ -15,7 +16,6 @@ import type { CheckResult, Origin } from "@/lib/types";
 import { uploadFile, waitReady } from "@/lib/upload";
 import { useWs } from "@/lib/workspace";
 
-type Params = { url?: string; text?: string; file?: string; mime?: string; name?: string; size?: string; shared?: string };
 type Steps = Record<string, { state: StepState; detail?: string }>;
 
 const ORIGIN: Record<string, Origin> = { facebook: "facebook", whatsapp: "whatsapp", tiktok: "tiktok" };
@@ -26,7 +26,10 @@ export default function Analyse() {
   const c = useTheme();
   const router = useRouter();
   const ws = useWs();
-  const p = useLocalSearchParams<Params>();
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  // Only checks handed over in memory by the share sheet or the Analyser tab; a bare deep link gets nothing.
+  const job = pickUp(id);
+  const p = { url: job?.url, text: job?.text, file: job?.file?.uri, mime: job?.file?.mime, name: job?.file?.name, size: job?.file?.size };
   const isFile = !!p.file;
   const order = [...(isFile ? ["upload", "ingest"] : []), "read", "claims", "search", "verdict"];
 
@@ -56,7 +59,7 @@ export default function Analyse() {
       try {
         if (isFile && !sourceId.current) {
           step("upload", "running", t.check.percent(0));
-          const src = await uploadFile(ws, { uri: p.file!, mime: p.mime ?? "application/octet-stream", name: p.name ?? "fichier", size: p.size ? Number(p.size) : null }, (share) =>
+          const src = await uploadFile(ws, { uri: p.file!, mime: p.mime ?? "application/octet-stream", name: p.name ?? "fichier", size: p.size ?? null }, (share) =>
             step("upload", "running", t.check.percent(share)),
           );
           step("upload", "done");
@@ -111,11 +114,11 @@ export default function Analyse() {
   );
 
   useEffect(() => {
-    if (started.current) return;
+    if (started.current || !job) return;
     started.current = true;
     void run();
     return () => abort.current?.abort();
-  }, [run]);
+  }, [run, job]);
 
   async function track() {
     if (!result) return;
@@ -162,9 +165,10 @@ export default function Analyse() {
         <T tone="title" style={{ flex: 1 }}>
           {t.check.title}
         </T>
-        {p.shared === "1" && <T tone="muted">{t.check.shared}</T>}
+        {job?.shared && <T tone="muted">{t.check.shared}</T>}
       </View>
 
+      {!job && <Notice>{t.analyse.empty}</Notice>}
       {isFile && <Preview uri={p.file!} mime={p.mime ?? ""} />}
       {!isFile && !!p.url && (
         <T tone="muted" numberOfLines={1}>
@@ -342,7 +346,7 @@ export default function Analyse() {
 function LinkRow({ label, url }: { label: string; url: string }) {
   const c = useTheme();
   return (
-    <Pressable accessibilityRole="link" onPress={() => Linking.openURL(url)} style={[styles.row, { paddingVertical: 6 }]}>
+    <Pressable accessibilityRole="link" onPress={() => openWeb(url)} style={[styles.row, { paddingVertical: 6 }]}>
       <ExternalLink size={15} color={c.foreground} />
       <T style={{ textDecorationLine: "underline", fontSize: 15 }}>{label}</T>
     </Pressable>
