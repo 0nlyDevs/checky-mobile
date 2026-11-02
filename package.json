@@ -4,9 +4,8 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@better-auth/expo": "^1.7.12",
-    "@expo-google-fonts/anton": "^0.4.2",
-    "@expo-google-fonts/barlow-condensed": "^0.4.1",
-    "@expo-google-fonts/public-sans": "^0.4.2",
+    "@expo-google-fonts/bricolage-grotesque": "^0.4.1",
+    "@expo-google-fonts/cormorant-garamond": "^0.4.1",
     "better-auth": "^1.7.12",
     "expo": "~58.0.21",
     "expo-build-properties": "~58.0.11",
@@ -52,7 +51,8 @@
     "ios": "expo run:ios",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "gen:api": "npx -y openapi-typescript@7 ../fanilo-base/packages/shared/openapi.json -o src/lib/api-schema.d.ts"
+    "gen:api": "npx -y openapi-typescript@7 ../fanilo-base/packages/shared/openapi.json -o src/lib/api-schema.d.ts",
+    "test": "node --test src/lib/*.test.ts"
   },
   "private": true
 }

@@ -81,14 +81,14 @@ function Answer({ text }: { text: string }) {
   const c = useTheme();
   const parts = text.replace(/【(\d+)[^】]*】/g, "[$1]").split(/(\*\*[^*]+\*\*|\[\d+\])/g);
   return (
-    <Text style={{ fontFamily: fonts.body, fontSize: 16, lineHeight: 24, color: c.foreground }}>
+    <Text style={{ fontFamily: fonts.regular, fontSize: 16, lineHeight: 24, color: c.foreground }}>
       {parts.map((part, i) =>
         /^\*\*/.test(part) ? (
           <Text key={i} style={{ fontFamily: fonts.bold }}>
             {part.slice(2, -2)}
           </Text>
         ) : /^\[\d+\]$/.test(part) ? (
-          <Text key={i} style={{ fontFamily: fonts.tabular, color: c.mutedForeground }}>
+          <Text key={i} style={{ fontFamily: fonts.semibold, color: c.mutedForeground }}>
             {part}
           </Text>
         ) : (

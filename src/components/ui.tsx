@@ -26,11 +26,11 @@ type Tone = "default" | "muted" | "title" | "label" | "tabular";
 export function T({ tone = "default", style, ...rest }: TextProps & { tone?: Tone }) {
   const c = useTheme();
   const base = {
-    default: { fontFamily: fonts.body, fontSize: 16, lineHeight: 23, color: c.foreground },
-    muted: { fontFamily: fonts.body, fontSize: 14, lineHeight: 20, color: c.mutedForeground },
-    title: { fontFamily: fonts.title, fontSize: 30, lineHeight: 38, color: c.foreground, letterSpacing: 0.3 },
+    default: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 23, color: c.foreground },
+    muted: { fontFamily: fonts.regular, fontSize: 14, lineHeight: 20, color: c.mutedForeground },
+    title: { fontFamily: fonts.display, fontSize: 30, lineHeight: 38, color: c.foreground, letterSpacing: 0.3 },
     label: { fontFamily: fonts.semibold, fontSize: 13, lineHeight: 18, color: c.mutedForeground, letterSpacing: 0.4, textTransform: "uppercase" as const },
-    tabular: { fontFamily: fonts.tabular, fontSize: 16, lineHeight: 20, color: c.foreground, fontVariant: ["tabular-nums" as const] },
+    tabular: { fontFamily: fonts.semibold, fontSize: 16, lineHeight: 20, color: c.foreground, fontVariant: ["tabular-nums" as const] },
   }[tone];
   return <Text style={[base, style]} {...rest} />;
 }
@@ -96,7 +96,7 @@ export function Field({ label, style, ...rest }: TextInputProps & { label?: stri
       {label && <T style={{ fontFamily: fonts.medium, fontSize: 15 }}>{label}</T>}
       <TextInput
         placeholderTextColor={c.mutedForeground}
-        selectionColor={c.signal}
+        selectionColor={c.input}
         style={[
           {
             minHeight: 48,
@@ -105,7 +105,7 @@ export function Field({ label, style, ...rest }: TextInputProps & { label?: stri
             borderRadius: radius,
             paddingHorizontal: 12,
             paddingVertical: 10,
-            fontFamily: fonts.body,
+            fontFamily: fonts.regular,
             fontSize: 16,
             color: c.foreground,
             backgroundColor: c.card,
@@ -222,7 +222,7 @@ export function Step({ label, state, detail }: { label: string; state: StepState
         )}
       </View>
       <View style={{ flex: 1 }}>
-        <T style={{ color, fontFamily: state === "running" ? fonts.semibold : fonts.body }}>{label}</T>
+        <T style={{ color, fontFamily: state === "running" ? fonts.semibold : fonts.regular }}>{label}</T>
         {!!detail && <T tone="muted">{detail}</T>}
       </View>
     </View>
@@ -254,12 +254,12 @@ export function Chip({ label, selected, onPress }: { label: string; selected?: b
         justifyContent: "center",
         borderRadius: 999,
         borderWidth: 1,
-        // Selection is one of the three places the signal yellow may appear.
-        borderColor: selected ? c.signal : c.border,
-        backgroundColor: selected ? c.signal : c.card,
+        // Selected = the ink primary with its paired label.
+        borderColor: selected ? c.primary : c.border,
+        backgroundColor: selected ? c.primary : c.card,
       }}
     >
-      <Text style={{ fontFamily: selected ? fonts.semibold : fonts.medium, fontSize: 14, color: selected ? "#14201d" : c.foreground }}>{label}</Text>
+      <Text style={{ fontFamily: selected ? fonts.semibold : fonts.medium, fontSize: 14, color: selected ? c.primaryForeground : c.foreground }}>{label}</Text>
     </Pressable>
   );
 }

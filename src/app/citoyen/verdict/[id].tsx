@@ -60,7 +60,7 @@ export default function PublicVerdictScreen() {
       )}
       {!!v.post && v.post !== v.reason && (
         <Card>
-          <T>{v.post}</T>
+          <T style={{ fontFamily: fonts.quote, fontSize: 17, lineHeight: 24 }}>{v.post}</T>
         </Card>
       )}
       {v.sources.length > 0 && (

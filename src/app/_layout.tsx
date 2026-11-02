@@ -1,6 +1,5 @@
-import { Anton_400Regular } from "@expo-google-fonts/anton";
-import { BarlowCondensed_600SemiBold } from "@expo-google-fonts/barlow-condensed";
-import { PublicSans_400Regular, PublicSans_500Medium, PublicSans_600SemiBold, PublicSans_700Bold } from "@expo-google-fonts/public-sans";
+import { BricolageGrotesque_400Regular, BricolageGrotesque_500Medium, BricolageGrotesque_600SemiBold, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from "@expo-google-fonts/bricolage-grotesque";
+import { CormorantGaramond_500Medium_Italic } from "@expo-google-fonts/cormorant-garamond";
 import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
 import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
@@ -26,12 +25,12 @@ SplashScreen.preventAutoHideAsync().catch(() => null);
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    PublicSans_400Regular,
-    PublicSans_500Medium,
-    PublicSans_600SemiBold,
-    PublicSans_700Bold,
-    BarlowCondensed_600SemiBold,
-    Anton_400Regular,
+    BricolageGrotesque_400Regular,
+    BricolageGrotesque_500Medium,
+    BricolageGrotesque_600SemiBold,
+    BricolageGrotesque_700Bold,
+    BricolageGrotesque_800ExtraBold,
+    CormorantGaramond_500Medium_Italic,
   });
   if (!loaded) return null;
   return (
