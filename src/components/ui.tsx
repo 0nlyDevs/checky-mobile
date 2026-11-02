@@ -1,5 +1,5 @@
 import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass, Question, SealCheck, SpinnerGap, Warning, X, XCircle } from "@/lib/icons";
-import { type ComponentProps, type ReactNode, useEffect } from "react";
+import { type ComponentProps, type ReactNode, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -274,23 +274,28 @@ export function Section({ title, children, note }: { title: string; children: Re
 
 export function Chip({ label, selected, onPress }: { label: string; selected?: boolean; onPress?: () => void }) {
   const c = useTheme();
+  const [pressed, setPressed] = useState(false);
+  const on = selected || pressed;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       style={{
-        minHeight: 36,
-        paddingHorizontal: 14,
+        minHeight: 44,
+        paddingHorizontal: 16,
         justifyContent: "center",
         borderRadius: radius.control,
         borderWidth: 1,
-        // Selected = the ink primary with its paired label.
-        borderColor: selected ? c.primary : c.border,
-        backgroundColor: selected ? c.primary : c.card,
+        // Selected = the ink primary with its paired label; pressed = primaryPressed fill.
+        borderColor: selected || pressed ? c.primary : c.border,
+        backgroundColor: pressed ? c.primaryPressed : selected ? c.primary : c.card,
+        transform: [{ scale: pressed ? 0.97 : 1 }],
       }}
     >
-      <Text style={{ fontFamily: selected ? fonts.semibold : fonts.medium, fontSize: 14, color: selected ? c.primaryForeground : c.foreground }}>{label}</Text>
+      <Text style={{ fontFamily: selected ? fonts.semibold : fonts.medium, fontSize: 14, color: on ? c.primaryForeground : c.foreground }}>{label}</Text>
     </Pressable>
   );
 }
