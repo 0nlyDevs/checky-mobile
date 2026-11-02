@@ -7,4 +7,9 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*'],
   },
+  {
+    // phosphor-react-native only declares import/require conditions in "exports"; the resolver
+    // finds no "default" condition, though Metro (react-native field) and tsc resolve it.
+    rules: { 'import/no-unresolved': ['error', { ignore: ['^phosphor-react-native$'] }] },
+  },
 ]);
