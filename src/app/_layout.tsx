@@ -27,6 +27,7 @@ import { ModeProvider, useMode } from "@/lib/mode";
 import { onReconnect } from "@/lib/network";
 import { askToNotify } from "@/lib/notify";
 import { holdForBackground, OutboxProvider, useOutbox } from "@/lib/outbox";
+import { usePendingProfile } from "@/lib/press-card";
 import { useTheme } from "@/lib/theme";
 import { WorkspaceProvider, useWorkspace } from "@/lib/workspace";
 
@@ -80,6 +81,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   const c = useTheme();
   const { current, loading, error, refresh } = useWorkspace();
   const { mode, loaded, setMode } = useMode();
+  const profile = usePendingProfile(signedIn);
   const ready = loaded && !pending && !(signedIn && loading && !current);
   const router = useRouter();
   const chosen = useRef<string | null | undefined>(undefined);
@@ -146,6 +148,12 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
       {inDesk && <NotificationOpener />}
       {inDesk && <NativeSurfaces />}
       {citizen && <ShareForwarder to="/citizen/verify" />}
+      {signedIn && profile.pending && (
+        <View style={{ padding: 12, paddingTop: 48, gap: 8, backgroundColor: c.background }}>
+          {profile.error ? <Notice tone="error">{`${profile.error} ${t.auth.cardRetry}`}</Notice> : <Notice>{t.auth.cardSending}</Notice>}
+          {profile.error && <Button label={t.common.retry} onPress={() => void profile.retry()} />}
+        </View>
+      )}
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.background } }}>
         {/* The first screen allowed is where the app opens. */}
         <Stack.Protected guard={!signedIn && !mode}>
