@@ -50,7 +50,7 @@ export default function Claims() {
           <View style={{ gap: 12, marginBottom: 4 }}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
               <T tone="title">{t.claims.title}</T>
-              <Button label={t.claims.new} icon={Plus} variant="outline" onPress={() => router.push("/nouvelle")} />
+              <Button label={t.claims.new} icon={Plus} variant="outline" onPress={() => router.push("/new")} />
             </View>
             <Field placeholder={t.claims.search} value={q} onChangeText={setQ} returnKeyType="search" autoCorrect={false} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>

@@ -38,7 +38,7 @@ export default function AnalyseHome() {
     const x = text.trim();
     if (!u && !x) return setError(t.analyse.empty);
     setError(null);
-    router.push({ pathname: "/analyse", params: { id: handOff({ url: u || undefined, text: x || undefined }) } });
+    router.push({ pathname: "/analyze", params: { id: handOff({ url: u || undefined, text: x || undefined }) } });
   }
 
   async function paste() {
@@ -53,10 +53,10 @@ export default function AnalyseHome() {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["videos", "images"], quality: 1, allowsEditing: false, exif: true });
     const a = res.assets?.[0];
     if (res.canceled || !a) return;
-    router.push({ pathname: "/analyse", params: { id: handOff({ file: asPicked(a) }) } });
+    router.push({ pathname: "/analyze", params: { id: handOff({ file: asPicked(a) }) } });
   }
   // Android recreated the app while the picker was open: the picked file waits here.
-  usePendingPick((file) => router.push({ pathname: "/analyse", params: { id: handOff({ file }) } }));
+  usePendingPick((file) => router.push({ pathname: "/analyze", params: { id: handOff({ file }) } }));
 
   return (
     <Screen bottomInset={inset}>

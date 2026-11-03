@@ -95,3 +95,12 @@ test("a QR pointed at another registry entry borrows nothing from it", () => {
   const vr = checkSeal(v.verdict_url, { ...store, registry: [{ ...decoy, id: "3f1c2a4e-8b7d-4c1e-9a2b-5d6e7f8a9b0c" }] });
   assert.equal(vr.status === "authentic" && vr.demo, false);
 });
+
+test("the web's English paths read like the French ones printed before them", () => {
+  const english = (url: string) => url.replace("/verifies/", "/verdicts/").replace("/sceau/", "/seal/");
+  assert.equal(checkSeal(english(v.verdict_url), store).status, "authentic");
+  assert.equal(checkSeal(english(v.communique_url), store).status, "authentic");
+  assert.equal(checkSeal(english(v.legacy_url), store).status, "authentic");
+  assert.equal(parseSeal(english(v.verdict_url))?.type, "verdict");
+  assert.equal(parseSeal(english(v.legacy_url))?.type, "communique_legacy");
+});

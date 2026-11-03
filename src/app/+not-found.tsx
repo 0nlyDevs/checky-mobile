@@ -7,5 +7,5 @@ import { useMode } from "@/lib/mode";
 export default function NotFound() {
   const router = useRouter();
   const { mode } = useMode();
-  return <StatusScreen kind="notFound" onHome={() => router.replace(mode === "citizen" ? "/citoyen" : mode === "journalist" ? "/" : "/accueil")} />;
+  return <StatusScreen kind="notFound" onHome={() => router.replace(mode === "citizen" ? "/citizen" : mode === "journalist" ? "/" : "/home")} />;
 }

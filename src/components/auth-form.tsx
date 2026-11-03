@@ -21,7 +21,7 @@ export function AuthForm({ mode }: { mode: "in" | "up" }) {
 
   // The citizen screens only exist in citizen mode, so move once the mode has switched.
   useEffect(() => {
-    if (who === "citizen") router.replace("/citoyen");
+    if (who === "citizen") router.replace("/citizen");
   }, [who, router]);
 
   async function submit() {
@@ -86,7 +86,7 @@ export function AuthForm({ mode }: { mode: "in" | "up" }) {
           disabled={!email || password.length < 1}
           onPress={submit}
         />
-        <Link href={mode === "in" ? "/inscription" : "/connexion"} replace style={{ alignSelf: "center", padding: 12 }}>
+        <Link href={mode === "in" ? "/sign-up" : "/sign-in"} replace style={{ alignSelf: "center", padding: 12 }}>
           <T style={{ textDecorationLine: "underline" }}>{mode === "in" ? t.auth.noAccount : t.auth.haveAccount}</T>
         </Link>
         <Button label={t.auth.citizen} variant="outline" onPress={() => setMode("citizen")} />

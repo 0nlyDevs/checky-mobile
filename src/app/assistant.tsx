@@ -50,14 +50,18 @@ function appRoute(href: string, desk: boolean): string | null {
   const path = href.replace(/^https?:\/\/[^/]+/, "").split("?")[0];
   const m = (re: RegExp) => path.match(re);
   let x: RegExpMatchArray | null;
-  if ((x = m(/^\/verifies\/([\w-]+)$/))) return `/citoyen/verdict/${x[1]}`;
-  if (path === "/verifies") return "/verdicts";
-  if (!desk && (x = m(/^\/suivi\/([\w-]+)$/))) return `/citoyen/suivi/${x[1]}`;
-  if (!desk && path === "/signaler") return "/citoyen/signaler";
+  // The web's English paths, and the French ones an older API still sends.
+  if ((x = m(/^\/(?:verdicts|verifies)\/([\w-]+)$/))) return `/citizen/verdict/${x[1]}`;
+  if (path === "/verdicts" || path === "/verifies") return "/verdicts";
+  if (!desk && (x = m(/^\/(?:track|suivi)\/([\w-]+)$/))) return `/citizen/track/${x[1]}`;
+  if (!desk && (path === "/report" || path === "/signaler")) return "/citizen/report";
   if (!desk) return null;
-  if ((x = m(/^\/w\/[\w-]+\/affirmations\/([\w-]+)$/))) return `/affirmation/${x[1]}`;
+  if ((x = m(/^\/w\/[\w-]+\/(?:claims|affirmations)\/([\w-]+)$/))) return `/claim/${x[1]}`;
   const page = m(/^\/w\/[\w-]+\/([\w-]+)$/)?.[1];
-  const tabs: Record<string, string> = { affirmations: "/affirmations", verifier: "/", analyser: "/", rubrique: "/rubrique", parametres: "/reglages", annuaire: "/annuaire", chiffres: "/chiffres", registre: "/registre" };
+  const tabs: Record<string, string> = {
+    claims: "/claims", verify: "/", analyze: "/", beat: "/beat", settings: "/settings", directory: "/directory", figures: "/figures", registry: "/registry",
+    affirmations: "/claims", verifier: "/", analyser: "/", rubrique: "/beat", parametres: "/settings", annuaire: "/directory", chiffres: "/figures", registre: "/registry",
+  };
   return page ? (tabs[page] ?? null) : null;
 }
 
@@ -154,13 +158,13 @@ export default function Assistant() {
           newsroom: res.newsroom?.name ?? ac.newsroom_name ?? "",
           at: new Date().toISOString(),
         });
-        patchAction(turn, ac.id, { state: "done", outcome: a.sent(res.ref), link: `/citoyen/suivi/${res.token}` });
+        patchAction(turn, ac.id, { state: "done", outcome: a.sent(res.ref), link: `/citizen/track/${res.token}` });
       } else if (ws) {
         const res = await api<{ item_id: string; ref: string | null }>(`/workspaces/${ws}/copilot/act`, {
           method: "POST",
           body: JSON.stringify({ kind: ac.kind, item_id: ac.item_id, title: ac.title, body: ac.text, origin: ac.origin, url: ac.url, status: ac.status }),
         });
-        patchAction(turn, ac.id, { state: "done", outcome: res.ref ? `${a.done} ${res.ref}.` : a.done, link: `/affirmation/${res.item_id}` });
+        patchAction(turn, ac.id, { state: "done", outcome: res.ref ? `${a.done} ${res.ref}.` : a.done, link: `/claim/${res.item_id}` });
       }
     } catch (err) {
       const note = err instanceof ApiError && err.status === 403 ? a.forbidden : err instanceof ApiError && err.status === 429 ? a.tooMany : a.actFailed;
@@ -233,7 +237,7 @@ export default function Assistant() {
                         <Pressable
                           key={ci.n}
                           accessibilityRole="link"
-                          onPress={() => (ci.id && ci.verdict ? router.push({ pathname: "/citoyen/verdict/[id]", params: { id: ci.id } }) : openWeb(ci.url))}
+                          onPress={() => (ci.id && ci.verdict ? router.push({ pathname: "/citizen/verdict/[id]", params: { id: ci.id } }) : openWeb(ci.url))}
                           style={[styles.row, { gap: 6 }]}
                         >
                           <T style={{ flex: 1, textDecorationLine: "underline" }} numberOfLines={2}>

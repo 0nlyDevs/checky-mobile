@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import { qrPath, shortLink } from "./qr.ts";
 
-const URL = "https://checky.mg/verifies/2b1f0c7e-1111-4222-8333-944445555666#s=eyJpZCI6IngifQ.k1.c2lnbmF0dXJl";
+const URL = "https://checky.mg/verdicts/2b1f0c7e-1111-4222-8333-944445555666#s=eyJpZCI6IngifQ.k1.c2lnbmF0dXJl";
 
 test("the seal QR is one path inside its quiet zone", () => {
   const { box, d } = qrPath(URL);

@@ -22,10 +22,10 @@ export default function TabsLayout() {
         screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: c.background } }}
       >
         <Tabs.Screen name="index" options={{ title: t.tabs.analyse, tabBarIcon: icon(Scan) }} />
-        <Tabs.Screen name="rubrique" options={{ title: t.rubrique.tab, tabBarIcon: icon(Newspaper) }} />
-        <Tabs.Screen name="affirmations" options={{ title: t.tabs.claims, tabBarIcon: icon(ListChecks) }} />
-        <Tabs.Screen name="verifier" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
-        <Tabs.Screen name="reglages" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />
+        <Tabs.Screen name="beat" options={{ title: t.rubrique.tab, tabBarIcon: icon(Newspaper) }} />
+        <Tabs.Screen name="claims" options={{ title: t.tabs.claims, tabBarIcon: icon(ListChecks) }} />
+        <Tabs.Screen name="verify" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
+        <Tabs.Screen name="settings" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />
       </Tabs>
       <CheckyButton />
     </View>

@@ -41,7 +41,7 @@ export default function NewClaim() {
         method: "POST",
         body: JSON.stringify({ kind: "create_claim", title: title.trim(), origin }),
       });
-      router.replace({ pathname: "/affirmation/[id]", params: { id: made.item_id } });
+      router.replace({ pathname: "/claim/[id]", params: { id: made.item_id } });
     } catch (e) {
       if (isNetworkError(e) || !(await isOnline())) return later();
       setError(true);
