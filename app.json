@@ -53,7 +53,7 @@
         "expo-image-picker",
         {
           "photosPermission": "Checky ouvre les photos et vidéos que vous choisissez pour les vérifier.",
-          "cameraPermission": "Checky photographie le papier que vous voulez vérifier.",
+          "cameraPermission": "Checky photographie le papier que vous voulez vérifier, et votre carte de presse à l'inscription.",
           "microphonePermission": false
         }
       ],
