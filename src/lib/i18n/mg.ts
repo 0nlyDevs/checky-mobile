@@ -544,6 +544,7 @@ export const mg: Overrides = {
   image: {
     title: "Izay lazain'ny sary",
     pick: "Sary avy amin'ny galerie",
+    another: "Diniho sary hafa",
     permission: "Mila miditra amin'ny saryo i Checky mba handinihana ilay safidinao.",
     lead: "Famantarana fotsiny, tsy porofo mihitsy: mety ho noforonina na nesorina tamin'ny toerany ihany ny sary tsy misy marika.",
     checking: "Eo am-pandinihana ny sary…",

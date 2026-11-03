@@ -17,6 +17,7 @@ import { Button, Card, Field, Notice, Screen, Section, T } from "@/components/ui
 import { cachedAt } from "@/lib/cache";
 import { ago } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
+import { asPicked, type Picked, usePendingPick } from "@/lib/picked";
 import { useT } from "@/lib/i18n";
 import { useMode } from "@/lib/mode";
 import { deviceCountry, type MyTip, myTips, publicFetcher } from "@/lib/public";
@@ -59,13 +60,19 @@ export default function CitizenHome() {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 1, allowsEditing: false, exif: true });
     const a = res.assets?.[0];
     if (res.canceled || !a) return;
-    const mime = a.mimeType ?? "image/jpeg";
-    const name = a.fileName ?? `photo.${mime.split("/")[1] ?? "jpg"}`;
+    examine(asPicked(a));
+  }
+
+  function examine(file: Picked) {
     router.push({
       pathname: "/citoyen/verifier",
-      params: { id: handOff({ text: text.trim() || undefined, file: { uri: a.uri, mime, name, size: a.fileSize } }) },
+      params: { id: handOff({ text: text.trim() || undefined, file }) },
     });
   }
+  // Android recreated this screen while the picker was open: pick the photo up where it waited.
+  usePendingPick((file) => {
+    if (file.mime.startsWith("image/")) examine(file);
+  });
 
   return (
     <View style={{ flex: 1 }}>

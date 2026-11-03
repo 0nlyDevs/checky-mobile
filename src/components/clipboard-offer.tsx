@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
+import { kv } from "@/lib/kv";
 import { useEffect, useState } from "react";
 import { AppState, Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -42,9 +42,9 @@ export function ClipboardOffer({ to }: { to: "/analyse" | "/citoyen/verifier" })
           const kind = worthOffering(value);
           if (!kind) return;
           const print = fingerprint(value);
-          const next = rememberOffer(await SecureStore.getItemAsync(KEY), print);
+          const next = rememberOffer(await kv.getItemAsync(KEY), print);
           if (!next) return;
-          await SecureStore.setItemAsync(KEY, next);
+          await kv.setItemAsync(KEY, next);
           if (live) setClip({ value, kind });
         } catch {
           // no access: nothing offered

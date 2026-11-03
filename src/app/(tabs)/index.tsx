@@ -10,6 +10,7 @@ import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
 import { handOff } from "@/lib/handoff";
+import { asPicked, usePendingPick } from "@/lib/picked";
 import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
@@ -52,10 +53,10 @@ export default function AnalyseHome() {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["videos", "images"], quality: 1, allowsEditing: false, exif: true });
     const a = res.assets?.[0];
     if (res.canceled || !a) return;
-    const mime = a.mimeType ?? (a.type === "video" ? "video/mp4" : "image/jpeg");
-    const name = a.fileName ?? `${a.type === "video" ? "video" : "photo"}.${mime.split("/")[1] ?? "bin"}`;
-    router.push({ pathname: "/analyse", params: { id: handOff({ file: { uri: a.uri, mime, name, size: a.fileSize } }) } });
+    router.push({ pathname: "/analyse", params: { id: handOff({ file: asPicked(a) }) } });
   }
+  // Android recreated the app while the picker was open: the picked file waits here.
+  usePendingPick((file) => router.push({ pathname: "/analyse", params: { id: handOff({ file }) } }));
 
   return (
     <Screen bottomInset={inset}>

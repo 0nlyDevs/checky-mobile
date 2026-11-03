@@ -1,6 +1,6 @@
 import { fetch as expoFetch } from "expo/fetch";
 import { File } from "expo-file-system";
-import * as SecureStore from "expo-secure-store";
+import { kv } from "@/lib/kv";
 
 import { errorFrom } from "@/lib/api";
 import type { components } from "@/lib/api-schema";
@@ -63,7 +63,7 @@ const TIPS = "fanilo.tips";
 
 export async function myTips(): Promise<MyTip[]> {
   try {
-    return JSON.parse((await SecureStore.getItemAsync(TIPS)) ?? "[]") as MyTip[];
+    return JSON.parse((await kv.getItemAsync(TIPS)) ?? "[]") as MyTip[];
   } catch {
     return [];
   }
@@ -71,5 +71,5 @@ export async function myTips(): Promise<MyTip[]> {
 
 export async function rememberTip(tip: MyTip): Promise<void> {
   const all = [tip, ...(await myTips()).filter((t) => t.token !== tip.token)].slice(0, 12);
-  await SecureStore.setItemAsync(TIPS, JSON.stringify(all)).catch(() => null);
+  await kv.setItemAsync(TIPS, JSON.stringify(all)).catch(() => null);
 }

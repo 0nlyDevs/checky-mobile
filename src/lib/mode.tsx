@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import { kv } from "@/lib/kv";
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 export type Mode = "citizen" | "journalist";
@@ -13,7 +13,7 @@ export function ModeProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    SecureStore.getItemAsync(KEY)
+    kv.getItemAsync(KEY)
       .then((v) => set(v === "citizen" || v === "journalist" ? v : null))
       .catch(() => null)
       .finally(() => setLoaded(true));
@@ -25,7 +25,7 @@ export function ModeProvider({ children }: { children: ReactNode }) {
       loaded,
       setMode: (m) => {
         set(m);
-        SecureStore.setItemAsync(KEY, m).catch(() => null);
+        kv.setItemAsync(KEY, m).catch(() => null);
       },
     }),
     [mode, loaded],

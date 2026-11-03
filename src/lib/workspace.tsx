@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import { kv } from "@/lib/kv";
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
@@ -24,7 +24,7 @@ export function WorkspaceProvider({ children, signedIn }: { children: ReactNode;
   const [chosen, setChosen] = useState<string | null>(null);
 
   useEffect(() => {
-    SecureStore.getItemAsync(KEY)
+    kv.getItemAsync(KEY)
       .then(setChosen)
       .catch(() => null);
   }, []);
@@ -39,7 +39,7 @@ export function WorkspaceProvider({ children, signedIn }: { children: ReactNode;
       current,
       choose: (id) => {
         setChosen(id);
-        SecureStore.setItemAsync(KEY, id).catch(() => null);
+        kv.setItemAsync(KEY, id).catch(() => null);
       },
       refresh: () => mutate(),
     };

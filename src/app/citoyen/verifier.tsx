@@ -1,5 +1,6 @@
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, ArrowSquareOut, PaperPlaneTilt, SealCheck } from "@/lib/icons";
+import { ArrowLeft, ArrowSquareOut, ImageSquare, PaperPlaneTilt, SealCheck } from "@/lib/icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -12,6 +13,7 @@ import { day, tr, useLang, useT } from "@/lib/i18n";
 import { deviceCountry, type Fact, publicApi, type Review, type Verify } from "@/lib/public";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import { goBack } from "@/lib/nav";
+import { asPicked, type Picked, usePendingPick } from "@/lib/picked";
 
 const LONE_URL = /^https?:\/\/\S+$/i;
 
@@ -25,8 +27,22 @@ export default function CitizenCheck() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const job = pickUp(id);
-  const image = job?.file && job.file.mime.startsWith("image/") ? job.file : null;
-  const video = job?.file && !image ? job.file : null;
+  // A photo shared, picked on the home, or added here; a video only gets a note.
+  const [image, setImage] = useState<Picked | null>(job?.file && job.file.mime.startsWith("image/") ? job.file : null);
+  const video = job?.file && !job.file.mime.startsWith("image/") ? job.file : null;
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  usePendingPick((file) => {
+    if (file.mime.startsWith("image/")) setImage(file);
+  });
+
+  async function addPhoto() {
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) return setPhotoError(tr().image.permission);
+    setPhotoError(null);
+    const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 1, allowsEditing: false, exif: true });
+    const a = res.assets?.[0];
+    if (!res.canceled && a) setImage(asPicked(a));
+  }
   const [query, setQuery] = useState((job?.text ?? job?.url ?? "").trim());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,8 +89,10 @@ export default function CitizenCheck() {
         </T>
       </View>
 
-      {image && <ImageCheckCard file={image} />}
+      {image && <ImageCheckCard key={image.uri} file={image} />}
       {video && <Notice>{t.image.video}</Notice>}
+      <Button label={image ? t.image.another : t.image.pick} icon={ImageSquare} variant="outline" onPress={addPhoto} />
+      {photoError && <Notice tone="error">{photoError}</Notice>}
 
       <Field label={t.citizen.describe} value={query} onChangeText={setQuery} multiline style={{ minHeight: 80, textAlignVertical: "top" }} />
       <Button label={t.citizen.check} busy={busy} disabled={query.trim().length < 3} onPress={() => run(query)} />

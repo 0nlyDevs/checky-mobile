@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import { kv } from "@/lib/kv";
 import { useSyncExternalStore } from "react";
 
 import { isLang, type Lang, langFromLocale, LOCALES, merge, type Messages } from "./core";
@@ -10,7 +10,7 @@ export { LANGS, NAMES, type Lang, type Messages } from "./core";
 
 /**
  * The interface language. French is the source (`fr.ts`); `mg.ts` and `en.ts` override the keys they
- * know and French fills the rest. The choice is kept in SecureStore like the app's other preferences;
+ * know and French fills the rest. The choice is kept in `lib/kv` (SecureStore, or a private file) like the app's other preferences;
  * until one is made, the phone's language decides (Malagasy, French, otherwise English).
  */
 const DICTS: Record<Lang, Messages> = { fr, mg: merge<Messages>(fr, mg), en: merge<Messages>(fr, en) };
@@ -30,7 +30,7 @@ const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((f) => f());
 
 // Read once, as early as possible: the root layout waits for it so the first screen is in the right language.
-SecureStore.getItemAsync(KEY)
+kv.getItemAsync(KEY)
   .then((v) => {
     if (isLang(v)) current = v;
   })
@@ -48,7 +48,7 @@ function subscribe(onChange: () => void) {
 export function setLang(lang: Lang) {
   if (lang === current) return;
   current = lang;
-  SecureStore.setItemAsync(KEY, lang).catch(() => null);
+  kv.setItemAsync(KEY, lang).catch(() => null);
   notify();
 }
 

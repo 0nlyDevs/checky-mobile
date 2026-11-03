@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import { kv } from "@/lib/kv";
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 /** « Mode léger » (brief 0.9, 6.3), for satellite and 2G links: text first, images and videos
@@ -22,7 +22,7 @@ export function LightProvider({ children }: { children: ReactNode }) {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    SecureStore.getItemAsync(KEY)
+    kv.getItemAsync(KEY)
       .then((v) => {
         current = v === "1";
         set(current);
@@ -36,7 +36,7 @@ export function LightProvider({ children }: { children: ReactNode }) {
       setLight: (on) => {
         current = on;
         set(on);
-        SecureStore.setItemAsync(KEY, on ? "1" : "0").catch(() => null);
+        kv.setItemAsync(KEY, on ? "1" : "0").catch(() => null);
       },
       dismissed,
       dismiss: () => setDismissed(true),
