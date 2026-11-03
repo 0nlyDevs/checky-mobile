@@ -236,7 +236,7 @@ export const mg: Overrides = {
     confirmBody: "Ho hitan'ny tranom-gazety manontolo ny didy ary hiova ho Voamarina ny antontan-taratasy.",
     againstAi: (v: string) => `« ${v} » no natolotry ny IA.`,
     confirm: "Hamafiso",
-    signSuggested: (v: string) => `Hamafiso ny « ${v} »`,
+    signSuggested: (v: string) => `Asio sonia ny « ${v} »`, // relire (mg)
     clear: "Esory ny didy",
     analysis: "Fanadihadiana ny loharano",
     analyse: "Hadihadio ny loharano",
@@ -595,5 +595,20 @@ export const mg: Overrides = {
     failed: "Tsy nahavaly aho. Jereo ny fifandraisana ary andramo indray.",
     tooMany: "Be loatra ny fanontaniana misesy. Andramo indray afaka minitra vitsivitsy.",
     clear: "Resaka vaovao",
+  },
+
+  // relire (mg)
+  sign: {
+    title: (v: string) => `Asio sonia ny « ${v} »`,
+    lead: "Ny sonianao no mametraka ny didy eo ambanin'ny anaran'ny rédaction. Tsy mivoaka izy raha tsy efa navoaka.",
+    reason: "Fanazavana ho an'ny besinimaro",
+    reasonPlaceholder: "Nahoana ity didy ity, amin'ny fehezanteny iray na roa.",
+    tooShort: "Manorata fanazavana litera 10 farafahakeliny.",
+    publish: "Asio sonia ary avoahy",
+    only: "Asio sonia fa aza avoaka",
+    release: "Avoahy ny dika nosoniavina",
+    by: (who: string, when: string) => `Nosoniavin'i ${who}, ny ${when}`,
+    unsigned: "Voafidy ny didy fa mbola tsy nosoniavina.",
+    failed: "Tsy voatahiry ny sonia. Andramo indray.",
   },
 };

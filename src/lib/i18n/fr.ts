@@ -249,7 +249,7 @@ export const t = {
     confirmBody: "Le verdict sera visible par toute la rédaction et le dossier passera à Vérifié.",
     againstAi: (v: string) => `L'IA suggérait « ${v} ».`,
     confirm: "Confirmer",
-    signSuggested: (v: string) => `Confirmer « ${v} »`,
+    signSuggested: (v: string) => `Signer « ${v} »`,
     clear: "Retirer le verdict",
     analysis: "Analyse des sources",
     analyse: "Analyser les sources",
@@ -625,5 +625,20 @@ export const t = {
     failed: "Je n'ai pas pu répondre. Vérifiez la connexion et réessayez.",
     tooMany: "Trop de questions d'affilée. Réessayez dans quelques minutes.",
     clear: "Nouvelle conversation",
+  },
+
+  // « Signer et publier » (brief 2.3, 2.4): the verdict goes out under the newsroom's name only once signed.
+  sign: {
+    title: (v: string) => `Signer « ${v} »`,
+    lead: "Votre signature met le verdict sous le nom de la rédaction. Il ne sort qu'une fois publié.",
+    reason: "Explication publique",
+    reasonPlaceholder: "Pourquoi ce verdict, en une ou deux phrases.",
+    tooShort: "Écrivez au moins 10 caractères d'explication.",
+    publish: "Signer et publier",
+    only: "Signer sans publier",
+    release: "Publier la version signée",
+    by: (who: string, when: string) => `Signé par ${who}, le ${when}`,
+    unsigned: "Verdict choisi mais pas encore signé.",
+    failed: "La signature n'a pas été enregistrée. Réessayez.",
   },
 };

@@ -235,7 +235,7 @@ export const en: Overrides = {
     confirmBody: "The whole newsroom will see the verdict, and the case will move to Checked.",
     againstAi: (v: string) => `The AI suggested “${v}”.`,
     confirm: "Confirm",
-    signSuggested: (v: string) => `Confirm “${v}”`,
+    signSuggested: (v: string) => `Sign “${v}”`,
     clear: "Remove the verdict",
     analysis: "Source analysis",
     analyse: "Analyse the sources",
@@ -591,5 +591,19 @@ export const en: Overrides = {
     failed: "I couldn't answer. Check your connection and try again.",
     tooMany: "Too many questions in a row. Try again in a few minutes.",
     clear: "New conversation",
+  },
+
+  sign: {
+    title: (v: string) => `Sign “${v}”`,
+    lead: "Your signature puts the verdict under the newsroom's name. It only goes out once published.",
+    reason: "Public explanation",
+    reasonPlaceholder: "Why this verdict, in one or two sentences.",
+    tooShort: "Write at least 10 characters of explanation.",
+    publish: "Sign and publish",
+    only: "Sign without publishing",
+    release: "Publish the signed version",
+    by: (who: string, when: string) => `Signed by ${who} on ${when}`,
+    unsigned: "Verdict chosen but not signed yet.",
+    failed: "The signature was not saved. Try again.",
   },
 };
