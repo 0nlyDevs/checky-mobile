@@ -1,7 +1,9 @@
 import { File } from "expo-file-system";
+import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import { createUploadTask, FileSystemUploadType } from "expo-file-system/legacy";
 
 import { api, ApiError } from "@/lib/api";
+import { isLight, pace } from "@/lib/light";
 import type { Source } from "@/lib/types";
 
 export const MAX_BYTES = 25 * 1024 * 1024;
@@ -23,9 +25,31 @@ export function normalise(p: Picked): Picked {
   return { ...p, mime, size };
 }
 
+const LIGHT_EDGE = 1600;
+
+/** Mode léger (brief 6.3): a photo is resized to 1600 px and re-encoded as JPEG before it
+ * leaves. That strips EXIF, C2PA and generator tags, which the Réglages switch says; a GIF or a
+ * file that cannot be read goes as it is. */
+export async function lighten(p: Picked): Promise<Picked> {
+  if (!isLight() || !/^image\/(jpeg|png|webp|heic)$/.test(p.mime)) return p;
+  try {
+    const first = await ImageManipulator.manipulate(p.uri).renderAsync();
+    const big = Math.max(first.width, first.height) > LIGHT_EDGE;
+    const ref = big
+      ? await ImageManipulator.manipulate(p.uri)
+          .resize(first.width >= first.height ? { width: LIGHT_EDGE } : { height: LIGHT_EDGE })
+          .renderAsync()
+      : first;
+    const out = await ref.saveAsync({ compress: 0.6, format: SaveFormat.JPEG });
+    return normalise({ uri: out.uri, mime: "image/jpeg", name: p.name.replace(/\.[a-z0-9]+$/i, "") + ".jpg", size: null });
+  } catch {
+    return p;
+  }
+}
+
 /** Presigned PUT straight to storage (with progress), then the API turns it into a source. */
 export async function uploadFile(ws: string, file: Picked, onProgress: (share: number) => void, itemId?: string): Promise<Source> {
-  const f = normalise(file);
+  const f = await lighten(normalise(file));
   if (!ACCEPTED.test(f.mime)) throw new ApiError(415, "unsupported_type", f.mime);
   if (!f.size) throw new ApiError(400, "unreadable", "Unknown file size");
   if (f.size > MAX_BYTES) throw new ApiError(413, "too_large", "Files are limited to 25 MB");
@@ -56,7 +80,7 @@ export async function waitReady(ws: string, id: string, signal?: AbortSignal, ti
     const s = await api<Source>(`/workspaces/${ws}/sources/${id}`);
     if (s.status === "ready") return s;
     if (s.status === "failed") throw new ApiError(422, "source_failed", s.error ?? "failed");
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, pace(2000)));
   }
   throw new ApiError(408, "timeout", "The file is taking too long to read");
 }

@@ -24,7 +24,7 @@ export default function PublicVerdictScreen() {
   const cardRef: CardRef = useRef(null);
   const [sharing, setSharing] = useState(false);
 
-  if (error) {
+  if (error && !v) {
     return (
       <Screen>
         <Notice tone="error">{t.citizen.failed}</Notice>

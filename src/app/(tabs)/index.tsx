@@ -1,10 +1,11 @@
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ClipboardText, Images, ShareNetwork } from "@/lib/icons";
+import { ClipboardText, Images, QrCode, ShareNetwork } from "@/lib/icons";
 import { type ComponentRef, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 
+import { LightSuggest } from "@/components/light";
 import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
@@ -63,12 +64,14 @@ export default function AnalyseHome() {
         <T tone="muted">{t.analyse.lead}</T>
       </View>
       <OfflineNotice />
+      <LightSuggest />
       <OutboxList />
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
         <ShareNetwork size={20} color={c.foreground} />
         <T style={{ flex: 1, fontSize: 15 }}>{t.analyse.shareHint}</T>
       </Card>
       <Button label={t.analyse.pick} icon={Images} onPress={pick} />
+      <Button label={t.scanner.open} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
       <View style={{ gap: 12 }}>
         <Field
           ref={urlField}

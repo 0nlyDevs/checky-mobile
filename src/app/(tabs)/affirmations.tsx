@@ -10,7 +10,9 @@ import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Chip, Field, Notice, T } from "@/components/ui";
 import { fetcher } from "@/lib/api";
+import { cachedAt } from "@/lib/cache";
 import { useT } from "@/lib/i18n";
+import { useLight } from "@/lib/light";
 import { useTheme } from "@/lib/theme";
 import { type ItemPage, STATUSES } from "@/lib/types";
 import { useWs } from "@/lib/workspace";
@@ -24,12 +26,16 @@ export default function Claims() {
   const [status, setStatus] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const params = new URLSearchParams({ type: "claim", limit: "200", ...(status ? { status } : {}), ...(q.trim() ? { q: q.trim() } : {}) });
-  const { data, error, isLoading, mutate } = useSWR<ItemPage>(`/workspaces/${ws}/items?${params}`, fetcher, { keepPreviousData: true });
+  const key = `/workspaces/${ws}/items?${params}`;
+  const { data, error, isLoading, mutate } = useSWR<ItemPage>(key, fetcher, { keepPreviousData: true });
 
+  const { light } = useLight();
+  // Mode léger: a list fetched in the last 5 minutes is not fetched again on every visit.
   useFocusEffect(
     useCallback(() => {
+      if (light && Date.now() - (cachedAt(key) ?? 0) < 5 * 60_000) return;
       void mutate();
-    }, [mutate]),
+    }, [mutate, light, key]),
   );
 
   return (
@@ -53,7 +59,7 @@ export default function Claims() {
                 <Chip key={s} label={t.claims.filters[s]} selected={status === s} onPress={() => setStatus(s)} />
               ))}
             </ScrollView>
-            <OfflineNotice stale={!!data} />
+            <OfflineNotice stale={!!data} at={cachedAt(key)} />
             {error && !data && <Notice tone="error">{t.common.offline}</Notice>}
             <OutboxList kind="claim" />
           </View>

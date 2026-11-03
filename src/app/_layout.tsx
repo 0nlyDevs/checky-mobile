@@ -10,11 +10,13 @@ import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SWRConfig } from "swr";
 
+import { OfflineSync } from "@/components/offline-sync";
 import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
 import { persistentCache } from "@/lib/cache";
 import { type Check, handOff } from "@/lib/handoff";
 import { useLangReady, useT } from "@/lib/i18n";
+import { LightProvider } from "@/lib/light";
 import { ModeProvider, useMode } from "@/lib/mode";
 import { onReconnect } from "@/lib/network";
 import { OutboxProvider } from "@/lib/outbox";
@@ -43,7 +45,9 @@ export default function RootLayout() {
             refetches. The cache is kept on the phone so what was opened stays readable offline. */}
         <SWRConfig value={{ revalidateOnFocus: false, dedupingInterval: 4000, provider: persistentCache, initReconnect: onReconnect }}>
           <ModeProvider>
-            <Session />
+            <LightProvider>
+              <Session />
+            </LightProvider>
           </ModeProvider>
         </SWRConfig>
       </SafeAreaProvider>
@@ -100,6 +104,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   return (
     <>
       <StatusBar style="auto" />
+      <OfflineSync desk={inDesk} />
       {inDesk && <ShareForwarder to="/analyse" />}
       {citizen && <ShareForwarder to="/citoyen/verifier" />}
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.background } }}>
@@ -112,7 +117,13 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
           <Stack.Screen name="citoyen/verifier" />
           <Stack.Screen name="citoyen/signaler" />
           <Stack.Screen name="citoyen/suivi/[token]" />
+        </Stack.Protected>
+        {/* Public, kept on the phone: readable by everyone, account or not. */}
+        <Stack.Protected guard={citizen || inDesk}>
           <Stack.Screen name="citoyen/verdict/[id]" />
+          <Stack.Screen name="registre" />
+          <Stack.Screen name="verdicts" />
+          <Stack.Screen name="scanner" />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="connexion" />
@@ -126,6 +137,8 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
           <Stack.Screen name="analyse" />
           <Stack.Screen name="affirmation/[id]" />
           <Stack.Screen name="nouvelle" options={{ presentation: "modal" }} />
+          <Stack.Screen name="annuaire" />
+          <Stack.Screen name="chiffres" />
         </Stack.Protected>
       </Stack>
     </>

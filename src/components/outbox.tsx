@@ -3,15 +3,16 @@ import { Checks, Clock, CloudArrowUp, CloudSlash, type Icon, WarningOctagon } fr
 import { Pressable, View } from "react-native";
 
 import { Button, Card, Notice, Section, T } from "@/components/ui";
-import { host } from "@/lib/format";
+import { host, stamp } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
 import { tr, useT } from "@/lib/i18n";
 import { useOnline } from "@/lib/network";
 import { type Entry, useOutbox } from "@/lib/outbox";
 import { fonts, useTheme } from "@/lib/theme";
 
-/** Shown at the top of the desk screens while the phone has no network. */
-export function OfflineNotice({ stale }: { stale?: boolean }) {
+/** Shown at the top of the desk screens while the phone has no network; `at` (ms) says how old
+ * the copy on screen is: « Hors connexion · données du 3 nov., 07:12 ». */
+export function OfflineNotice({ stale, at }: { stale?: boolean; at?: number | null }) {
   const t = useT();
   const online = useOnline();
   const { entries } = useOutbox();
@@ -19,7 +20,7 @@ export function OfflineNotice({ stale }: { stale?: boolean }) {
   if (online) return null;
   return (
     <View accessibilityRole="alert" style={{ gap: 6 }}>
-      <Notice>{stale ? t.outbox.stale : t.outbox.offline}</Notice>
+      <Notice>{at ? t.offline.age(stamp(at)) : stale ? t.outbox.stale : t.outbox.offline}</Notice>
       {pending > 0 && <T tone="muted">{t.outbox.pending(pending)}</T>}
     </View>
   );

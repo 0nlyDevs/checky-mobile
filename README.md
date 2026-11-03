@@ -37,7 +37,10 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/affirmations` | The newsroom's claims, filtered by status, searchable |
 | `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), **Partager le verdict** (the 1080 × 1080 card in French or Malagasy and the post written from the verdict, through the share sheet; sharing moves a verified claim to Publié, as in the desk), status, AI source analysis, sources (add a link or a file), comments |
 | `/verifier` | **Avant l'antenne** (default): the caller's claim, typed or dictated with the keyboard's microphone, is matched against published verdicts (`/public/match`, then the newsroom's own through `/items/similar`). A match shows « Déjà vérifié : … » with the newsroom, the date and a two-sentence radio line to copy; with none, it never says « Faux »: it says nothing is published, gives a neutral line for the air, shows whether the desk already follows it, and offers **Suivre dans le desk** (origin radio, queued offline). **Nos sources**: ask every source of the newsroom; the answer streams and cites its passages |
-| `/reglages` | Language, account, newsroom switch and its verification status (the request is made on the web desk), service health, demo reset, sign out |
+| `/reglages` | Language, account, newsroom switch and its verification status, Mode léger, offline sync, service health, demo reset, sign out |
+| `/rubrique` | My beat, including circulating reports, cases, contacts, figures and suggested angles, from the phone's offline copy |
+| `/annuaire`, `/chiffres`, `/registre`, `/verdicts` | Search the directory, official figures, the last 90 days of originals and published verdicts saved on the phone |
+| `/scanner` | Check a verdict or communiqué QR seal against saved issuer keys and revocations without a network; photograph printed notices into the check flow |
 
 Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link in the desk, or `/citoyen/verifier` in citizen mode. A share made before a mode is chosen, or while a journalist is signed out, waits until then.
 
@@ -56,9 +59,11 @@ For reporters in areas with weak or no coverage. The checks themselves (AI, sear
 
 - **"À envoyer" (`src/lib/outbox.tsx`)**: with no network, `/analyse` and `/nouvelle` put the check or the new claim in a queue saved on the phone (`documentDirectory/outbox/`; files are copied there so a cleared share cache does not lose them). The queue is sent when the network comes back, when the app returns to the front, and every 30 s while something waits. A file is uploaded only once (`sourceId` is kept), and the link check runs in the background. The result shows up on the Analyser tab as "Analyse prête", and "Suivre" works as usual from there. Server failures back off up to 10 min, and refusals (too large, wrong type) are marked failed. Only in-app actions fill the queue, never a deep link. It runs only while the app is open: there is no background task.
 - **Cached reading (`src/lib/cache.ts`)**: the SWR cache is saved to `swr-cache.json`. Claims, files and verdicts already opened stay readable, and the app opens offline because `/me` and the Better Auth session (`fanilo_session_data`) are cached. SWR refetches when the network returns (`initReconnect` via `expo-network`).
+- **Synced reading (`src/lib/offline.ts`)**: on opening and reconnecting, the phone stores published verdicts, issuer keys and revocations, the last 90 days of the registry, and a signed-in newsroom's Ma rubrique, directory, figures and cases. Each screen shows when its copy was saved. Réglages offers an immediate refresh. A public QR seal is checked against those saved keys with no network; the signed title, number and date are shown for comparison with the paper. An unknown or outdated key is never called fake. A photo of a printed notice joins the normal analysis or the outbox.
+- **Mode léger**: text first, heavy media only after a tap, slower refresh and compressed photos when sending over a slow link. Compression strips EXIF and C2PA markers, and the switch says so. The setting is kept on the phone; a slow sync offers it once per launch.
 - **Weak networks**: `api()` gives up after 60 s and a queued link check after 5 min, so a stalled request does not block the queue.
 - **Sign-out** wipes the cache and the queue, after a confirmation when something is unsent.
-- Photos are sent uncompressed on purpose: recompressing would strip the EXIF, C2PA and AI markers the server checks.
+- Photos are sent uncompressed unless Mode léger is on: recompression strips the EXIF, C2PA and AI markers the server checks.
 
 ## Layout
 

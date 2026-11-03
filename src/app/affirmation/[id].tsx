@@ -5,11 +5,14 @@ import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import useSWR from "swr";
 
+import { OfflineNotice } from "@/components/outbox";
 import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictPanel, styles } from "@/components/ui";
 import { VerificationNotice } from "@/components/verification";
 import { api, ApiError, fetcher } from "@/lib/api";
+import { cachedAt } from "@/lib/cache";
+import { pace } from "@/lib/light";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
 import { useT } from "@/lib/i18n";
@@ -43,7 +46,8 @@ export default function ClaimDetail() {
   const [upload, setUpload] = useState<number | null>(null);
   const [comment, setComment] = useState("");
 
-  if (error) {
+  // Offline, a kept copy still opens: only a dossier never fetched shows the error.
+  if (error && !item) {
     return (
       <Screen>
         <Notice tone="error">{t.common.offline}</Notice>
@@ -88,7 +92,7 @@ export default function ClaimDetail() {
     try {
       const job = await api<{ id: string }>(`${base}/analyze`, { method: "POST" });
       for (let i = 0; i < 60; i++) {
-        await new Promise((r) => setTimeout(r, 2500));
+        await new Promise((r) => setTimeout(r, pace(2500)));
         const j = await api<{ status: string }>(`/workspaces/${ws}/jobs/${job.id}`);
         if (j.status === "done" || j.status === "failed") break;
       }
@@ -160,6 +164,7 @@ export default function ClaimDetail() {
       </T>
       )}
       {!!item.body && <T>{item.body}</T>}
+      <OfflineNotice stale at={cachedAt(base)} />
       {notice && <Notice tone="error">{notice}</Notice>}
 
       <Section title={t.detail.verdict}>

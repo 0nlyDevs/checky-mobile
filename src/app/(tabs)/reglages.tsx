@@ -3,12 +3,17 @@ import { Alert, View } from "react-native";
 import useSWR from "swr";
 
 import { LanguagePicker } from "@/components/language-picker";
+import { LightSwitch } from "@/components/light";
+import { OfflineLinks } from "@/components/offline-links";
+import { useSyncNow } from "@/components/offline-sync";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Chip, Notice, Screen, Section, T, styles } from "@/components/ui";
 import { VerificationNotice } from "@/components/verification";
 import { api, clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
 import { clearCache } from "@/lib/cache";
+import { stamp } from "@/lib/format";
+import { clearDeskOffline, useSyncState } from "@/lib/offline";
 import { API_URL } from "@/lib/config";
 import { useT } from "@/lib/i18n";
 import { fonts } from "@/lib/theme";
@@ -24,6 +29,8 @@ export default function Settings() {
   const { me, current, choose, refresh } = useWorkspace();
   const outbox = useOutbox();
   const unsent = outbox.entries.filter((e) => e.state !== "done").length;
+  const sync = useSyncState();
+  const syncNow = useSyncNow(true);
 
   /** Signing out wipes what this phone kept offline: cached claims and files, and unsent items. */
   async function signOut() {
@@ -31,6 +38,7 @@ export default function Settings() {
     await authClient.signOut();
     outbox.clear();
     clearCache();
+    clearDeskOffline();
     await refresh();
   }
 
@@ -86,6 +94,13 @@ export default function Settings() {
         </View>
         {current && <VerificationNotice membership={current} always />}
         {current && <Button label={t.settings.demo} variant="outline" onPress={resetDemo} />}
+      </Section>
+      <LightSwitch />
+      <Section title={t.offline.title} note={t.offline.lead}>
+        <T tone="muted">{sync.at ? t.offline.synced(stamp(sync.at)) : t.offline.never}</T>
+        {sync.failed && <Notice tone="error">{t.offline.syncFailed}</Notice>}
+        <Button label={sync.running ? t.offline.syncing : t.offline.sync} busy={sync.running} variant="outline" onPress={() => syncNow(true)} />
+        <OfflineLinks desk />
       </Section>
       <Section title={t.settings.health}>
         {error ? (

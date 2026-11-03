@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { CaretRight, ClipboardText, ShareNetwork } from "@/lib/icons";
+import { CaretRight, ClipboardText, QrCode, ShareNetwork } from "@/lib/icons";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import useSWR from "swr";
@@ -8,7 +8,11 @@ import useSWR from "swr";
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Brand } from "@/components/brand";
 import { LanguagePicker } from "@/components/language-picker";
+import { LightSuggest, LightSwitch } from "@/components/light";
+import { OfflineLinks } from "@/components/offline-links";
+import { OfflineNotice } from "@/components/outbox";
 import { Button, Card, Field, Screen, Section, T } from "@/components/ui";
+import { cachedAt } from "@/lib/cache";
 import { ago } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
 import { useT } from "@/lib/i18n";
@@ -28,7 +32,8 @@ export default function CitizenHome() {
   const { setMode } = useMode();
   const [text, setText] = useState("");
   const [tips, setTips] = useState<MyTip[]>([]);
-  const { data: latest } = useSWR<Page>(`/verdicts?limit=5${country ? `&country=${country}` : ""}`, publicFetcher);
+  const latestKey = `/verdicts?limit=5${country ? `&country=${country}` : ""}`;
+  const { data: latest } = useSWR<Page>(latestKey, publicFetcher);
 
   useFocusEffect(
     useCallback(() => {
@@ -50,6 +55,7 @@ export default function CitizenHome() {
         <T tone="title">{t.citizen.title}</T>
         <T tone="muted">{t.citizen.lead}</T>
       </View>
+      <LightSuggest />
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
         <ShareNetwork size={20} color={c.foreground} />
         <T style={{ flex: 1, fontSize: 15 }}>{t.citizen.shareHint}</T>
@@ -59,6 +65,7 @@ export default function CitizenHome() {
         <Button label={t.citizen.paste} icon={ClipboardText} variant="outline" style={{ flex: 1 }} onPress={async () => setText((await Clipboard.getStringAsync()).trim())} />
         <Button label={t.citizen.check} style={{ flex: 1 }} disabled={!text.trim()} onPress={check} />
       </View>
+      <Button label={t.scanner.title} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
 
       {tips.length > 0 && (
         <Section title={t.citizen.mine}>
@@ -84,10 +91,15 @@ export default function CitizenHome() {
       )}
 
       <Section title={t.citizen.latest}>
+        <OfflineNotice stale={!!latest} at={cachedAt(latestKey)} />
         {latest?.items.length ? latest.items.map((v) => <PublicVerdictRow key={v.id} v={v} />) : <T tone="muted">{t.citizen.noLatest}</T>}
       </Section>
 
       <LanguagePicker />
+      <Section title={t.offline.title}>
+        <OfflineLinks desk={false} />
+        <LightSwitch />
+      </Section>
       <Button
         label={t.citizen.journalist}
         variant="ghost"

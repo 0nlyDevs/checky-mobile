@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 
@@ -6,6 +7,7 @@ import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Chip, Field, Notice, Screen, Section, T, styles } from "@/components/ui";
 import { ApiError } from "@/lib/api";
 import { useT } from "@/lib/i18n";
+import { QrCode } from "@/lib/icons";
 import { postStream } from "@/lib/sse";
 import { fonts, useTheme } from "@/lib/theme";
 import { useWs } from "@/lib/workspace";
@@ -19,6 +21,7 @@ export default function Ask() {
   const inset = useTabInset();
   const ws = useWs();
   const [view, setView] = useState<"air" | "sources">("air");
+  const router = useRouter();
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [passages, setPassages] = useState<Passage[]>([]);
@@ -59,6 +62,7 @@ export default function Ask() {
         <Chip label={t.antenne.tab} selected={view === "air"} onPress={() => setView("air")} />
         <Chip label={t.antenne.sourcesTab} selected={view === "sources"} onPress={() => setView("sources")} />
       </View>
+      <Button label={t.scanner.open} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
       {view === "air" ? (
         <BeforeAir />
       ) : (

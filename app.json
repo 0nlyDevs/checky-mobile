@@ -49,14 +49,27 @@
       "expo-video",
       [
         "expo-image-picker",
-        { "photosPermission": "Checky ouvre les photos et vidéos que vous choisissez pour les vérifier." }
+        {
+          "photosPermission": "Checky ouvre les photos et vidéos que vous choisissez pour les vérifier.",
+          "cameraPermission": "Checky photographie le papier que vous voulez vérifier.",
+          "microphonePermission": false
+        }
       ],
       [
         "expo-build-properties",
         { "android": { "usesCleartextTraffic": true } }
       ],
       "expo-font",
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Checky lit le QR des sceaux et photographie le papier à vérifier.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
