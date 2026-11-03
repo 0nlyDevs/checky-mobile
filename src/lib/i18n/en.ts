@@ -359,6 +359,7 @@ export const en: Overrides = {
       failed: "The server refused it.",
     },
   },
+  clip: { ask: "Check what you just copied?", check: "Check", dismiss: "No thanks", link: "Copied link", text: "Copied text" },
   status: { to_check: "To check", in_progress: "In progress", verified: "Checked", published: "Published" },
   verdict: {
     true: "True",

@@ -10,6 +10,7 @@ import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SWRConfig } from "swr";
 
+import { ClipboardOffer } from "@/components/clipboard-offer";
 import { OfflineSync } from "@/components/offline-sync";
 import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
@@ -141,6 +142,8 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
           <Stack.Screen name="chiffres" />
         </Stack.Protected>
       </Stack>
+      {inDesk && <ClipboardOffer to="/analyse" />}
+      {citizen && <ClipboardOffer to="/citoyen/verifier" />}
     </>
   );
 }

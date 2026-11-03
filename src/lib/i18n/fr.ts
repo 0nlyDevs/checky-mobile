@@ -380,6 +380,14 @@ export const t = {
       failed: "Le serveur a refusé l'envoi.",
     } as Record<string, string>,
   },
+  // « Vérifier ce que vous venez de copier ? »
+  clip: {
+    ask: "Vérifier ce que vous venez de copier ?",
+    check: "Vérifier",
+    dismiss: "Non merci",
+    link: "Lien copié",
+    text: "Texte copié",
+  },
   status: { to_check: "À vérifier", in_progress: "En cours", verified: "Vérifié", published: "Publié" } as Record<string, string>,
   verdict: { true: "Vrai", misleading: "Trompeur", false: "Faux", unverifiable: "Invérifiable", none: "Sans verdict", suggested: "suggéré", suggestedLabel: "Lecture de Checky, à signer par un journaliste", confirmedLabel: "Verdict confirmé" } as Record<string, string>,
   origin: { facebook: "Facebook", whatsapp: "WhatsApp", tiktok: "TikTok", radio: "Radio", press: "Presse", other: "Autre" } as Record<string, string>,

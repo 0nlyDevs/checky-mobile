@@ -1,0 +1,8 @@
+R_DEF: Internal format may change without notice
+local
+drawable checky_stat
+string checky_menu_check
+string checky_menu_debunk
+string checky_menu_translate
+string checky_work_channel
+style Theme.CheckySheet

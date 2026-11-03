@@ -1,0 +1,112 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="expo.modules.checkytext" >
+4
+5    <uses-sdk android:minSdkVersion="24" />
+5-->INJECTED
+5-->INJECTED
+6
+7    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+7-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:2:3-75
+7-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:2:20-72
+8    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+8-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:3:3-85
+8-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:3:20-82
+9
+10    <application>
+10-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:5:3-52:17
+11
+12        <!-- « Checky » in the text-selection menu: checks the selected text. -->
+13        <activity
+13-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:7:5-20:16
+14            android:name="expo.modules.checkytext.ProcessTextActivity"
+14-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:8:9-67
+15            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|density|fontScale"
+15-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:14:9-136
+16            android:excludeFromRecents="true"
+16-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:11:9-42
+17            android:exported="true"
+17-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:10:9-32
+18            android:label="@string/checky_menu_check"
+18-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:9:9-50
+19            android:theme="@style/Theme.CheckySheet"
+19-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:12:9-49
+20            android:windowSoftInputMode="adjustResize" >
+20-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:13:9-51
+21            <intent-filter>
+21-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:15:7-19:23
+22                <action android:name="android.intent.action.PROCESS_TEXT" />
+22-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:16:9-69
+22-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:16:17-66
+23
+24                <category android:name="android.intent.category.DEFAULT" />
+24-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:17:9-68
+24-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:17:19-65
+25
+26                <data android:mimeType="text/plain" />
+26-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:18:9-47
+26-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:18:15-44
+27            </intent-filter>
+28        </activity> <!-- « Remplacer par le démenti »: a rumour being written becomes the published démenti and its link. -->
+29        <activity-alias
+29-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:36:5-46:22
+30            android:name="expo.modules.checkytext.DebunkText"
+30-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:37:9-58
+31            android:exported="true"
+31-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:40:9-32
+32            android:label="@string/checky_menu_debunk"
+32-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:39:9-51
+33            android:targetActivity="expo.modules.checkytext.ProcessTextActivity" >
+33-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:38:9-77
+34            <intent-filter>
+34-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:15:7-19:23
+35                <action android:name="android.intent.action.PROCESS_TEXT" />
+35-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:16:9-69
+35-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:16:17-66
+36
+37                <category android:name="android.intent.category.DEFAULT" />
+37-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:17:9-68
+37-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:17:19-65
+38
+39                <data android:mimeType="text/plain" />
+39-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:18:9-47
+39-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:18:15-44
+40            </intent-filter>
+41        </activity-alias> <!-- « Traduire FR ↔ MG »: on text being written, the translation replaces the selection. -->
+42        <activity-alias
+42-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:23:5-33:22
+43            android:name="expo.modules.checkytext.TranslateText"
+43-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:24:9-61
+44            android:exported="true"
+44-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:27:9-32
+45            android:label="@string/checky_menu_translate"
+45-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:26:9-54
+46            android:targetActivity="expo.modules.checkytext.ProcessTextActivity" >
+46-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:25:9-77
+47            <intent-filter>
+47-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:15:7-19:23
+48                <action android:name="android.intent.action.PROCESS_TEXT" />
+48-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:16:9-69
+48-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:16:17-66
+49
+50                <category android:name="android.intent.category.DEFAULT" />
+50-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:17:9-68
+50-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:17:19-65
+51
+52                <data android:mimeType="text/plain" />
+52-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:18:9-47
+52-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:18:15-44
+53            </intent-filter>
+54        </activity-alias>
+55
+56        <service
+56-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:48:5-51:52
+57            android:name="expo.modules.checkytext.CheckWorkService"
+57-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:49:9-64
+58            android:exported="false"
+58-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:50:9-33
+59            android:foregroundServiceType="dataSync" />
+59-->/home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/AndroidManifest.xml:51:9-49
+60    </application>
+61
+62</manifest>
