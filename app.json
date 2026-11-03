@@ -59,7 +59,7 @@
       ],
       [
         "expo-build-properties",
-        { "android": { "usesCleartextTraffic": true } }
+        { "android": { "usesCleartextTraffic": true, "extraProguardRules": "# Room creates WorkManager's database by reflection before React Native starts.\n-keep class androidx.work.impl.WorkDatabase_Impl {\n    public <init>();\n}" } }
       ],
       "expo-font",
       "expo-sharing",
