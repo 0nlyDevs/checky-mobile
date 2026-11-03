@@ -1,7 +1,0 @@
-expo.modules.checkytext
-drawable checky_stat
-string checky_menu_check
-string checky_menu_debunk
-string checky_menu_translate
-string checky_work_channel
-style Theme_CheckySheet
