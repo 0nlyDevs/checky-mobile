@@ -276,7 +276,7 @@ export const mg: Overrides = {
     title: "Alohan'ny fandefasana",
     lead: "Misy mpihaino milaza zavatra mivantana? Avereno amin'ny fehezanteny iray: mitady didy efa navoaka aloha i Checky.",
     placeholder: "Ohatra: Misy mpaka an-keriny any Antsirabe",
-    dictate: "Raha hanonona fotsiny, tsindrio ny mikrô amin'ny fafana.",
+    dictate: "Raha hanonona fotsiny, tsindrio ny mikrô eo amin'ny fitendry.",
     check: "Hamarino",
     paste: "Apetaho",
     checking: "Mitady ao amin'ireo didy navoaka…",
