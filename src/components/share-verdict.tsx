@@ -3,17 +3,22 @@ import { useRef, useState } from "react";
 import { Share, useWindowDimensions, View } from "react-native";
 
 import { Button, Card, Chip, Field, Notice, T, styles } from "@/components/ui";
-import { type CardLang, type CardRef, shareCard, VerdictCardView } from "@/components/verdict-card";
-import { api, ApiError } from "@/lib/api";
+import { type CardFormat, type CardLang, type CardRef, type Seal, shareCard, VerdictCardView } from "@/components/verdict-card";
+import useSWR from "swr";
+
+import { api, ApiError, fetcher } from "@/lib/api";
 import { useT } from "@/lib/i18n";
 import type { ClaimData, Item, Source, Verdict } from "@/lib/types";
 
 /** F5 on the phone: the 1080 × 1080 card and its post, shared to WhatsApp, Facebook… once the verdict is confirmed. */
-export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { ws: string; item: Item; verdict: Verdict; sources: Source[]; desk: string; onShared: () => void }) {
+export function ShareVerdict({ ws, item, verdict, sources, desk, verified, onShared }: { ws: string; item: Item; verdict: Verdict; sources: Source[]; desk: string; verified?: boolean; onShared: () => void }) {
   const t = useT();
   const { width } = useWindowDimensions();
   const d = item.data as ClaimData & { posts?: Partial<Record<CardLang, string>> };
   const [lang, setLang] = useState<CardLang>("fr");
+  const [format, setFormat] = useState<CardFormat>("square");
+  // The seal exists once the verdict is published by a newsroom that publishes; before, no QR.
+  const { data: seal } = useSWR<Seal>(item.status === "published" ? `/workspaces/${ws}/items/${item.id}/seal` : null, fetcher, { shouldRetryOnError: false, revalidateOnFocus: false });
   const [reason, setReason] = useState((d.analysis?.reason ?? "").slice(0, 280));
   const [post, setPost] = useState<string | null>(null);
   const [writing, setWriting] = useState(false);
@@ -39,7 +44,7 @@ export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { w
     setSharing(true);
     setError(null);
     try {
-      if (await shareCard(cardRef, t.card.title)) onShared();
+      if (await shareCard(cardRef, t.card.title, format)) onShared();
     } catch {
       setError(t.card.exportFailed);
     } finally {
@@ -62,8 +67,17 @@ export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { w
           />
         ))}
       </View>
+      <View style={styles.wrap}>
+        {(["square", "story"] as const).map((f) => (
+          <Chip key={f} label={t.card.formats[f]} selected={format === f} onPress={() => setFormat(f)} />
+        ))}
+      </View>
+      <T tone="muted">{seal ? t.card.sealed : item.status === "published" ? t.card.unsealed : t.card.notPublished}</T>
       <VerdictCardView
-        width={width - 32}
+        format={format}
+        seal={seal ?? null}
+        verified={verified}
+        width={format === "story" ? Math.min(width - 32, 260) : width - 32}
         cardRef={cardRef}
         verdict={verdict}
         title={item.title}

@@ -118,6 +118,10 @@ export const en: Overrides = {
     unknown: "This report can't be found.",
   },
   card: {
+    formats: { square: "Card 1080 × 1080", story: "Story 9:16" },
+    sealed: "Every format carries the newsroom's sealed QR: a fake “Checky says” card fails the scan.",
+    unsealed: "The seal is not available: the card goes out without a QR. Check that the newsroom is verified and publishes its verdicts.",
+    notPublished: "Publish the signed verdict so the card carries its sealed QR.",
     title: "Share the verdict",
     language: "Language",
     languages: { fr: "French", mg: "Malagasy" },

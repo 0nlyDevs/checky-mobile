@@ -246,6 +246,7 @@ export default function ClaimDetail() {
             verdict={d.verdict}
             sources={sources ?? []}
             desk={current?.name ?? t.app.name}
+            verified={current?.verification === "approved"}
             onShared={() => item.status === "verified" && publish()}
           />
         </Section>

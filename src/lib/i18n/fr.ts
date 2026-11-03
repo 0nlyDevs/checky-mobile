@@ -115,6 +115,10 @@ export const t = {
     unknown: "Ce signalement est introuvable.",
   },
   card: {
+    formats: { square: "Carte 1080 × 1080", story: "Statut 9:16" } as Record<string, string>,
+    sealed: "Chaque format porte le QR scellé de la rédaction : une fausse carte « Checky dit » échoue au scan.",
+    unsealed: "Le sceau n'est pas disponible : la carte part sans QR. Vérifiez que la rédaction est vérifiée et publie ses verdicts.",
+    notPublished: "Publiez le verdict signé pour que la carte porte son QR scellé.",
     title: "Partager le verdict",
     language: "Langue",
     languages: { fr: "Français", mg: "Malagasy" } as Record<string, string>,
@@ -135,6 +139,9 @@ export const t = {
         sources: "Sources",
         by: (desk: string) => `Vérifié par ${desk}`,
         verdicts: { true: "Vrai", misleading: "Trompeur", false: "Faux", unverifiable: "Invérifiable" } as Record<string, string>,
+        number: (n: number) => `vérification ${n}`,
+        scan: "Scannez pour vérifier la carte",
+        verified: "Rédaction vérifiée par Checky",
       },
       mg: {
         checked: "Fanamarinana",
@@ -142,6 +149,9 @@ export const t = {
         sources: "Loharano",
         by: (desk: string) => `Nohamarinin'ny ${desk}`,
         verdicts: { true: "Marina", misleading: "Mamitaka", false: "Diso", unverifiable: "Tsy hay antoka" } as Record<string, string>,
+        number: (n: number) => `fanamarinana ${n}`,
+        scan: "Skaneo hanamarinana ity karatra ity", // relire (mg)
+        verified: "Voamarin'i Checky", // relire (mg)
       },
     },
   },

@@ -120,6 +120,10 @@ export const mg: Overrides = {
     unknown: "Tsy hita io fampandrenesana io.",
   },
   card: {
+    formats: { square: "Karatra 1080 × 1080", story: "Sata 9:16" }, // relire (mg)
+    sealed: "Samy misy QR misy tombo-kase avy amin'ny rédaction ny endrika rehetra: tsy mandalo ny skana ny karatra sandoka « Checky hoe ».", // relire (mg)
+    unsealed: "Tsy misy ny tombo-kase: hivoaka tsy misy QR ny karatra. Hamarino fa voamarina ny rédaction ary mamoaka ny didiny.", // relire (mg)
+    notPublished: "Avoahy ny didy nosoniavina mba hisy QR misy tombo-kase ny karatra.", // relire (mg)
     title: "Zarao ny didy",
     language: "Fiteny",
     languages: { fr: "Frantsay", mg: "Malagasy" },
