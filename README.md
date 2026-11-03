@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/img/logo.svg" alt="Checky logo" width="84" height="84">
+
 # Checky mobile
 
 **Share a rumour to Checky, get the proof.** The Android app for journalists and citizens in Madagascar.
