@@ -1,0 +1,61 @@
+{
+  "verdict_url": "https://checky.example/verifies/3f1c2a4e-8b7d-4c1e-9a2b-5d6e7f8a9b0c#eyJkaWdlc3QiOiJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYiIsImlkIjoiM2YxYzJhNGUtOGI3ZC00YzFlLTlhMmItNWQ2ZTdmOGE5YjBjIiwicmVmIjoiRkFOLTAxNDUiLCJzaWduZWRfYXQiOiIyMDI2LTExLTAzVDA1OjEyWiIsInRpdGxlIjoiTGUgcG9udCBkJ0Fub3N5IGVzdCBmZXJtw6kgwqsgZGVwdWlzIGNlIG1hdGluIMK7IiwidHlwZSI6InZlcmRpY3QiLCJ2ZXJkaWN0IjoiZmFsc2UifQ.65XmV-VC8Ho4f8Tg7JBH7albNmuqvSpQzMTJ2aa4o1cuSxwo-PnO5VnkXp5Gtu3ucaBb-D5XxtPpgUYIy-ApDA.k_fe812c12f3ab4ce6",
+  "communique_url": "https://checky.example/sceau/0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d#eyJmaW5nZXJwcmludCI6ImJhMWU0MGUyNDZjZjQ0YWRkZGZiZmM4NGFmY2Y5OWM3ZWNlYmZmYWMwYTczZjk5YzIxNWU5Yzk3YjgxYmQxYTIiLCJpc3N1ZWRfb24iOiIyMDI2LTExLTAyIiwiaXNzdWVyIjoiSklSQU1BIChkw6ltbykiLCJudW1iZXIiOiIwNDUvMjAyNiIsInRpdGxlIjoiRmluIGRlcyBkw6lsZXN0YWdlcyJ9.F--F_0gmiZvtqUq41o8HNGScCFrOUbsb9XUhnAW9O6qBKz_4G_R_cpvk3SOT7o5hJO68WtWWoLKBDAXQNJm5Cg.k_dbc298251c51321b",
+  "legacy_url": "https://checky.example/sceau/0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d#F--F_0gmiZvtqUq41o8HNGScCFrOUbsb9XUhnAW9O6qBKz_4G_R_cpvk3SOT7o5hJO68WtWWoLKBDAXQNJm5Cg",
+  "revoked_url": "https://checky.example/sceau/0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d#eyJmaW5nZXJwcmludCI6ImJhMWU0MGUyNDZjZjQ0YWRkZGZiZmM4NGFmY2Y5OWM3ZWNlYmZmYWMwYTczZjk5YzIxNWU5Yzk3YjgxYmQxYTIiLCJpc3N1ZWRfb24iOiIyMDI2LTExLTAyIiwiaXNzdWVyIjoiSklSQU1BIChkw6ltbykiLCJudW1iZXIiOiIwNDUvMjAyNiIsInRpdGxlIjoiQ29tbXVuaXF1w6kgZCd1bmUgY2zDqSByw6l2b3F1w6llIn0.sfR4AwrUAKYf9fCUrpgR3_X8A-psuA4qBojrxCKnYWIMMDmY6Nb_D2NxNAp_8W3RJ_hMv56qIlrNDZVh-JNKBg.k_fdf72a088f18f739",
+  "text": "Le ministère  de l'Énergie\n informe que les délestages\tcesseront le 5 novembre.  ",
+  "fingerprint": "ba1e40e246cf44adddfbfc84afcf99c7ecebffac0a73f99c215e9c97b81bd1a2",
+  "keys": [
+    {
+      "key_id": "k_fe812c12f3ab4ce6",
+      "issuer": "checky:verdicts",
+      "kind": "verdict",
+      "alg": "Ed25519",
+      "public_key": "6kpsY+KcUgq+9VB7Ey7F+ZVHdq6+vnuSQh7qaRRG0iw=",
+      "created_at": "2026-11-01T00:00:00Z",
+      "newsroom": {
+        "slug": "radio-demo",
+        "name": "Radio Démo"
+      }
+    },
+    {
+      "key_id": "k_dbc298251c51321b",
+      "issuer": "JIRAMA (démo)",
+      "kind": "communique",
+      "alg": "Ed25519",
+      "public_key": "/RckOFqgx1tk+3jNYC+h2ZH96/drE8WO1wLqyDXp9hg=",
+      "created_at": "2026-11-01T00:00:00Z",
+      "newsroom": {
+        "slug": "radio-demo",
+        "name": "Radio Démo"
+      }
+    }
+  ],
+  "revoked": [
+    {
+      "key_id": "k_fdf72a088f18f739",
+      "issuer": "JIRAMA (démo)",
+      "kind": "communique",
+      "revoked_at": "2026-11-02T10:00:00Z",
+      "newsroom": {
+        "slug": "radio-demo",
+        "name": "Radio Démo"
+      }
+    }
+  ],
+  "registry": [
+    {
+      "id": "0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d",
+      "issuer": "JIRAMA (démo)",
+      "number": "045/2026",
+      "issued_on": "2026-11-02",
+      "title": "Fin des délestages",
+      "text": "Le ministère  de l'Énergie\n informe que les délestages\tcesseront le 5 novembre.  ",
+      "is_demo": true,
+      "newsroom": {
+        "slug": "radio-demo",
+        "name": "Radio Démo"
+      }
+    }
+  ]
+}
