@@ -2,7 +2,7 @@ import { type ReactNode, useState } from "react";
 import { Pressable, Switch, View } from "react-native";
 
 import { Button, Card, T } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { ImageSquare, Lightning, VideoCamera } from "@/lib/icons";
 import { useLight } from "@/lib/light";
 import { useSyncState } from "@/lib/offline";
@@ -10,6 +10,7 @@ import { fonts, radius, useTheme } from "@/lib/theme";
 
 /** The Réglages switch, with what it changes. */
 export function LightSwitch() {
+  const t = useT();
   const c = useTheme();
   const { light, setLight } = useLight();
   return (
@@ -32,6 +33,7 @@ export function LightSwitch() {
 
 /** Suggested once per launch when a small request took long (measured by the offline sync). */
 export function LightSuggest() {
+  const t = useT();
   const { light, setLight, dismissed, dismiss } = useLight();
   const { slow } = useSyncState();
   if (light || dismissed || !slow) return null;
@@ -48,6 +50,7 @@ export function LightSuggest() {
 
 /** Heavy media behind a tap in Mode léger; shown at once otherwise. */
 export function OnDemand({ kind, height = 220, children }: { kind: "image" | "video"; height?: number; children: ReactNode }) {
+  const t = useT();
   const c = useTheme();
   const { light } = useLight();
   const [shown, setShown] = useState(false);

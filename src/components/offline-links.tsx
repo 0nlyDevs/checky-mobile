@@ -2,12 +2,13 @@ import { type Href, useRouter } from "expo-router";
 import { Pressable, View } from "react-native";
 
 import { T } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { AddressBook, CaretRight, ChartBar, type Icon, SealCheck, Stamp } from "@/lib/icons";
 import { fonts, radius, useTheme } from "@/lib/theme";
 
 /** The sets kept on the phone that have no tab of their own: one row each. */
 export function OfflineLinks({ desk }: { desk: boolean }) {
+  const t = useT();
   const rows: [string, Icon, Href][] = [
     ...(desk
       ? ([

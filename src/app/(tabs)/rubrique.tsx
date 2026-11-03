@@ -9,7 +9,7 @@ import { useSyncNow } from "@/components/offline-sync";
 import { useTabInset } from "@/components/tab-bar";
 import { Card, Screen, Section, T, styles } from "@/components/ui";
 import { ago } from "@/lib/format";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { Checks, Phone } from "@/lib/icons";
 import { keys, type Rubrique, useStored, useSyncState } from "@/lib/offline";
 import { fonts, radius, useTheme } from "@/lib/theme";
@@ -18,6 +18,7 @@ import { useWs } from "@/lib/workspace";
 /** « Ma rubrique »: the journalist's beat this morning, read from the copy kept on the phone, so
  * it opens the same with no network (brief 0.1, 0.9). Beats and region are chosen on the desk. */
 export default function MyBeat() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const inset = useTabInset();

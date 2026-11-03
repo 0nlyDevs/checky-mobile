@@ -4,7 +4,7 @@ import { Linking, View } from "react-native";
 import { fold, matches, ReadingScreen } from "@/components/reading";
 import { Button, Card, T, styles } from "@/components/ui";
 import { openWeb } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { Envelope, Globe, Phone, SealCheck } from "@/lib/icons";
 import { type Contact, keys, useStored } from "@/lib/offline";
 import { fonts, useTheme } from "@/lib/theme";
@@ -12,6 +12,7 @@ import { useWs } from "@/lib/workspace";
 
 /** « Annuaire », as kept on the phone: who to call, with the official numbers. */
 export default function Directory() {
+  const t = useT();
   const ws = useWs();
   const kept = useStored<Contact[]>(keys.contacts(ws));
   const [q, setQ] = useState("");
@@ -26,6 +27,7 @@ export default function Directory() {
 }
 
 function ContactCard({ x }: { x: Contact }) {
+  const t = useT();
   const c = useTheme();
   const region = typeof x.location?.region === "string" ? x.location.region : null;
   return (

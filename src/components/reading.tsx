@@ -6,7 +6,7 @@ import { AgeLine } from "@/components/age-line";
 import { useSyncNow } from "@/components/offline-sync";
 import { Field, Screen, T, styles } from "@/components/ui";
 import { ArrowLeft } from "@/lib/icons";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useSyncState } from "@/lib/offline";
 import { useTheme } from "@/lib/theme";
 
@@ -29,6 +29,7 @@ export function ReadingScreen({
   onQuery?: (q: string) => void;
   children: ReactNode;
 }) {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const sync = useSyncState();

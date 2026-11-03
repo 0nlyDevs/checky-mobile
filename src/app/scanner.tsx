@@ -8,7 +8,7 @@ import { AgeLine } from "@/components/age-line";
 import { Button, Card, Notice, Screen, T, VerdictBadge, styles } from "@/components/ui";
 import { day, stamp } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { ArrowLeft, Camera, type Icon, LockSimple, Question, SealCheck, WarningOctagon } from "@/lib/icons";
 import { useSealStore } from "@/lib/offline";
 import { checkNumber, checkSeal, type SealResult } from "@/lib/seal";
@@ -21,6 +21,7 @@ import { useWorkspace } from "@/lib/workspace";
  * with no network; a journalist can also photograph a printed notice, which goes to the
  * ordinary analysis (or waits in « À envoyer »). Open to everyone: no account needed for a QR. */
 export default function Scanner() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const focused = useIsFocused();
@@ -104,6 +105,7 @@ const HEAD: Record<SealResult["status"], Icon> = {
 
 /** Every outcome is an icon and a word, never a colour alone; only « Authentique » shows what was signed. */
 function ResultCard({ result, desk }: { result: SealResult; desk: boolean }) {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const Head = HEAD[result.status];
@@ -140,6 +142,7 @@ function ResultCard({ result, desk }: { result: SealResult; desk: boolean }) {
 }
 
 function Authentic({ result }: { result: Extract<SealResult, { status: "authentic" }> }) {
+  const t = useT();
   const f = result.fields;
   const signer = result.kind === "verdict" ? t.scanner.newsroomKey(result.newsroom.name) : `${result.signer} · ${result.newsroom.name}`;
   const n = result.kind === "verdict" ? checkNumber(f.ref) : null;

@@ -4,7 +4,7 @@ import { Pressable, View } from "react-native";
 import { matches, ReadingScreen } from "@/components/reading";
 import { Card, T, styles } from "@/components/ui";
 import { day } from "@/lib/format";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { Checks, Stamp, WarningOctagon } from "@/lib/icons";
 import { keys, type RegistryRow, useStored } from "@/lib/offline";
 import { fonts, useTheme } from "@/lib/theme";
@@ -13,6 +13,7 @@ import { useWorkspace } from "@/lib/workspace";
 /** « Registre », as kept on the phone: the originals of the last 90 days, text only, searched
  * by issuer, number or words with no network (brief 6.3). */
 export default function Registry() {
+  const t = useT();
   const ws = useWorkspace().current?.workspace_id ?? null;
   const kept = useStored<RegistryRow[]>(ws ? keys.registry(ws) : keys.publicRegistry);
   const [q, setQ] = useState("");
@@ -26,6 +27,7 @@ export default function Registry() {
 }
 
 function Row({ r }: { r: RegistryRow }) {
+  const t = useT();
   const c = useTheme();
   const [open, setOpen] = useState(false);
   const fake = r.kind === "fake_caught";

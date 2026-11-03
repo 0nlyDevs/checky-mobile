@@ -2,12 +2,13 @@ import { useState } from "react";
 import { FigureCard } from "@/components/figure-card";
 import { matches, ReadingScreen } from "@/components/reading";
 import { T } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { type Figure, keys, useStored } from "@/lib/offline";
 import { useWs } from "@/lib/workspace";
 
 /** « Chiffres », as kept on the phone: each official figure with its date, source and age. */
 export default function Figures() {
+  const t = useT();
   const ws = useWs();
   const kept = useStored<Figure[]>(keys.figures(ws));
   const [q, setQ] = useState("");

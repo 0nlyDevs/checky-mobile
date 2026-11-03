@@ -3,13 +3,14 @@ import { useState } from "react";
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { matches, ReadingScreen } from "@/components/reading";
 import { T } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { keys, useStored } from "@/lib/offline";
 import type { PublicVerdict } from "@/lib/public";
 import { useWorkspace } from "@/lib/workspace";
 
 /** The published verdicts kept on the phone, readable with no network. */
 export default function Verdicts() {
+  const t = useT();
   const desk = !!useWorkspace().current;
   const kept = useStored<PublicVerdict[]>(keys.verdicts);
   const [q, setQ] = useState("");
