@@ -38,11 +38,12 @@
             "NSExtensionActivationSupportsText": true,
             "NSExtensionActivationSupportsWebURLWithMaxCount": 1,
             "NSExtensionActivationSupportsWebPageWithMaxCount": 1,
-            "NSExtensionActivationSupportsImageWithMaxCount": 1,
+            "NSExtensionActivationSupportsImageWithMaxCount": 10,
             "NSExtensionActivationSupportsMovieWithMaxCount": 1,
             "NSExtensionActivationSupportsFileWithMaxCount": 1
           },
-          "androidIntentFilters": ["text/*", "image/*", "video/*", "audio/*", "application/pdf"]
+          "androidIntentFilters": ["text/*", "image/*", "video/*", "audio/*", "application/pdf"],
+          "androidMultiIntentFilters": ["image/*"]
         }
       ],
       "expo-secure-store",
@@ -70,6 +71,11 @@
           "recordAudioAndroid": false,
           "barcodeScannerEnabled": true
         }
+      ],
+      "expo-background-task",
+      [
+        "expo-notifications",
+        { "icon": "./assets/images/android-icon-monochrome.png", "color": "#0a0a0b", "defaultChannel": "checky-ready" }
       ]
     ],
     "experiments": {

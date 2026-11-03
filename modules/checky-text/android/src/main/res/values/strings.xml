@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="checky_menu_check">Checky</string>
+  <string name="checky_menu_translate">Traduire FR ↔ MG</string>
+  <string name="checky_menu_debunk">Remplacer par le démenti</string>
+  <string name="checky_work_channel">Vérifications en cours</string>
+  <string name="checky_scheme" translatable="false">fanilo</string>
+  <string name="checky_tile">Vérifier</string>
+  <string name="checky_tile_sub">Ce que vous venez de copier</string>
+  <string name="checky_sc_clip">Vérifier le presse-papiers</string>
+  <string name="checky_sc_scan">Scanner</string>
+  <string name="checky_widget_title">Checky · derniers verdicts</string>
+  <string name="checky_widget_verify">Vérifier</string>
+  <string name="checky_widget_empty">Aucun verdict signé pour le moment.</string>
+  <string name="checky_widget_desc">Les trois derniers verdicts du desk et un bouton Vérifier</string>
+</resources>

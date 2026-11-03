@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="checky_menu_check">Checky</string>
-    <string name="checky_menu_debunk">Replace with the fact-check</string>
-    <string name="checky_menu_translate">Translate FR ↔ MG</string>
-    <string name="checky_work_channel">Checks in progress</string>
-</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/checky_w_row2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone">
+  <ImageView
+      android:id="@+id/checky_w_icon2"
+      android:layout_width="16dp"
+      android:layout_height="16dp"
+      android:contentDescription="@null" />
+  <TextView
+      android:id="@+id/checky_w_word2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="6dp"
+      android:textSize="12sp"
+      android:textStyle="bold" />
+  <TextView
+      android:id="@+id/checky_w_text2"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_weight="1"
+      android:singleLine="true"
+      android:ellipsize="end"
+      android:textColor="#0A0A0B"
+      android:textSize="13sp" />
+</LinearLayout>

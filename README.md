@@ -33,6 +33,7 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/connexion`, `/inscription` | Sign in, sign up (same accounts as the desk) |
 | `/bienvenue` | Create a newsroom (optionally with the demo claims) or join with an invitation link |
 | `/` Analyser | Pick a video/photo from the gallery, or paste a link or text |
+| `/lot` | Several screenshots shared at once: each one uploaded and checked through the queue, then grouped by rumour (same file, same picture by difference hash, same claim already followed in the desk, or the same claim's words; `src/lib/group.ts`) |
 | `/analyse` | The check, step by step: upload → transcription → read → claims and warning signs → search → suggested verdict. Then the content, the dashed AI suggestion and the quotes it rests on, the warning signs, the file's AI traces (C2PA, generator tags such as Sora or Midjourney), reverse image search, and results to tick. **Suivre dans le desk** creates the claim and attaches the file and the ticked sources |
 | `/affirmations` | The newsroom's claims, filtered by status, searchable |
 | `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), **Partager le verdict** (the 1080 × 1080 card in French or Malagasy and the post written from the verdict, through the share sheet; sharing moves a verified claim to Publié, as in the desk), status, AI source analysis, sources (add a link or a file), comments |
@@ -54,11 +55,34 @@ The interface is in Malagasy, French and English, switched in one tap (Réglages
 - **Every new string goes into `fr.ts`, with its English in `en.ts` and its Malagasy in `mg.ts`.** `mg.ts` is machine-drafted and marked `// relire (mg)`: a Malagasy speaker must reread it. Its verdict and status words match the web's public site.
 - The verdict card keeps its own language picker (French or Malagasy labels); a citizen's card follows the interface (Malagasy, otherwise French).
 
+## From any app (Android)
+
+The journalist never leaves the app they are in.
+
+- **The text-selection menu (`modules/checky-text`).** Select a sentence in Chrome, Messages or any app with the standard menu: three entries appear, « Checky », « Traduire FR ↔ MG » and « Remplacer par le démenti » (one `PROCESS_TEXT` activity plus two `activity-alias`, declared in the local module's manifest, which Gradle merges into the app; labels in `res/values*/strings.xml`, Malagasy to be reread). The activity is a translucent `ReactActivity` that renders the JS component `checky-sheet` (`src/sheet/process-text.tsx`, registered in `index.ts`) on the app's own React host, so it shares the app's session and memory. The answer slides up as a sheet; « Retour », the back key or a tap outside go back where the journalist was.
+  - « Checky »: a journalist gets the link check on the text (or the link) with the reading dashed, plus any verdict a newsroom published; a citizen gets published verdicts only. « Voir tout dans Checky » opens the full analysis without running it again.
+  - « Traduire FR ↔ MG » (journalists): `POST /workspaces/{ws}/translate`; the direction is guessed from the text (`src/lib/lang.ts`) and can be flipped. The translation replaces the selection through `setResult(EXTRA_PROCESS_TEXT)`. Malagasy is flagged « À relire » and replaces nothing until « Relu en malgache » is ticked.
+  - « Remplacer par le démenti »: `/public/match` on the selection; the journalist picks the published verdict, and its post (or its signed word and reason) and its link replace the rumour in the message being written (`src/lib/debunk.ts`). Nothing published matches: nothing is replaced, and « Introuvable » is not « Faux ».
+  - Android shows every entry on every selection. On read-only text (a web page, a received message) nothing can be replaced, so translate and démenti offer « Copier » instead. WhatsApp and some Facebook screens use their own menu without these entries: the share sheet does the same job there.
+- **Several screenshots at once.** Share up to 10 images from the gallery (`SEND_MULTIPLE`): they go into the queue together and `/lot` shows them grouped by rumour as their checks come back. The API reads no text in images yet (no OCR), so screenshots group by file, picture and followed claim until it does.
+- **Check in the background.** « Continuer en arrière-plan » on a running check (and every batch) hands it to the queue and steps back to the app the journalist came from. A foreground service (`CheckWorkService`, type `dataSync`, notification « Vérification en cours… ») keeps the app from being frozen while it runs; when it is done a local notification (`expo-notifications`) says « Vérification prête · lecture : Trompeur » (the reading named as a reading) and opens the result. Android limits, honestly: the service has to start while Checky is on screen (Android 12+), Android 15 caps `dataSync` services at 6 hours a day, and a phone maker's battery saver can still kill the app. Then `expo-background-task` (WorkManager, every 15 minutes at best, often later, only with a network) sends what still waits, and the notification follows; otherwise it all resumes when Checky is opened. Notifications need the Android 13+ permission, asked the first time.
+- **« Vérifier ce que vous venez de copier ? »** When Checky opens or comes back with a link or a sentence in the clipboard that it never offered, a card offers to check it (one tap « Non merci » dismisses it). The clipboard is read once per return and only when it holds text, so Android 13+ shows its « collé » toast at that moment; only a fingerprint is kept (`fanilo.clip`), never the text. Android only: iOS would ask permission to paste each time.
+
+### La bulle over reels: not built yet
+
+Spec 4.3 (a disc over other apps that records 15 s of a reel) needs native work that could not be tested on a device here, so none of it ships. The design, for whoever builds it:
+
+1. Réglages » « Bulle Checky » asks `SYSTEM_ALERT_WINDOW` (`Settings.ACTION_MANAGE_OVERLAY_PERMISSION`); Android Go refuses it, and the menu and share sheet stay the way in.
+2. A foreground service of type `mediaProjection` (Android 14+ requires the type, and a new consent each session) owns a `TYPE_APPLICATION_OVERLAY` view: the draggable disc, hidden while Checky is in front and during calls (`TelephonyManager` call state), put away by a long press.
+3. A tap asks `MediaProjectionManager.createScreenCaptureIntent()` once per session, then records 15 s with `MediaRecorder` on a `VirtualDisplay` (picture) plus `AudioPlaybackCaptureConfiguration` (the reel's sound, Android 10+, only from apps that allow capture), or one frame through `ImageReader` for a photo. The disc shows « J'écoute… 15 s ».
+4. The clip goes through the same queue as a shared video (upload, faces blurred server-side, transcription of French only, the check), and the disc opens into a small card over the reel with the main claim and « Déjà vérifié » when known; « Voir tout » opens `/analyse`.
+5. The capture is deleted after the check unless the journalist follows it in the desk.
+
 ## Working without a network
 
 For reporters in areas with weak or no coverage. The checks themselves (AI, search, file reading) run on the server, so the phone does not verify offline. Instead, nothing captured is lost and nothing already opened becomes unreadable.
 
-- **"À envoyer" (`src/lib/outbox.tsx`)**: with no network, `/analyse` and `/nouvelle` put the check or the new claim in a queue saved on the phone (`documentDirectory/outbox/`; files are copied there so a cleared share cache does not lose them). The queue is sent when the network comes back, when the app returns to the front, and every 30 s while something waits. A file is uploaded only once (`sourceId` is kept), and the link check runs in the background. The result shows up on the Analyser tab as "Analyse prête", and "Suivre" works as usual from there. Server failures back off up to 10 min, and refusals (too large, wrong type) are marked failed. Only in-app actions fill the queue, never a deep link. It runs only while the app is open: there is no background task.
+- **"À envoyer" (`src/lib/outbox.tsx`)**: the queue lives at module level, so the background task can run it with no screen. With no network, `/analyse` and `/nouvelle` put the check or the new claim in a queue saved on the phone (`documentDirectory/outbox/`; files are copied there so a cleared share cache does not lose them). The queue is sent when the network comes back, when the app returns to the front, and every 30 s while something waits. A file is uploaded only once (`sourceId` is kept), and the link check runs in the background. The result shows up on the Analyser tab as "Analyse prête", and "Suivre" works as usual from there. Server failures back off up to 10 min, and refusals (too large, wrong type) are marked failed. Only in-app actions fill the queue, never a deep link. It runs while the app is open, while a background check holds the foreground service, and in the `expo-background-task` follow-up.
 - **Cached reading (`src/lib/cache.ts`)**: the SWR cache is saved to `swr-cache.json`. Claims, files and verdicts already opened stay readable, and the app opens offline because `/me` and the Better Auth session (`fanilo_session_data`) are cached. SWR refetches when the network returns (`initReconnect` via `expo-network`).
 - **Synced reading (`src/lib/offline.ts`)**: on opening and reconnecting, the phone stores published verdicts, issuer keys and revocations, the last 90 days of the registry, and a signed-in newsroom's Ma rubrique, directory, figures and cases. Each screen shows when its copy was saved. Réglages offers an immediate refresh. A public QR seal is checked against those saved keys with no network; the signed title, number and date are shown for comparison with the paper. An unknown or outdated key is never called fake. A photo of a printed notice joins the normal analysis or the outbox.
 - **Mode léger**: text first, heavy media only after a tap, slower refresh and compressed photos when sending over a slow link. Compression strips EXIF and C2PA markers, and the switch says so. The setting is kept on the phone; a slow sync offers it once per launch.
@@ -69,6 +93,10 @@ For reporters in areas with weak or no coverage. The checks themselves (AI, sear
 ## Layout
 
 ```
+index.ts            Entry: Expo Router, the selection-menu sheet (`checky-sheet`) and the background task
+modules/checky-text Local Expo module (Android): the PROCESS_TEXT activity and its aliases, the sheet's
+                    translucent theme, the foreground service of background checks
+src/sheet/          The selection-menu sheet (check, translate, démenti)
 src/app/            Expo Router screens (see above)
 src/components/     ui.tsx (text, buttons, fields, verdict badge, status, steps), brand, claim row, auth form, outbox
 src/lib/            config, auth (Better Auth client), api (JWT + fetch), sse (streams via expo/fetch),
@@ -123,7 +151,7 @@ iOS needs a Mac with Xcode (`npx expo run:ios`) or EAS Build (`npx eas-cli build
 ## Checks
 
 ```bash
-npx tsc --noEmit && npx eslint src && npm test
+npx tsc --noEmit && npx eslint src index.ts modules && npm test
 npx expo export --platform android   # the bundle builds
 npm run gen:api     # after an API schema change in fanilo-base (expects it checked out next to this repo)
 ```
@@ -135,4 +163,5 @@ npm run gen:api     # after an API schema change in fanilo-base (expects it chec
 - `PATCH /workspaces/{ws}/sources/{id} {item_id}` attaches the analysed file to the claim created by **Suivre dans le desk**.
 - `POST /workspaces/{ws}/copilot/act` creates the claim (next FAN ref) and attaches links.
 - `POST /workspaces/{ws}/items/{id}/post {language}` writes the post for the verdict card.
+- `POST /workspaces/{ws}/translate {text, to: fr|mg}` translates a selection (`reread_needed` for Malagasy).
 - Citizen mode: `/public/newsrooms`, `/public/verdicts`, `/public/match`, `/public/ask`, `/public/tips`, `/public/tips/{token}`. Only newsrooms that publish their verdicts appear.

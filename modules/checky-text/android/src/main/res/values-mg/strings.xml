@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- relire (mg): written without a native speaker; to be reread before release. -->
+<resources>
+  <string name="checky_menu_check">Checky</string>
+  <string name="checky_menu_translate">Adikao FR ↔ MG</string>
+  <string name="checky_menu_debunk">Soloy ny fanitsiana</string>
+  <string name="checky_work_channel">Fanamarinana an-dalana</string>
+  <string name="checky_tile">Hamarino</string>
+  <string name="checky_tile_sub">Izay vao nadikao</string>
+  <string name="checky_sc_clip">Hamarino ny nadika</string>
+  <string name="checky_sc_scan">Skanerao</string>
+  <string name="checky_widget_title">Checky · didy farany</string>
+  <string name="checky_widget_verify">Hamarino</string>
+  <string name="checky_widget_empty">Mbola tsy misy didy voasonia.</string>
+  <string name="checky_widget_desc">Ny didy telo farany ao amin\'ny desk sy bokotra Hamarino</string>
+</resources>

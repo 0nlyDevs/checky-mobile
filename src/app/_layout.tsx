@@ -2,6 +2,7 @@ import { BricolageGrotesque_400Regular, BricolageGrotesque_500Medium, BricolageG
 import { CormorantGaramond_500Medium_Italic } from "@expo-google-fonts/cormorant-garamond";
 import { useFonts } from "expo-font";
 import { Stack, useRouter, usePathname, type ErrorBoundaryProps } from "expo-router";
+import * as Notifications from "expo-notifications";
 import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -13,16 +14,19 @@ import { SWRConfig } from "swr";
 import { CitizenBar } from "@/components/citizen-bar";
 import { StatusScreen } from "@/components/status-screen";
 import { ClipboardOffer } from "@/components/clipboard-offer";
+import { NativeSurfaces } from "@/components/native-surfaces";
 import { OfflineSync } from "@/components/offline-sync";
 import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
 import { persistentCache } from "@/lib/cache";
+import { MAX_BATCH } from "@/lib/group";
 import { type Check, handOff } from "@/lib/handoff";
 import { useLangReady, useT } from "@/lib/i18n";
 import { LightProvider } from "@/lib/light";
 import { ModeProvider, useMode } from "@/lib/mode";
 import { onReconnect } from "@/lib/network";
-import { OutboxProvider } from "@/lib/outbox";
+import { askToNotify } from "@/lib/notify";
+import { holdForBackground, OutboxProvider, useOutbox } from "@/lib/outbox";
 import { useTheme } from "@/lib/theme";
 import { WorkspaceProvider, useWorkspace } from "@/lib/workspace";
 
@@ -139,6 +143,8 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
       <StatusBar style="auto" />
       <OfflineSync desk={inDesk} />
       {inDesk && <ShareForwarder to="/analyse" />}
+      {inDesk && <NotificationOpener />}
+      {inDesk && <NativeSurfaces />}
       {citizen && <ShareForwarder to="/citoyen/verifier" />}
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.background } }}>
         {/* The first screen allowed is where the app opens. */}
@@ -169,6 +175,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
         <Stack.Protected guard={inDesk}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="analyse" />
+          <Stack.Screen name="lot" />
           <Stack.Screen name="affirmation/[id]" />
           <Stack.Screen name="nouvelle" options={{ presentation: "modal" }} />
           <Stack.Screen name="annuaire" />
@@ -183,30 +190,66 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
 }
 
 /** Something shared to Checky from another app (a WhatsApp video, a TikTok link…) opens the analysis
- * in the desk, or the "already checked?" screen for a citizen. */
+ * in the desk, or the "already checked?" screen for a citizen. Several screenshots at once go to
+ * the desk's queue together and open the batch screen, where they are grouped by rumour. */
 function ShareForwarder({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
   const router = useRouter();
+  const outbox = useOutbox();
   const { hasShareIntent, shareIntent, resetShareIntent } = useShareIntentContext();
 
   useEffect(() => {
     if (!hasShareIntent) return;
-    const file = shareIntent.files?.[0];
+    const files = (shareIntent.files ?? []).map((file) => ({
+      uri: file.path.startsWith("/") ? `file://${file.path}` : file.path,
+      mime: file.mimeType,
+      name: file.fileName,
+      size: file.size,
+    }));
+    resetShareIntent();
+    if (to === "/analyse" && files.length > 1) {
+      const batch = `b${Date.now().toString(36)}`;
+      // Asked now, while Checky is on screen: Android refuses both from the background.
+      void askToNotify();
+      holdForBackground();
+      for (const file of files.slice(0, MAX_BATCH)) {
+        try {
+          outbox.add({ kind: "check", check: { file }, notify: true, batch });
+        } catch {
+          // too large: left out of the batch
+        }
+      }
+      router.push({ pathname: "/lot", params: { batch, more: files.length > MAX_BATCH ? "1" : undefined } });
+      return;
+    }
     const check: Check = { shared: true };
-    if (file) {
-      check.file = {
-        uri: file.path.startsWith("/") ? `file://${file.path}` : file.path,
-        mime: file.mimeType,
-        name: file.fileName,
-        size: file.size,
-      };
+    if (files[0]) {
+      check.file = files[0];
     } else {
       if (shareIntent.webUrl) check.url = shareIntent.webUrl;
       const text = (shareIntent.text ?? "").trim();
       if (text && text !== shareIntent.webUrl) check.text = text;
     }
-    resetShareIntent();
     if (check.file || check.url || check.text) router.push({ pathname: to, params: { id: handOff(check) } });
-  }, [hasShareIntent, shareIntent, resetShareIntent, router, to]);
+  }, [hasShareIntent, shareIntent, resetShareIntent, router, to, outbox]);
+
+  return null;
+}
+
+/** A tap on « Vérification prête » opens that check, or the batch of screenshots. */
+function NotificationOpener() {
+  const router = useRouter();
+  const response = Notifications.useLastNotificationResponse();
+  const seen = useRef<string | null>(null);
+
+  useEffect(() => {
+    const id = response?.notification.request.identifier;
+    if (!response || !id || seen.current === id) return;
+    seen.current = id;
+    const data = response.notification.request.content.data as { entry?: unknown; batch?: unknown };
+    if (typeof data.batch === "string") router.push({ pathname: "/lot", params: { batch: data.batch } });
+    else if (typeof data.entry === "string") router.push({ pathname: "/analyse", params: { id: handOff({ queued: data.entry }) } });
+    Notifications.clearLastNotificationResponseAsync().catch(() => null);
+  }, [response, router]);
 
   return null;
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="checky_menu_check">Checky</string>
+  <string name="checky_menu_translate">Translate FR ↔ MG</string>
+  <string name="checky_menu_debunk">Replace with the fact-check</string>
+  <string name="checky_work_channel">Checks in progress</string>
+  <string name="checky_tile">Check</string>
+  <string name="checky_tile_sub">What you just copied</string>
+  <string name="checky_sc_clip">Check the clipboard</string>
+  <string name="checky_sc_scan">Scan</string>
+  <string name="checky_widget_title">Checky · latest verdicts</string>
+  <string name="checky_widget_verify">Check</string>
+  <string name="checky_widget_empty">No signed verdict yet.</string>
+  <string name="checky_widget_desc">The desk\'s three latest verdicts and a Check button</string>
+</resources>

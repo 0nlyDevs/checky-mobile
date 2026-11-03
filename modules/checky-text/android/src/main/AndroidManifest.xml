@@ -1,0 +1,85 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+  <application>
+    <!-- « Checky » in the text-selection menu: checks the selected text. -->
+    <activity
+        android:name="expo.modules.checkytext.ProcessTextActivity"
+        android:label="@string/checky_menu_check"
+        android:exported="true"
+        android:excludeFromRecents="true"
+        android:theme="@style/Theme.CheckySheet"
+        android:windowSoftInputMode="adjustResize"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|density|fontScale">
+      <intent-filter>
+        <action android:name="android.intent.action.PROCESS_TEXT" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+    </activity>
+
+    <!-- « Traduire FR ↔ MG »: on text being written, the translation replaces the selection. -->
+    <activity-alias
+        android:name="expo.modules.checkytext.TranslateText"
+        android:targetActivity="expo.modules.checkytext.ProcessTextActivity"
+        android:label="@string/checky_menu_translate"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.PROCESS_TEXT" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+    </activity-alias>
+
+    <!-- « Remplacer par le démenti »: a rumour being written becomes the published démenti and its link. -->
+    <activity-alias
+        android:name="expo.modules.checkytext.DebunkText"
+        android:targetActivity="expo.modules.checkytext.ProcessTextActivity"
+        android:label="@string/checky_menu_debunk"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.PROCESS_TEXT" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+      </intent-filter>
+    </activity-alias>
+
+    <!-- Tile, shortcut and widget button: the same sheet, opened on "check the clipboard". -->
+    <activity
+        android:name="expo.modules.checkytext.QuickCheckActivity"
+        android:label="@string/checky_tile"
+        android:exported="false"
+        android:taskAffinity=""
+        android:excludeFromRecents="true"
+        android:theme="@style/Theme.CheckySheet"
+        android:windowSoftInputMode="adjustResize"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|density|fontScale" />
+
+    <service
+        android:name="expo.modules.checkytext.CheckTileService"
+        android:label="@string/checky_tile"
+        android:icon="@drawable/checky_stat"
+        android:exported="true"
+        android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+      <intent-filter>
+        <action android:name="android.service.quicksettings.action.QS_TILE" />
+      </intent-filter>
+    </service>
+
+    <receiver
+        android:name="expo.modules.checkytext.VerdictsWidget"
+        android:label="@string/checky_widget_title"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@xml/checky_widget_info" />
+    </receiver>
+
+    <service
+        android:name="expo.modules.checkytext.CheckWorkService"
+        android:exported="false"
+        android:foregroundServiceType="dataSync" />
+  </application>
+</manifest>
