@@ -1,7 +1,7 @@
 import { BricolageGrotesque_400Regular, BricolageGrotesque_500Medium, BricolageGrotesque_600SemiBold, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from "@expo-google-fonts/bricolage-grotesque";
 import { CormorantGaramond_500Medium_Italic } from "@expo-google-fonts/cormorant-garamond";
 import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useRouter, usePathname } from "expo-router";
 import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -78,6 +78,19 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   const ready = loaded && !pending && !(signedIn && loading && !current);
   const router = useRouter();
   const chosen = useRef<string | null | undefined>(undefined);
+
+  const path = usePathname();
+  // Each account state has its own first screen. While the session and /me load, the routes
+  // unmount; they come back on the screen the person was on (« inscription »), which signing in
+  // just closed, and Expo Router showed its 404. Send them where they belong instead.
+  useEffect(() => {
+    if (!ready) return;
+    if (signedIn && !current) {
+      if (path !== "/bienvenue") router.replace("/bienvenue");
+    } else if (signedIn && current && ["/accueil", "/connexion", "/inscription", "/bienvenue"].includes(path)) {
+      router.replace("/");
+    }
+  }, [ready, signedIn, current, path, router]);
 
   // A mode chosen on the first screen opens its own home. Left to Stack.Protected, the
   // welcome screen gave way to whichever public screen it found first: the scanner.
