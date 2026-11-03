@@ -92,7 +92,7 @@ export default function Batch() {
                   {a && <VerdictBadge verdict={a.verdict} suggested />}
                   {e.state === "done" && !e.result?.claims?.length && !e.result?.excerpt && <T tone="muted">{t.batch.noText}</T>}
                   {e.state === "failed" && <T tone="muted">{t.outbox.errors[e.error ?? "failed"] ?? t.outbox.errors.failed}</T>}
-                  {e.state === "done" && <Button label={t.batch.open} variant="outline" onPress={() => router.push({ pathname: "/analyse", params: { id: handOff({ queued: e.id }) } })} />}
+                  {e.state === "done" && <Button label={t.batch.open} variant="outline" onPress={() => router.push({ pathname: "/analyze", params: { id: handOff({ queued: e.id }) } })} />}
                 </View>
               </Card>
             );

@@ -52,7 +52,7 @@ export default function Scanner() {
     const a = res.assets?.[0];
     if (res.canceled || !a) return;
     const mime = a.mimeType ?? "image/jpeg";
-    router.push({ pathname: "/analyse", params: { id: handOff({ file: { uri: a.uri, mime, name: a.fileName ?? `papier.${mime.split("/")[1] ?? "jpg"}`, size: a.fileSize } }) } });
+    router.push({ pathname: "/analyze", params: { id: handOff({ file: { uri: a.uri, mime, name: a.fileName ?? `papier.${mime.split("/")[1] ?? "jpg"}`, size: a.fileSize } }) } });
   }
 
   return (
@@ -131,7 +131,7 @@ function ResultCard({ result, desk }: { result: SealResult; desk: boolean }) {
             <Button
               label={desk ? t.scanner.analyse : t.citizen.check}
               variant="outline"
-              onPress={() => router.push({ pathname: desk ? "/analyse" : "/citoyen/verifier", params: { id: handOff({ url: result.text.trim() }) } })}
+              onPress={() => router.push({ pathname: desk ? "/analyze" : "/citizen/verify", params: { id: handOff({ url: result.text.trim() }) } })}
             />
           )}
         </>

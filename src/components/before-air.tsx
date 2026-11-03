@@ -118,7 +118,7 @@ export function BeforeAir() {
     setCopied(true);
   }
 
-  const openClaim = (id: string) => router.push({ pathname: "/affirmation/[id]", params: { id } });
+  const openClaim = (id: string) => router.push({ pathname: "/claim/[id]", params: { id } });
   const top = result?.hits[0];
   const line = top
     ? t.antenne.line(top.newsroom, top.title, t.verdict[top.verdict], firstSentence(top.reason))
@@ -243,7 +243,7 @@ export function BeforeAir() {
             label={t.antenne.deeper}
             icon={MagnifyingGlass}
             variant="ghost"
-            onPress={() => router.push({ pathname: "/analyse", params: { id: handOff({ text: asked }) } })}
+            onPress={() => router.push({ pathname: "/analyze", params: { id: handOff({ text: asked }) } })}
           />
         </View>
       )}

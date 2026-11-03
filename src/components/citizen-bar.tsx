@@ -12,9 +12,9 @@ type Tab = { path: string; also?: string[]; icon: Icon; key: "check" | "verdicts
 
 /** The public site's menu, on the phone: Vérifier, Les verdicts, Signaler, Scanner. */
 const TABS: Tab[] = [
-  { path: "/citoyen", also: ["/citoyen/verifier"], icon: Scan, key: "check" },
+  { path: "/citizen", also: ["/citizen/verify"], icon: Scan, key: "check" },
   { path: "/verdicts", icon: Newspaper, key: "verdicts" },
-  { path: "/citoyen/signaler", icon: PaperPlaneTilt, key: "report" },
+  { path: "/citizen/report", icon: PaperPlaneTilt, key: "report" },
   { path: "/scanner", icon: QrCode, key: "scan" },
 ];
 

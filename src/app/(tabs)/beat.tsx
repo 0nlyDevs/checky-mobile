@@ -47,7 +47,7 @@ export default function MyBeat() {
               key={`${x.kind}-${x.id}`}
               accessibilityRole={x.item_id ? "button" : undefined}
               disabled={!x.item_id}
-              onPress={() => x.item_id && router.push({ pathname: "/affirmation/[id]", params: { id: x.item_id } })}
+              onPress={() => x.item_id && router.push({ pathname: "/claim/[id]", params: { id: x.item_id } })}
             >
               <Card style={{ gap: 4 }}>
                 <T tone="label">{[t.rubrique.kind[x.kind] ?? x.kind, x.station, ago(x.at), x.demo ? t.offline.demo : ""].filter(Boolean).join(" · ")}</T>

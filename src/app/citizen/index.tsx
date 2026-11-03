@@ -49,7 +49,7 @@ export default function CitizenHome() {
     const s = text.trim();
     if (!s) return;
     const isUrl = /^https?:\/\/\S+$/i.test(s);
-    router.push({ pathname: "/citoyen/verifier", params: { id: handOff(isUrl ? { url: s } : { text: s }) } });
+    router.push({ pathname: "/citizen/verify", params: { id: handOff(isUrl ? { url: s } : { text: s }) } });
   }
 
   /** A photo from the gallery gets the public image check (hints and a detector's score, no verdict). */
@@ -65,7 +65,7 @@ export default function CitizenHome() {
 
   function examine(file: Picked) {
     router.push({
-      pathname: "/citoyen/verifier",
+      pathname: "/citizen/verify",
       params: { id: handOff({ text: text.trim() || undefined, file }) },
     });
   }
@@ -105,7 +105,7 @@ export default function CitizenHome() {
         {tips.length > 0 && (
           <Section title={t.citizen.mine}>
             {tips.map((tip) => (
-              <Link key={tip.token} href={{ pathname: "/citoyen/suivi/[token]", params: { token: tip.token } }} asChild>
+              <Link key={tip.token} href={{ pathname: "/citizen/track/[token]", params: { token: tip.token } }} asChild>
                 <Pressable accessibilityRole="link">
                   <Card style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
                     <View style={{ flex: 1, gap: 2 }}>
@@ -140,7 +140,7 @@ export default function CitizenHome() {
           variant="ghost"
           onPress={() => {
             setMode("journalist");
-            router.replace("/connexion");
+            router.replace("/sign-in");
           }}
         />
       </Screen>

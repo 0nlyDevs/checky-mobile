@@ -21,7 +21,7 @@ const KEY = "fanilo.clip";
  * the journalist sees Checky read it), and only when the clipboard holds text, which is checked
  * first without reading it. Only a fingerprint is kept, never the text. iOS would ask to paste
  * each time, so it relies on the « Coller » button. */
-export function ClipboardOffer({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
+export function ClipboardOffer({ to }: { to: "/analyze" | "/citizen/verify" }) {
   const t = useT();
   const c = useTheme();
   const router = useRouter();

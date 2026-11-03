@@ -56,7 +56,7 @@ export default function Report() {
       });
       const name = out.newsroom?.name ?? newsrooms?.find((n) => n.slug === newsroom)?.name ?? t.app.name;
       await rememberTip({ token: out.token, ref: out.ref, title: text.trim().slice(0, 120) || url.trim(), newsroom: name, at: new Date().toISOString() });
-      router.replace({ pathname: "/citoyen/suivi/[token]", params: { token: out.token, routed: out.routed ?? "chosen" } });
+      router.replace({ pathname: "/citizen/track/[token]", params: { token: out.token, routed: out.routed ?? "chosen" } });
     } catch (e) {
       setError(
         e instanceof ApiError && e.status === 429 ? t.tip.tooMany : e instanceof ApiError && e.status === 404 ? t.tip.noNewsroom : t.tip.failed,

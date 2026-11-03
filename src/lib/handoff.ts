@@ -3,7 +3,7 @@ import { Linking } from "react-native";
 import type { CheckResult } from "@/lib/types";
 
 /** What the analysis screen checks. Handed over in memory, never through route params, so a
- * `fanilo://analyse?file=…` deep link from a web page cannot make the app upload a local file
+ * `fanilo://analyze?file=…` deep link from a web page cannot make the app upload a local file
  * or start a check on its own. */
 export type Check = {
   url?: string;

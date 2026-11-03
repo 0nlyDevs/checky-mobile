@@ -76,7 +76,7 @@ export default function CitizenCheck() {
   }, [query, run]);
 
   const report = () =>
-    router.push({ pathname: "/citoyen/signaler", params: { id: handOff({ text: job?.url && query === job.url ? "" : query, url: job?.url }) } });
+    router.push({ pathname: "/citizen/report", params: { id: handOff({ text: job?.url && query === job.url ? "" : query, url: job?.url }) } });
 
   return (
     <Screen>

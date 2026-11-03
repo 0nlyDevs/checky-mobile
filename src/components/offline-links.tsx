@@ -12,11 +12,11 @@ export function OfflineLinks({ desk }: { desk: boolean }) {
   const rows: [string, Icon, Href][] = [
     ...(desk
       ? ([
-          [t.directory.title, AddressBook, "/annuaire"],
-          [t.figures.title, ChartBar, "/chiffres"],
+          [t.directory.title, AddressBook, "/directory"],
+          [t.figures.title, ChartBar, "/figures"],
         ] as [string, Icon, Href][])
       : []),
-    [t.registry.title, Stamp, "/registre"],
+    [t.registry.title, Stamp, "/registry"],
     [t.verdictsOffline.title, SealCheck, "/verdicts"],
   ];
   return (

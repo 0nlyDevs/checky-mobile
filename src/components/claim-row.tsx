@@ -15,7 +15,7 @@ export function ClaimRow({ item }: { item: Item }) {
   const suggested = !verdict ? (d.verdict_suggested ?? null) : null;
   return (
     <Pressable
-      onPress={() => router.push({ pathname: "/affirmation/[id]", params: { id: item.id } })}
+      onPress={() => router.push({ pathname: "/claim/[id]", params: { id: item.id } })}
       accessibilityRole="button"
       style={({ pressed }) => ({ backgroundColor: c.card, borderColor: c.border, borderWidth: 1, borderRadius: radius.card, padding: 14, gap: 8, transform: [{ scale: pressed ? 0.97 : 1 }], opacity: pressed ? 0.9 : 1 })}
     >
