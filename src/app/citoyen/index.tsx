@@ -8,7 +8,9 @@ import useSWR from "swr";
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Brand } from "@/components/brand";
 import { LanguagePicker } from "@/components/language-picker";
+import { OfflineNotice } from "@/components/outbox";
 import { Button, Card, Field, Screen, Section, T } from "@/components/ui";
+import { cachedAt } from "@/lib/cache";
 import { ago } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
 import { useT } from "@/lib/i18n";
@@ -28,7 +30,8 @@ export default function CitizenHome() {
   const { setMode } = useMode();
   const [text, setText] = useState("");
   const [tips, setTips] = useState<MyTip[]>([]);
-  const { data: latest } = useSWR<Page>(`/verdicts?limit=5${country ? `&country=${country}` : ""}`, publicFetcher);
+  const latestKey = `/verdicts?limit=5${country ? `&country=${country}` : ""}`;
+  const { data: latest } = useSWR<Page>(latestKey, publicFetcher);
 
   useFocusEffect(
     useCallback(() => {
@@ -84,6 +87,7 @@ export default function CitizenHome() {
       )}
 
       <Section title={t.citizen.latest}>
+        <OfflineNotice stale={!!latest} at={cachedAt(latestKey)} />
         {latest?.items.length ? latest.items.map((v) => <PublicVerdictRow key={v.id} v={v} />) : <T tone="muted">{t.citizen.noLatest}</T>}
       </Section>
 

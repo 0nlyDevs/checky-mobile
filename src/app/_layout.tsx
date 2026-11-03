@@ -10,6 +10,7 @@ import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SWRConfig } from "swr";
 
+import { OfflineSync } from "@/components/offline-sync";
 import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
 import { persistentCache } from "@/lib/cache";
@@ -100,6 +101,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   return (
     <>
       <StatusBar style="auto" />
+      <OfflineSync desk={inDesk} />
       {inDesk && <ShareForwarder to="/analyse" />}
       {citizen && <ShareForwarder to="/citoyen/verifier" />}
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.background } }}>
