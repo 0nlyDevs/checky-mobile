@@ -290,6 +290,20 @@ export const t = {
     signOutPending: (n: number) =>
       n === 1 ? "1 élément n'est pas encore envoyé. Il sera effacé de ce téléphone." : `${n} éléments ne sont pas encore envoyés. Ils seront effacés de ce téléphone.`,
   },
+  // Verified newsrooms (same words as the desk's banner): only a verified, public newsroom publishes.
+  verification: {
+    banner: {
+      none: "Rédaction non vérifiée : vous travaillez en privé, rien n'est publié.",
+      pending: "En attente de validation : la rédaction travaille en privé, rien n'est publié pour l'instant.",
+      refused: "Demande de vérification refusée : rien n'est publié.",
+      approved: "Rédaction vérifiée par Checky",
+    } as Record<string, string>,
+    ask: "Demander la vérification",
+    see: "Voir la demande",
+    fix: "Corriger la demande",
+    onWeb: "Ouvre les réglages du desk dans le navigateur",
+    shareNote: "La carte et le texte partent quand même par vos applications, mais rien n'apparaît sur la page publique des verdicts.",
+  },
   outbox: {
     title: "À envoyer",
     offline: "Hors ligne. Ce que vous captez reste sur le téléphone et part tout seul au retour du réseau.",

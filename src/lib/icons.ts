@@ -17,10 +17,12 @@ import {
   CloudSlash as PCloudSlash,
   FileText as PFileText,
   Gear as PGear,
+  Hourglass as PHourglass,
   ImageSquare as PImageSquare,
   Images as PImages,
   Link as PLink,
   ListChecks as PListChecks,
+  LockSimple as PLockSimple,
   MagnifyingGlass as PMagnifyingGlass,
   Newspaper as PNewspaper,
   Paperclip as PPaperclip,
@@ -67,10 +69,12 @@ export const CloudArrowUp = duo(PCloudArrowUp);
 export const CloudSlash = duo(PCloudSlash);
 export const FileText = duo(PFileText);
 export const Gear = duo(PGear);
+export const Hourglass = duo(PHourglass);
 export const ImageSquare = duo(PImageSquare);
 export const Images = duo(PImages);
 export const Link = duo(PLink);
 export const ListChecks = duo(PListChecks);
+export const LockSimple = duo(PLockSimple);
 export const MagnifyingGlass = duo(PMagnifyingGlass);
 export const Newspaper = duo(PNewspaper);
 export const Paperclip = duo(PPaperclip);

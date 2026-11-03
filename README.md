@@ -37,7 +37,7 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/affirmations` | The newsroom's claims, filtered by status, searchable |
 | `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), **Partager le verdict** (the 1080 × 1080 card in French or Malagasy and the post written from the verdict, through the share sheet; sharing moves a verified claim to Publié, as in the desk), status, AI source analysis, sources (add a link or a file), comments |
 | `/verifier` | Ask every source of the newsroom; the answer streams and cites its passages |
-| `/reglages` | Account, newsroom switch, service health, demo reset, sign out |
+| `/reglages` | Account, newsroom switch and its verification status (the request is made on the web desk), service health, demo reset, sign out |
 
 Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link in the desk, or `/citoyen/verifier` in citizen mode. A share made before a mode is chosen, or while a journalist is signed out, waits until then.
 

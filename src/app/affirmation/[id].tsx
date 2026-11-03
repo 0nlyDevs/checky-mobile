@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictPanel, styles } from "@/components/ui";
+import { VerificationNotice } from "@/components/verification";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
@@ -202,7 +203,8 @@ export default function ClaimDetail() {
       </Section>
 
       {!!d.verdict && (
-        <Section title={t.card.title}>
+        <Section title={t.card.title} note={current && current.verification !== "approved" ? t.verification.shareNote : undefined}>
+          {current && <VerificationNotice membership={current} />}
           <ShareVerdict
             key={d.verdict}
             ws={ws}
