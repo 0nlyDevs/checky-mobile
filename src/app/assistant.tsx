@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { type ComponentRef, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Button, Chip, Field, Notice, Step, T, styles } from "@/components/ui";
@@ -14,6 +14,7 @@ import { myTips, publicApi, rememberTip } from "@/lib/public";
 import { postStream } from "@/lib/sse";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import { useWorkspace } from "@/lib/workspace";
+import { goBack } from "@/lib/nav";
 
 type Cite = { n: number; title: string; url?: string | null; id?: string; verdict?: string };
 /** A change the agent proposes; nothing happens until the person confirms it here. */
@@ -179,10 +180,10 @@ export default function Assistant() {
             : "";
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: c.background }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: c.background }} behavior="padding">
       <ScrollView ref={scroll} contentContainerStyle={{ padding: 20, paddingTop: 56, gap: 16 }} keyboardShouldPersistTaps="handled">
         <View style={styles.row}>
-          <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
             <ArrowLeft size={24} color={c.foreground} />
           </Pressable>
           <T tone="title" style={{ flex: 1 }}>

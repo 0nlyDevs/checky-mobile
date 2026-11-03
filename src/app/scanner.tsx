@@ -16,6 +16,7 @@ import { fonts, radius, useTheme } from "@/lib/theme";
 import type { Verdict } from "@/lib/types";
 import { VERDICTS } from "@/lib/types";
 import { useWorkspace } from "@/lib/workspace";
+import { goBack } from "@/lib/nav";
 
 /** « Scanner » (brief 4.6): a QR seal is checked on the phone against the issuer keys it keeps,
  * with no network; a journalist can also photograph a printed notice, which goes to the
@@ -57,7 +58,7 @@ export default function Scanner() {
   return (
     <Screen>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="title" style={{ flex: 1 }}>

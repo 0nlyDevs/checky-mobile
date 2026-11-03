@@ -12,6 +12,7 @@ import { deviceCountry, type Newsroom, publicApi, publicFetcher, rememberTip } f
 import { useTheme } from "@/lib/theme";
 import type { components } from "@/lib/api-schema";
 import type { Origin } from "@/lib/types";
+import { goBack } from "@/lib/nav";
 
 type Schemas = components["schemas"];
 
@@ -67,7 +68,7 @@ export default function Report() {
   return (
     <Screen>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="title">{t.tip.title}</T>

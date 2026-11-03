@@ -55,6 +55,7 @@ export const en: Overrides = {
     journalist: "I'm a journalist",
     journalistHint: "Sign in to your newsroom's desk.",
   },
+  citizenNav: { check: "Check", verdicts: "Verdicts", report: "Report", scan: "Scanner" },
   citizen: {
     title: "Check something",
     lead: "Paste the message or link you received. Checky looks for a newsroom that has already checked it, and helps you report it if not.",

@@ -137,7 +137,7 @@ export default function CitizenHome() {
           }}
         />
       </Screen>
-      <CheckyButton tabs={false} />
+      <CheckyButton />
     </View>
   );
 }

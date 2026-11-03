@@ -57,6 +57,7 @@ export const mg: Overrides = {
     journalist: "Mpanao gazety aho",
     journalistHint: "Midira amin'ny desk-n'ny tranom-gazetinao.",
   },
+  citizenNav: { check: "Hamarino", verdicts: "Ny didy", report: "Hampandre", scan: "Scanner" },
   citizen: {
     title: "Hanamarina vaovao",
     lead: "Apetaho eto ny hafatra na ny rohy voarainao. Mitady i Checky raha efa nohamarinin'ny mpanao gazety izy, ary manampy anao hampandre raha tsy izany.",

@@ -19,6 +19,7 @@ import { fonts, radius, useTheme } from "@/lib/theme";
 import type { CheckResult, Origin } from "@/lib/types";
 import { uploadFile, waitReady } from "@/lib/upload";
 import { useWs } from "@/lib/workspace";
+import { goBack } from "@/lib/nav";
 
 type Steps = Record<string, { state: StepState; detail?: string }>;
 
@@ -188,7 +189,7 @@ export default function Analyse() {
   return (
     <Screen>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="title" style={{ flex: 1 }}>

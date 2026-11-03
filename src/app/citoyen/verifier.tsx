@@ -11,6 +11,7 @@ import { handOff, openWeb, pickUp } from "@/lib/handoff";
 import { day, tr, useLang, useT } from "@/lib/i18n";
 import { deviceCountry, type Fact, publicApi, type Review, type Verify } from "@/lib/public";
 import { fonts, radius, useTheme } from "@/lib/theme";
+import { goBack } from "@/lib/nav";
 
 const LONE_URL = /^https?:\/\/\S+$/i;
 
@@ -64,7 +65,7 @@ export default function CitizenCheck() {
   return (
     <Screen>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="title" style={{ flex: 1 }}>

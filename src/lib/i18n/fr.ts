@@ -52,6 +52,7 @@ export const t = {
     journalist: "Je suis journaliste",
     journalistHint: "Connectez-vous au desk de votre rédaction.",
   },
+  citizenNav: { check: "Vérifier", verdicts: "Les verdicts", report: "Signaler", scan: "Scanner" },
   citizen: {
     title: "Vérifier une info",
     lead: "Collez le message ou le lien reçu. Checky cherche si une rédaction l'a déjà vérifié, et vous aide à le signaler sinon.",

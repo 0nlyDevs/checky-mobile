@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { ArrowLeft, FileText, type Icon, ImageSquare, Link, Paperclip, TextT, VideoCamera, Waveform } from "@/lib/icons";
 import { useState } from "react";
 import { Alert, Pressable, View } from "react-native";
@@ -20,6 +20,7 @@ import { fonts, radius, tracking, useTheme } from "@/lib/theme";
 import { type ClaimData, type Comment, type Item, type ItemPatch, type Source, STATUSES, type Status, type Verdict, VERDICTS } from "@/lib/types";
 import { uploadFile } from "@/lib/upload";
 import { useWorkspace, useWs } from "@/lib/workspace";
+import { goBack } from "@/lib/nav";
 
 const KIND_ICON: Record<string, Icon> = { url: Link, pdf: FileText, image: ImageSquare, audio: Waveform, video: VideoCamera, text: TextT };
 
@@ -32,7 +33,6 @@ function statusAfter(verdict: Verdict | null, status: Status): Status {
 export default function ClaimDetail() {
   const t = useT();
   const c = useTheme();
-  const router = useRouter();
   const ws = useWs();
   const { me, current } = useWorkspace();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -148,7 +148,7 @@ export default function ClaimDetail() {
     <>
     <Screen bottomInset={awaiting ? SIGN_BAR_ROOM + 48 : 48}>
       <View style={styles.row}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => router.back()} hitSlop={12} style={{ padding: 4 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
         </Pressable>
         <T tone="tabular" style={{ fontSize: 20 }}>

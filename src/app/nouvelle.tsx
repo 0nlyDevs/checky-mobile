@@ -9,6 +9,7 @@ import { isNetworkError, isOnline } from "@/lib/network";
 import { useOutbox } from "@/lib/outbox";
 import type { Origin } from "@/lib/types";
 import { useWs } from "@/lib/workspace";
+import { goBack } from "@/lib/nav";
 
 const ORIGINS: Origin[] = ["whatsapp", "facebook", "tiktok", "radio", "press", "other"];
 
@@ -53,7 +54,7 @@ export default function NewClaim() {
       <Screen>
         <T tone="title">{t.newClaim.title}</T>
         <Notice>{t.outbox.queuedClaim}</Notice>
-        <Button label={t.outbox.back} onPress={() => router.back()} />
+        <Button label={t.outbox.back} onPress={goBack} />
       </Screen>
     );
   }
@@ -72,7 +73,7 @@ export default function NewClaim() {
       </View>
       {error && <Notice tone="error">{t.newClaim.failed}</Notice>}
       <Button label={t.newClaim.create} busy={busy} disabled={!title.trim()} onPress={create} />
-      <Button label={t.common.cancel} variant="ghost" onPress={() => router.back()} />
+      <Button label={t.common.cancel} variant="ghost" onPress={goBack} />
     </Screen>
   );
 }

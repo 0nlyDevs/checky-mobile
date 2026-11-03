@@ -2,6 +2,7 @@ import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass
 import { type ComponentProps, type ReactNode, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Pressable,
   type PressableProps,
   ScrollView,
@@ -17,6 +18,8 @@ import {
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useCitizenBar } from "@/components/citizen-bar";
+import { TAB_BAR_HEIGHT } from "@/components/tab-bar";
 import { useT } from "@/lib/i18n";
 import { fonts, radius, tracking, useTheme } from "@/lib/theme";
 import type { Status, Verdict } from "@/lib/types";
@@ -37,12 +40,18 @@ export function T({ tone = "default", style, ...rest }: TextProps & { tone?: Ton
 
 export function Screen({ children, scroll = true, bottomInset = 48, ...rest }: ScrollViewProps & { scroll?: boolean; bottomInset?: number }) {
   const c = useTheme();
+  // The citizen's bottom bar sits over the screen: the last row must clear it.
+  const bar = useCitizenBar() ? TAB_BAR_HEIGHT : 0;
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
       {scroll ? (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: bottomInset, gap: 16 }} {...rest}>
-          {children}
-        </ScrollView>
+        // The app draws edge to edge, so Android no longer shrinks the window for the keyboard:
+        // the field being typed in is lifted above it here, on both platforms.
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+          <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: bottomInset + bar, gap: 16 }} {...rest}>
+            {children}
+          </ScrollView>
+        </KeyboardAvoidingView>
       ) : (
         <View style={{ flex: 1 }}>{children}</View>
       )}
