@@ -3,14 +3,15 @@ import { Pressable, RefreshControl, View } from "react-native";
 
 import { AgeLine } from "@/components/age-line";
 import { ClaimRow } from "@/components/claim-row";
+import { ContentRail } from "@/components/content-rail";
 import { FigureCard } from "@/components/figure-card";
 import { OfflineLinks } from "@/components/offline-links";
 import { useSyncNow } from "@/components/offline-sync";
 import { useTabInset } from "@/components/tab-bar";
-import { Card, Screen, Section, T, styles } from "@/components/ui";
+import { Button, Card, Screen, Section, T, styles } from "@/components/ui";
 import { ago } from "@/lib/format";
 import { useT } from "@/lib/i18n";
-import { Checks, Phone } from "@/lib/icons";
+import { AddressBook, Checks, Phone, Scan } from "@/lib/icons";
 import { keys, type Rubrique, useStored, useSyncState } from "@/lib/offline";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import { useWs } from "@/lib/workspace";
@@ -36,9 +37,15 @@ export default function MyBeat() {
         <T tone="muted">{[r?.today_label, scope].filter(Boolean).join(" · ") || t.rubrique.prefs}</T>
         <AgeLine at={kept?.at} />
       </View>
+      {!r && <T tone="muted">{sync.running ? t.common.loading : t.rubrique.nothing}</T>}
 
-      {r && (r.to_sign.length > 0 ? <Section title={t.rubrique.toSign}>{r.to_sign.map((i) => <ClaimRow key={i.id} item={i} />)}</Section> : null)}
-      {r && r.mine.length > 0 && <Section title={t.rubrique.mine}>{r.mine.map((i) => <ClaimRow key={i.id} item={i} />)}</Section>}
+      <View style={{ flexDirection: "row", gap: 10 }}>
+        <Button label={t.citizen.check} icon={Scan} style={{ flex: 1 }} onPress={() => router.navigate("/")} />
+        <Button label={t.directory.title} icon={AddressBook} variant="outline" style={{ flex: 1 }} onPress={() => router.push("/annuaire")} />
+      </View>
+      {r && r.to_sign.length > 0 && <Card style={{ backgroundColor: c.primary, borderColor: c.primary, padding: 22 }}><T style={{ color: c.primaryForeground, fontFamily: fonts.medium, fontSize: 13 }}>{t.navigation.attention}</T><T style={{ color: c.primaryForeground, fontFamily: fonts.display, fontSize: 29, lineHeight: 35 }}>{r.to_sign.length} · {t.rubrique.toSign}</T><Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/affirmation/[id]", params: { id: r.to_sign[0].id } })} style={{ minHeight: 44, justifyContent: "center" }}><T style={{ color: c.primaryForeground, fontFamily: fonts.semibold, textDecorationLine: "underline" }}>{t.navigation.resume}</T></Pressable></Card>}
+      {r && <ContentRail title={t.rubrique.toSign} items={r.to_sign} itemKey={i => i.id} renderItem={i => <ClaimRow item={i} compact />} />}
+      {r && <ContentRail title={t.rubrique.mine} items={r.mine.filter(i => !r.to_sign.some(s => s.id === i.id))} itemKey={i => i.id} renderItem={i => <ClaimRow item={i} compact />} onSeeAll={() => router.navigate("/affirmations")} />}
 
       {r && r.circulating.length > 0 && (
         <Section title={t.rubrique.circulating}>
@@ -65,9 +72,8 @@ export default function MyBeat() {
       )}
 
       {r && r.contacts.length > 0 && (
-        <Section title={t.rubrique.contacts}>
-          {r.contacts.map((x) => (
-            <Card key={x.id} style={{ gap: 4 }}>
+        <ContentRail title={t.rubrique.contacts} items={r.contacts} itemKey={x => x.id} onSeeAll={() => router.push("/annuaire")} renderItem={x => (
+            <Card style={{ gap: 10, padding: 20, minHeight: 180 }}>
               <T style={{ fontFamily: fonts.semibold }}>{x.name}</T>
               <T tone="muted">{[x.role, x.institution, x.region, x.is_demo ? t.offline.demo : ""].filter(Boolean).join(" · ")}</T>
               {x.phone && (
@@ -79,22 +85,19 @@ export default function MyBeat() {
                 </View>
               )}
             </Card>
-          ))}
-        </Section>
+          )} />
       )}
 
-      {r && r.figures.length > 0 && <Section title={t.rubrique.figures}>{r.figures.map((f) => <FigureCard key={f.id} f={f} />)}</Section>}
+      {r && <ContentRail title={t.rubrique.figures} items={r.figures} itemKey={f => f.id} renderItem={f => <FigureCard f={f} />} onSeeAll={() => router.push("/chiffres")} />}
 
       {r && r.angles.length > 0 && (
-        <Section title={t.rubrique.angles} note={t.rubrique.anglesNote}>
-          {r.angles.map((a, i) => (
+        <ContentRail title={t.rubrique.angles} items={r.angles} itemKey={a => `${a.title}-${a.kind}`} renderItem={a => (
             // A suggestion: dashed until a journalist keeps it.
-            <View key={`${a.title}-${i}`} style={{ gap: 4, padding: 14, borderRadius: radius.card, borderWidth: 2, borderStyle: "dashed", borderColor: c.border }}>
+            <View style={{ gap: 12, padding: 20, minHeight: 200, borderRadius: radius.card, borderWidth: 2, borderStyle: "dashed", borderColor: c.input }}>
               <T style={{ fontFamily: fonts.semibold }}>{a.title}</T>
               <T tone="muted">{a.why}</T>
             </View>
-          ))}
-        </Section>
+          )} />
       )}
 
       {r && !r.to_sign.length && !r.mine.length && !r.circulating.length && <T tone="muted">{t.rubrique.nothing}</T>}

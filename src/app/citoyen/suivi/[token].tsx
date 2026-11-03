@@ -5,6 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useSWR from "swr";
 
 import { PublicVerdictRow } from "@/components/public-verdict-row";
+import { useAppChrome } from "@/components/app-header";
+import { TAB_BAR_HEIGHT } from "@/components/tab-bar";
 import { Card, Notice, Section, Step, T, styles } from "@/components/ui";
 import { ago } from "@/lib/format";
 import { useT } from "@/lib/i18n";
@@ -19,6 +21,7 @@ export default function FollowTip() {
   const t = useT();
   const c = useTheme();
   const router = useRouter();
+  const chrome = useAppChrome();
   const { token, routed } = useLocalSearchParams<{ token: string; routed?: string }>();
   // How Checky chose the newsroom, said once, right after sending (only known keys are shown).
   const how = routed && Object.hasOwn(t.tip.routed, routed) ? t.tip.routed[routed] : undefined;
@@ -27,8 +30,8 @@ export default function FollowTip() {
   const reached = data ? ORDER.indexOf(data.status) : -1;
 
   return (
-    <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 48 }} refreshControl={<RefreshControl refreshing={isLoading && !!data} onRefresh={() => void mutate()} />}>
+    <SafeAreaView edges={chrome ? [] : ["top"]} style={{ flex: 1, backgroundColor: c.background }}>
+      <ScrollView contentContainerStyle={{ padding: 16, gap: 20, paddingBottom: TAB_BAR_HEIGHT + 64 }} refreshControl={<RefreshControl refreshing={isLoading && !!data} onRefresh={() => void mutate()} />}>
         <View style={styles.row}>
           <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={() => (router.canGoBack() ? router.back() : router.replace("/citoyen"))} hitSlop={12} style={{ padding: 4 }}>
             <ArrowLeft size={24} color={c.foreground} />

@@ -148,7 +148,47 @@ EXPO_PUBLIC_WEB_URL=https://… EXPO_PUBLIC_API_URL=https://… \
 
 iOS needs a Mac with Xcode (`npx expo run:ios`) or EAS Build (`npx eas-cli build -p ios`, Apple developer account).
 
+#### Android release startup and R8
+
+WorkManager initializes before React Native starts and Room creates
+`androidx.work.impl.WorkDatabase_Impl` through reflection. The
+`expo-build-properties` plugin in `app.json` keeps that class and its public
+no-argument constructor. Without that rule, R8 can remove the constructor and
+the app crashes in `androidx.startup.InitializationProvider` with
+`NoSuchMethodException: <init> []` before displaying a screen.
+
+Keep this rule in the Expo configuration, not in the generated `android/`
+directory. A native change requires a rebuilt and reinstalled APK; a Metro
+reload or an over-the-air JavaScript update cannot fix an already-built APK.
+For the existing internal build profile:
+
+```bash
+npx eas-cli@latest build --platform android --profile preview --clear-cache
+```
+
+Test the resulting **release** APK on a device, including a cold start, before
+distributing it. A successful debug build does not exercise R8.
+
 ## Checks
+
+### Navigation and accessibility
+
+- Every working screen has a fixed Checky header with Home, Talk and Menu. The menu
+  exposes the tools previously below long feeds, and offers different destinations
+  for visitors and journalists. Citizens can find their report follow-up links directly.
+- Case search and status filters stay outside the scrolling list. The unfiltered
+  case view and beat use horizontal category rails with visible scroll indicators,
+  counts and an explicit list alternative. Case details have fixed section shortcuts.
+- Platform admins get a guarded native newsroom review screen. The backend still
+  checks permissions; approval needs confirmation and refusal needs a reason.
+- The assistant can transcribe a short recording into the editable composer. Sending
+  remains explicit. Read-aloud uses an installed device voice where available, otherwise
+  the existing server voice for French/Malagasy; unavailable voices leave the text usable.
+  Audio is stopped when leaving the assistant. Recordings stop when the app backgrounds.
+- `expo-speech` adds native code: rebuild the APK to test these changes. Validate the
+  menu, large text, horizontal/list alternatives, microphone permissions and admin
+  access on a physical device before distribution. The earlier R8 constructor rule
+  remains required for release builds.
 
 ```bash
 npx tsc --noEmit && npx eslint src index.ts modules && npm test

@@ -1,20 +1,23 @@
-import { useRouter } from "expo-router";
-import { type ComponentRef, useRef, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { type ComponentRef, useCallback, useRef, useState } from "react";
 import { KeyboardAvoidingView, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Button, Chip, Field, Notice, Step, T, styles } from "@/components/ui";
+import { VoiceComposer } from "@/components/voice-composer";
+import { AnswerVoice } from "@/components/answer-voice";
 import { api, ApiError } from "@/lib/api";
 import { WEB_URL } from "@/lib/config";
 import { openWeb } from "@/lib/handoff";
 import { tr, useLang, useT } from "@/lib/i18n";
-import { ArrowLeft, ArrowSquareOut, PaperPlaneTilt, Sparkle } from "@/lib/icons";
+import { ArrowLeft, ArrowSquareOut, Microphone, PaperPlaneTilt, Sparkle } from "@/lib/icons";
 import { useMode } from "@/lib/mode";
 import { myTips, publicApi, rememberTip } from "@/lib/public";
 import { postStream } from "@/lib/sse";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import { useWorkspace } from "@/lib/workspace";
 import { goBack } from "@/lib/nav";
+import { mobileRoute } from "@/lib/navigation";
 
 type Cite = { n: number; title: string; url?: string | null; id?: string; verdict?: string };
 /** A change the agent proposes; nothing happens until the person confirms it here. */
@@ -46,21 +49,6 @@ function cited(answer: string): Set<number> {
 }
 
 /** A page of the web the agent opens, as the screen of this app when there is one. */
-function appRoute(href: string, desk: boolean): string | null {
-  const path = href.replace(/^https?:\/\/[^/]+/, "").split("?")[0];
-  const m = (re: RegExp) => path.match(re);
-  let x: RegExpMatchArray | null;
-  if ((x = m(/^\/verifies\/([\w-]+)$/))) return `/citoyen/verdict/${x[1]}`;
-  if (path === "/verifies") return "/verdicts";
-  if (!desk && (x = m(/^\/suivi\/([\w-]+)$/))) return `/citoyen/suivi/${x[1]}`;
-  if (!desk && path === "/signaler") return "/citoyen/signaler";
-  if (!desk) return null;
-  if ((x = m(/^\/w\/[\w-]+\/affirmations\/([\w-]+)$/))) return `/affirmation/${x[1]}`;
-  const page = m(/^\/w\/[\w-]+\/([\w-]+)$/)?.[1];
-  const tabs: Record<string, string> = { affirmations: "/affirmations", verifier: "/", analyser: "/", rubrique: "/rubrique", parametres: "/reglages", annuaire: "/annuaire", chiffres: "/chiffres", registre: "/registre" };
-  return page ? (tabs[page] ?? null) : null;
-}
-
 /**
  * Checky's assistant, as on the web: without an account the visitors' guide (`/public/agent`:
  * published verdicts with citations, a tip drafted then sent by the citizen, the follow-up of their
@@ -72,6 +60,9 @@ export default function Assistant() {
   const c = useTheme();
   const lang = useLang();
   const router = useRouter();
+  const { voice } = useLocalSearchParams<{ voice?: string }>();
+  const [voiceMode, setVoiceMode] = useState(voice === "1");
+  useFocusEffect(useCallback(() => { if (voice === "1") setVoiceMode(true); }, [voice]));
   const { bottom } = useSafeAreaInsets();
   const { mode } = useMode();
   const { current } = useWorkspace();
@@ -80,6 +71,7 @@ export default function Assistant() {
   const a = t.assistant;
   const [turns, setTurns] = useState<Turn[]>([]);
   const [text, setText] = useState("");
+  const addDictation = useCallback((value: string) => setText(previous => previous.trim() ? `${previous}\n${value}` : value), []);
   const seq = useRef(0);
   const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const busy = turns.some((x) => x.state === "thinking");
@@ -89,7 +81,7 @@ export default function Assistant() {
     update(turn, (x) => ({ actions: x.actions?.map((ac) => (ac.id === action ? { ...ac, ...patch } : ac)) }));
 
   function open(href: string) {
-    const route = appRoute(href, desk);
+    const route = mobileRoute(href, desk);
     if (route) router.push(route as never);
     else openWeb(href.startsWith("http") ? href : `${WEB_URL}${href}`);
   }
@@ -111,7 +103,7 @@ export default function Assistant() {
     setTurns((all) => [...all, { id, question: q, answer: "", state: "thinking", steps: [] }]);
     setText("");
     const tips = ws ? [] : (await myTips()).map((x) => x.token);
-    const body = { messages, lang, page: ws ? `/w/${ws}` : "/", tips, voice: false };
+    const body = { messages, lang, page: ws ? `/w/${ws}` : "/", tips, voice: voiceMode };
     let actions: Action[] = [];
     try {
       await postStream(
@@ -181,7 +173,7 @@ export default function Assistant() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: c.background }} behavior="padding">
-      <ScrollView ref={scroll} contentContainerStyle={{ padding: 20, paddingTop: 56, gap: 16 }} keyboardShouldPersistTaps="handled">
+      <ScrollView ref={scroll} contentContainerStyle={{ padding: 20, gap: 24 }} keyboardShouldPersistTaps="handled">
         <View style={styles.row}>
           <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
             <ArrowLeft size={24} color={c.foreground} />
@@ -226,6 +218,7 @@ export default function Assistant() {
               {x.state === "done" && (
                 <View style={{ gap: 10 }}>
                   {!!x.answer && <T style={{ fontSize: 16, lineHeight: 24 }}>{x.answer.replace(/【(\d+)[^】]*】/g, "[$1]").replace(/\*\*(.+?)\*\*/g, "$1")}</T>}
+                  {!!x.answer && <AnswerVoice text={x.answer} />}
                   {used.length > 0 && (
                     <View style={{ gap: 6 }}>
                       <T tone="label">{a.files}</T>
@@ -291,7 +284,10 @@ export default function Assistant() {
         })}
       </ScrollView>
 
-      <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 8, paddingHorizontal: 16, paddingTop: 10, paddingBottom: bottom + 12, borderTopWidth: 1, borderTopColor: c.border, backgroundColor: c.background }}>
+      <View style={{ paddingHorizontal: 16, paddingTop: 10, paddingBottom: bottom + 12, borderTopWidth: 1, borderTopColor: c.border, backgroundColor: c.background, gap: 10 }}>
+      {voiceMode && <VoiceComposer onText={addDictation} disabled={busy} />}
+      <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 8 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.navigation.dictate} accessibilityState={{ selected: voiceMode }} onPress={() => setVoiceMode(!voiceMode)} style={{ minWidth: 44, minHeight: 48, alignItems: "center", justifyContent: "center" }}><Microphone size={23} color={c.foreground} /></Pressable>
         <View style={{ flex: 1 }}>
           <Field placeholder={a.placeholder} value={text} onChangeText={setText} multiline style={{ maxHeight: 120 }} accessibilityLabel={a.placeholder} />
         </View>
@@ -312,6 +308,7 @@ export default function Assistant() {
         >
           {busy ? <Sparkle size={22} color={c.primaryForeground} /> : <PaperPlaneTilt size={22} color={c.primaryForeground} />}
         </Pressable>
+      </View>
       </View>
     </KeyboardAvoidingView>
   );

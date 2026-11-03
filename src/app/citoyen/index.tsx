@@ -7,8 +7,7 @@ import { Pressable, View } from "react-native";
 import useSWR from "swr";
 
 import { PublicVerdictRow } from "@/components/public-verdict-row";
-import { Brand } from "@/components/brand";
-import { CheckyButton } from "@/components/checky-button";
+import { ContentRail } from "@/components/content-rail";
 import { LanguagePicker } from "@/components/language-picker";
 import { LightSuggest, LightSwitch } from "@/components/light";
 import { OfflineLinks } from "@/components/offline-links";
@@ -77,7 +76,6 @@ export default function CitizenHome() {
   return (
     <View style={{ flex: 1 }}>
       <Screen bottomInset={96}>
-        <Brand />
         <View style={{ gap: 6 }}>
           <T tone="title">{t.citizen.title}</T>
           <T tone="muted">{t.citizen.lead}</T>
@@ -125,10 +123,10 @@ export default function CitizenHome() {
           </Section>
         )}
 
-        <Section title={t.citizen.latest}>
+        <View>
           <OfflineNotice stale={!!latest} at={cachedAt(latestKey)} />
-          {latest?.items.length ? latest.items.map((v) => <PublicVerdictRow key={v.id} v={v} />) : <T tone="muted">{t.citizen.noLatest}</T>}
-        </Section>
+          {latest?.items.length ? <ContentRail title={t.citizen.latest} items={latest.items} itemKey={v => v.id} renderItem={v => <PublicVerdictRow v={v} />} onSeeAll={() => router.navigate("/verdicts")} /> : <T tone="muted">{t.citizen.noLatest}</T>}
+        </View>
 
         <LanguagePicker />
         <Section title={t.offline.title}>
@@ -144,7 +142,6 @@ export default function CitizenHome() {
           }}
         />
       </Screen>
-      <CheckyButton />
     </View>
   );
 }

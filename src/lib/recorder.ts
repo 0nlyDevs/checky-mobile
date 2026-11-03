@@ -1,5 +1,6 @@
 import { AudioQuality, IOSOutputFormat, requestRecordingPermissionsAsync, type RecordingOptions, setAudioModeAsync, useAudioRecorder } from "expo-audio";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AppState } from "react-native";
 
 /** Brief 6.3, « audio at 32 kbps »: mono speech, a 30 s note weighs about 120 kB. */
 export const SPEECH: RecordingOptions = {
@@ -71,6 +72,11 @@ export function useTake(max: number) {
     setElapsed(0);
     setState("idle");
   }, []);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", state => { if (state !== "active") void stop(); });
+    return () => subscription.remove();
+  }, [stop]);
 
   // Leaving the screen ends the take: the microphone is never left open.
   useEffect(

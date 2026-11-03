@@ -22,7 +22,7 @@ const TABS: Tab[] = [
 export function useCitizenBar(): boolean {
   const { mode } = useMode();
   const path = usePathname();
-  return mode === "citizen" && TABS.some((tab) => tab.path === path || tab.also?.includes(path));
+  return mode === "citizen" && (path.startsWith("/citoyen") || ["/verdicts", "/registre", "/scanner"].includes(path));
 }
 
 /** The ink bar of citizen mode, drawn like the desk's tab bar: the current place is a paper pill. */
@@ -51,7 +51,7 @@ export function CitizenBar() {
       }}
     >
       {TABS.map((tab) => {
-        const selected = tab.path === path || !!tab.also?.includes(path);
+        const selected = tab.path === path || !!tab.also?.includes(path) || (tab.key === "verdicts" && path.startsWith("/citoyen/verdict/")) || (tab.key === "report" && (path.startsWith("/citoyen/suivi/") || path === "/citoyen/signalements"));
         const color = selected ? c.navActiveForeground : c.navForeground;
         const label = t.citizenNav[tab.key];
         const Glyph = tab.icon;

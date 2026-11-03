@@ -48,7 +48,7 @@
       ],
       "expo-secure-store",
       "expo-video",
-      ["expo-audio", { "microphonePermission": "Checky enregistre votre voix pour le démenti et ce que vous entendez à la radio.", "enableBackgroundPlayback": false }],
+      ["expo-audio", { "microphonePermission": "Checky utilise le micro pour dicter une question, enregistrer un démenti ou un extrait entendu à la radio.", "enableBackgroundPlayback": false }],
       [
         "expo-image-picker",
         {

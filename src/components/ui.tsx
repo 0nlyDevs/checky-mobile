@@ -1,5 +1,5 @@
 import { Broadcast, Check, CheckCircle, CircleDashed, type Icon, MagnifyingGlass, Question, SealCheck, SpinnerGap, Warning, X, XCircle } from "@/lib/icons";
-import { type ComponentProps, type ReactNode, useEffect, useState } from "react";
+import { type ComponentProps, type ComponentRef, type ReactNode, type Ref, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -16,9 +16,10 @@ import {
   type ViewProps,
 } from "react-native";
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useCitizenBar } from "@/components/citizen-bar";
+import { useAppChrome } from "@/components/app-header";
 import { TAB_BAR_HEIGHT } from "@/components/tab-bar";
 import { useT } from "@/lib/i18n";
 import { fonts, radius, tracking, useTheme } from "@/lib/theme";
@@ -38,17 +39,20 @@ export function T({ tone = "default", style, ...rest }: TextProps & { tone?: Ton
   return <Text style={[base, style]} {...rest} />;
 }
 
-export function Screen({ children, scroll = true, bottomInset = 48, ...rest }: ScrollViewProps & { scroll?: boolean; bottomInset?: number }) {
+export function Screen({ children, scroll = true, bottomInset = 48, fixedHeader, scrollRef, ...rest }: ScrollViewProps & { scroll?: boolean; bottomInset?: number; fixedHeader?: ReactNode; scrollRef?: Ref<ComponentRef<typeof ScrollView>> }) {
   const c = useTheme();
   // The citizen's bottom bar sits over the screen: the last row must clear it.
-  const bar = useCitizenBar() ? TAB_BAR_HEIGHT : 0;
+  const { bottom } = useSafeAreaInsets();
+  const bar = useCitizenBar() ? TAB_BAR_HEIGHT + bottom : 0;
+  const chrome = useAppChrome();
   return (
-    <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: c.background }}>
+    <SafeAreaView edges={chrome ? [] : ["top"]} style={{ flex: 1, backgroundColor: c.background }}>
+      {fixedHeader}
       {scroll ? (
         // The app draws edge to edge, so Android no longer shrinks the window for the keyboard:
         // the field being typed in is lifted above it here, on both platforms.
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: bottomInset + bar, gap: 16 }} {...rest}>
+          <ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 16, paddingBottom: bottomInset + bar, gap: 20 }} {...rest}>
             {children}
           </ScrollView>
         </KeyboardAvoidingView>
@@ -273,11 +277,11 @@ export function Step({ label, state, detail }: { label: string; state: StepState
   );
 }
 
-export function Section({ title, children, note }: { title: string; children: ReactNode; note?: string }) {
+export function Section({ title, children, note, onLayout }: { title: string; children: ReactNode; note?: string; onLayout?: ViewProps["onLayout"] }) {
   return (
-    <View style={{ gap: 8 }}>
+    <View onLayout={onLayout} style={{ gap: 14, marginTop: 12, marginBottom: 8 }}>
       <View>
-        <T tone="label">{title}</T>
+        <T accessibilityRole="header" style={{ fontFamily: fonts.bold, fontSize: 22, lineHeight: 29 }}>{title}</T>
         {note && <T tone="muted">{note}</T>}
       </View>
       {children}

@@ -31,6 +31,7 @@ import {
   Images as PImages,
   Link as PLink,
   ListChecks as PListChecks,
+  List as PList,
   LockSimple as PLockSimple,
   MagnifyingGlass as PMagnifyingGlass,
   Newspaper as PNewspaper,
@@ -97,6 +98,7 @@ export const ImageSquare = duo(PImageSquare);
 export const Images = duo(PImages);
 export const Link = duo(PLink);
 export const ListChecks = duo(PListChecks);
+export const List = duo(PList);
 export const LockSimple = duo(PLockSimple);
 export const MagnifyingGlass = duo(PMagnifyingGlass);
 export const Newspaper = duo(PNewspaper);

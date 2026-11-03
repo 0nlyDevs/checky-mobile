@@ -6,6 +6,20 @@ import type { Overrides } from "./core";
 
 export const mg: Overrides = {
   app: { tagline: "Hamarino aloha vao mizara." },
+  navigation: {
+    menu: "Menu", close: "Hidio ny menu", home: "Fandraisana", overview: "Famintinana", evidence: "Porofo", speak: "Hiteny", public: "Tsy mila kaonty", newsroom: "Ny redaksionako",
+    tools: "Ny fitaovana rehetra", account: "Kaonty sy safidy", admin: "Fangatahan’ny redaksiona", adminHint: "Fitantanana Checky",
+    list: "Asehoy ho lisitra", cards: "Asehoy ho karatra", swipe: "Asosafo ireo karatra", all: "Jereo daholo", count: (n: number) => `${n} singa`,
+    checkHint: "Hafatra, sary na rohy hohamarinina", attention: "Ny dingana manaraka", resume: "Tohizo ny dosie", noCases: "Tsy misy dosie hotohizana.",
+    recording: "Ajanony ny fandraisam-peo", dictate: "Lazao ny fanontaniana", transcribing: "Avadika ho soratra…", voiceHint: "Alefa any amin’i Checky ny feo mba havadika ho soratra. Vakio aloha vao mandefa ny fanontaniana.",
+    voiceFailed: "Tsy mandeha ny feo. Mbola afaka manoratra ny fanontanianao ianao.", listen: "Henoy ny valiny", stopAudio: "Ajanony ny fihainoana", preparingAudio: "Manomana feo…",
+    language: "Azo atao amin’ny teny frantsay sy malagasy ny fandraisam-peo sy fihainoana.",
+    audioExcerpt: "Ny fiandohan’ny valiny no vakina. Mbola hita eo ny soratra manontolo.",
+    adminLead: "Hamarino amin’ny pejy ofisialiny ny redaksiona alohan’ny hanapahana hevitra.", pending: "Miandry", approved: "Nekena", refused: "Nolavina",
+    approve: "Ekeo ny redaksiona", refuse: "Lavao", reason: "Antony nandavana", confirm: "Hamafiso", officialPage: "Sokafy ny pejy ofisialy", call: "Hiantso",
+    approveQuestion: "Ekena ve ity redaksiona ity?", approveHint: "Hamafiso rehefa voamarina ny maha-izy azy sy ny fifandraisana ofisialy.",
+    denied: "Natokana ho an’ny ekipan’i Checky ity pejy ity.", emptyRequests: "Tsy misy fangatahana amin’ity sokajy ity.", actionFailed: "Tsy voatahiry ny fanapahan-kevitra. Andramo indray.", saved: "Voatahiry ny fanapahan-kevitra.",
+  },
   common: {
     cancel: "Aoka ihany",
     back: "Hiverina",

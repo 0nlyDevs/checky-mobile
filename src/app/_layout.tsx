@@ -12,6 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SWRConfig } from "swr";
 
 import { CitizenBar } from "@/components/citizen-bar";
+import { AppChromeContext, AppHeader } from "@/components/app-header";
 import { StatusScreen } from "@/components/status-screen";
 import { ClipboardOffer } from "@/components/clipboard-offer";
 import { NativeSurfaces } from "@/components/native-surfaces";
@@ -25,6 +26,7 @@ import { useLangReady, useT } from "@/lib/i18n";
 import { LightProvider } from "@/lib/light";
 import { ModeProvider, useMode } from "@/lib/mode";
 import { onReconnect } from "@/lib/network";
+import { canReviewNewsrooms } from "@/lib/navigation";
 import { askToNotify } from "@/lib/notify";
 import { holdForBackground, OutboxProvider, useOutbox } from "@/lib/outbox";
 import { useTheme } from "@/lib/theme";
@@ -78,7 +80,8 @@ function Session() {
 function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) {
   const t = useT();
   const c = useTheme();
-  const { current, loading, error, refresh } = useWorkspace();
+  const { current, me, loading, error, refresh } = useWorkspace();
+  const platformAdmin = canReviewNewsrooms(signedIn, me);
   const { mode, loaded, setMode } = useMode();
   const ready = loaded && !pending && !(signedIn && loading && !current);
   const router = useRouter();
@@ -91,11 +94,11 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   useEffect(() => {
     if (!ready) return;
     if (signedIn && !current) {
-      if (path !== "/bienvenue") router.replace("/bienvenue");
+      if (path !== "/bienvenue" && !(platformAdmin && (["/administration", "/assistant", "/preferences", "/registre", "/scanner", "/verdicts"].includes(path) || path.startsWith("/citoyen/verdict/")))) router.replace("/bienvenue");
     } else if (signedIn && current && ["/accueil", "/connexion", "/inscription", "/bienvenue"].includes(path)) {
-      router.replace("/");
+      router.replace("/rubrique");
     }
-  }, [ready, signedIn, current, path, router]);
+  }, [ready, signedIn, current, platformAdmin, path, router]);
 
   // A mode chosen on the first screen opens its own home. Left to Stack.Protected, the
   // welcome screen gave way to whichever public screen it found first: the scanner.
@@ -146,42 +149,49 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
       {inDesk && <NotificationOpener />}
       {inDesk && <NativeSurfaces />}
       {citizen && <ShareForwarder to="/citoyen/verifier" />}
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: c.background } }}>
-        {/* The first screen allowed is where the app opens. */}
-        <Stack.Protected guard={!signedIn && !mode}>
-          <Stack.Screen name="accueil" />
-        </Stack.Protected>
-        <Stack.Protected guard={citizen}>
-          <Stack.Screen name="citoyen/index" />
-          <Stack.Screen name="citoyen/verifier" />
-          <Stack.Screen name="citoyen/signaler" />
-          <Stack.Screen name="citoyen/suivi/[token]" />
-        </Stack.Protected>
-        {/* Public, kept on the phone: readable by everyone, account or not. */}
-        <Stack.Protected guard={citizen || inDesk}>
-          <Stack.Screen name="citoyen/verdict/[id]" />
-          <Stack.Screen name="registre" />
-          <Stack.Screen name="verdicts" />
-          <Stack.Screen name="scanner" />
-          <Stack.Screen name="assistant" />
-        </Stack.Protected>
-        <Stack.Protected guard={!signedIn}>
-          <Stack.Screen name="connexion" />
-          <Stack.Screen name="inscription" />
-        </Stack.Protected>
-        <Stack.Protected guard={signedIn && !current}>
-          <Stack.Screen name="bienvenue" />
-        </Stack.Protected>
-        <Stack.Protected guard={inDesk}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="analyse" />
-          <Stack.Screen name="lot" />
-          <Stack.Screen name="affirmation/[id]" />
-          <Stack.Screen name="nouvelle" options={{ presentation: "modal" }} />
-          <Stack.Screen name="annuaire" />
-          <Stack.Screen name="chiffres" />
-        </Stack.Protected>
-      </Stack>
+      <AppChromeContext value={inDesk || citizen || platformAdmin}>
+        <Stack screenOptions={{ headerShown: inDesk || citizen || platformAdmin, header: AppHeader, contentStyle: { backgroundColor: c.background } }}>
+          {/* The first screen allowed is where the app opens. */}
+          <Stack.Protected guard={!signedIn && !mode}>
+            <Stack.Screen name="accueil" />
+          </Stack.Protected>
+          <Stack.Protected guard={citizen}>
+            <Stack.Screen name="citoyen/index" />
+            <Stack.Screen name="citoyen/verifier" />
+            <Stack.Screen name="citoyen/signaler" />
+            <Stack.Screen name="citoyen/signalements" />
+            <Stack.Screen name="citoyen/suivi/[token]" />
+          </Stack.Protected>
+          {/* Public, kept on the phone: readable by everyone, account or not. */}
+          <Stack.Protected guard={citizen || inDesk || platformAdmin}>
+            <Stack.Screen name="citoyen/verdict/[id]" />
+            <Stack.Screen name="registre" />
+            <Stack.Screen name="verdicts" />
+            <Stack.Screen name="scanner" />
+            <Stack.Screen name="assistant" />
+            <Stack.Screen name="preferences" />
+          </Stack.Protected>
+          <Stack.Protected guard={platformAdmin}>
+            <Stack.Screen name="administration" />
+          </Stack.Protected>
+          <Stack.Protected guard={!signedIn}>
+            <Stack.Screen name="connexion" />
+            <Stack.Screen name="inscription" />
+          </Stack.Protected>
+          <Stack.Protected guard={signedIn && !current}>
+            <Stack.Screen name="bienvenue" />
+          </Stack.Protected>
+          <Stack.Protected guard={inDesk}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="analyse" />
+            <Stack.Screen name="lot" />
+            <Stack.Screen name="affirmation/[id]" />
+            <Stack.Screen name="nouvelle" options={{ presentation: "modal" }} />
+            <Stack.Screen name="annuaire" />
+            <Stack.Screen name="chiffres" />
+          </Stack.Protected>
+        </Stack>
+      </AppChromeContext>
       {inDesk && <ClipboardOffer to="/analyse" />}
       {citizen && <ClipboardOffer to="/citoyen/verifier" />}
       {citizen && <CitizenBar />}

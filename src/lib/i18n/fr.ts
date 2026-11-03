@@ -1,6 +1,20 @@
 // Every string the app shows, in French: the source. mg.ts and en.ts override it key by key (lib/i18n/index.ts).
 export const t = {
   app: { name: "Checky", tagline: "Vérifier avant de diffuser." },
+  navigation: {
+    menu: "Menu", close: "Fermer le menu", home: "Accueil", overview: "Résumé", evidence: "Éléments", speak: "Parler", public: "Sans compte", newsroom: "Ma rédaction",
+    tools: "Tous les outils", account: "Compte et préférences", admin: "Demandes des rédactions", adminHint: "Administration Checky",
+    list: "Afficher en liste", cards: "Afficher en cartes", swipe: "Faites glisser les cartes", all: "Tout voir", count: (n: number) => `${n} éléments`,
+    checkHint: "Un message, une photo ou un lien à vérifier", attention: "Votre prochaine action", resume: "Reprendre un dossier", noCases: "Aucun dossier à reprendre.",
+    recording: "Arrêter l’enregistrement", dictate: "Dicter une question", transcribing: "Transcription…", voiceHint: "L’audio est envoyé à Checky pour transcription. Relisez le texte avant d’envoyer votre question.",
+    voiceFailed: "La voix est indisponible. Vous pouvez toujours écrire votre question.", listen: "Écouter la réponse", stopAudio: "Arrêter l’écoute", preparingAudio: "Préparation de la voix…",
+    language: "La dictée et la voix sont disponibles en français et en malagasy.",
+    audioExcerpt: "La voix lit le début de la réponse. Le texte complet reste affiché.",
+    adminLead: "Vérifiez la rédaction à partir de sa page officielle avant de prendre une décision.", pending: "En attente", approved: "Approuvées", refused: "Refusées",
+    approve: "Approuver la rédaction", refuse: "Refuser", reason: "Motif du refus", confirm: "Confirmer", officialPage: "Ouvrir la page officielle", call: "Appeler",
+    approveQuestion: "Approuver cette rédaction ?", approveHint: "Confirmez seulement après avoir vérifié son identité et son contact officiel.",
+    denied: "Cette page est réservée à l’équipe Checky.", emptyRequests: "Aucune demande dans cette catégorie.", actionFailed: "La décision n’a pas été enregistrée. Réessayez.", saved: "Décision enregistrée.",
+  },
   common: {
     cancel: "Annuler",
     back: "Retour",

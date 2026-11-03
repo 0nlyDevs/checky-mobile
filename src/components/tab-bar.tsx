@@ -5,12 +5,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { fonts, useTheme } from "@/lib/theme";
 
 export const TAB_BAR_HEIGHT = 66;
-/** Room kept under scrolling content so the last row clears the bar and the Checky button. */
-const BUTTON_ROOM = 72;
-
-/** Bottom padding for a scrolling tab screen: tab bar, the home indicator and the floating Checky button. */
+/** The tab bar occupies layout space; only a breathing gap remains under the last row. */
 export function useTabInset(): number {
-  return TAB_BAR_HEIGHT + useSafeAreaInsets().bottom + BUTTON_ROOM;
+  return useSafeAreaInsets().bottom + 24;
 }
 
 /** The ink bar: every tab is a 44 px+ target, the current one is a paper pill whose label and icon stay ink in both themes. */

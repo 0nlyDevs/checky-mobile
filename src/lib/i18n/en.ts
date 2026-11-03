@@ -4,6 +4,20 @@ import type { Overrides } from "./core";
 
 export const en: Overrides = {
   app: { tagline: "Check before you pass it on." },
+  navigation: {
+    menu: "Menu", close: "Close menu", home: "Home", overview: "Overview", evidence: "Evidence", speak: "Talk", public: "No account needed", newsroom: "My newsroom",
+    tools: "All tools", account: "Account and preferences", admin: "Newsroom requests", adminHint: "Checky administration",
+    list: "Show as a list", cards: "Show as cards", swipe: "Swipe through the cards", all: "See all", count: (n: number) => `${n} items`,
+    checkHint: "A message, photo or link to check", attention: "Your next action", resume: "Resume a case", noCases: "No cases to resume.",
+    recording: "Stop recording", dictate: "Dictate a question", transcribing: "Transcribing…", voiceHint: "Audio is sent to Checky for transcription. Review the text before sending your question.",
+    voiceFailed: "Voice is unavailable. You can still type your question.", listen: "Listen to the answer", stopAudio: "Stop listening", preparingAudio: "Preparing audio…",
+    language: "Dictation and audio are available in French and Malagasy.",
+    audioExcerpt: "Audio reads the beginning of the answer. The full text stays on screen.",
+    adminLead: "Check the newsroom using its official page before making a decision.", pending: "Pending", approved: "Approved", refused: "Refused",
+    approve: "Approve newsroom", refuse: "Refuse", reason: "Reason for refusal", confirm: "Confirm", officialPage: "Open official page", call: "Call",
+    approveQuestion: "Approve this newsroom?", approveHint: "Confirm only after checking its identity and official contact.",
+    denied: "This page is restricted to the Checky team.", emptyRequests: "No requests in this category.", actionFailed: "The decision was not saved. Try again.", saved: "Decision saved.",
+  },
   common: {
     cancel: "Cancel",
     back: "Back",

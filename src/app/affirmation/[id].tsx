@@ -1,8 +1,9 @@
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams } from "expo-router";
 import { ArrowLeft, FileText, type Icon, ImageSquare, Link, Paperclip, TextT, VideoCamera, Waveform } from "@/lib/icons";
-import { useState } from "react";
-import { Pressable, View } from "react-native";
+import { type ComponentRef, useRef, useState } from "react";
+import { Pressable, ScrollView, View } from "react-native";
+import { useReducedMotion } from "react-native-reanimated";
 import useSWR from "swr";
 
 import { OfflineNotice } from "@/components/outbox";
@@ -48,6 +49,10 @@ export default function ClaimDetail() {
   const [comment, setComment] = useState("");
   // The verdict being signed (« Signer et publier »): the panel opens under the verdict buttons.
   const [choice, setChoice] = useState<Verdict | null>(null);
+  const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
+  const anchors = useRef({ overview: 0, evidence: 0, verdict: 0, discussion: 0 });
+  const reduce = useReducedMotion();
+  const jump = (key: keyof typeof anchors.current) => scroll.current?.scrollTo({ y: Math.max(0, anchors.current[key] - 16), animated: !reduce });
 
   // Offline, a kept copy still opens: only a dossier never fetched shows the error.
   if (error && !item) {
@@ -158,7 +163,7 @@ export default function ClaimDetail() {
 
   return (
     <>
-    <Screen bottomInset={awaiting ? SIGN_BAR_ROOM + 48 : 48}>
+    <Screen scrollRef={scroll} fixedHeader={<View style={{ borderBottomWidth: 1, borderBottomColor: c.border, backgroundColor: c.background }}><ScrollView horizontal showsHorizontalScrollIndicator contentContainerStyle={{ padding: 12, gap: 8 }}>{([['overview', t.navigation.overview], ['evidence', t.navigation.evidence], ['verdict', t.detail.verdict], ['discussion', t.detail.comments]] as const).map(([key, label]) => <Chip key={key} label={label} onPress={() => jump(key)} />)}</ScrollView></View>} bottomInset={awaiting ? SIGN_BAR_ROOM + 48 : 48}>
       <View style={styles.row}>
         <Pressable accessibilityRole="button" accessibilityLabel={t.common.back} onPress={goBack} hitSlop={12} style={{ padding: 4 }}>
           <ArrowLeft size={24} color={c.foreground} />
@@ -179,7 +184,7 @@ export default function ClaimDetail() {
       <OfflineNotice stale at={cachedAt(base)} />
       {notice && <Notice tone="error">{notice}</Notice>}
 
-      <Section title={t.detail.verdict}>
+      <Section title={t.detail.verdict} onLayout={event => { anchors.current.verdict = event.nativeEvent.layout.y; }}>
         <View style={{ gap: 10 }}>
           {d.verdict ? <VerdictPanel verdict={d.verdict} /> : <T tone="muted">{t.verdict.none}</T>}
           {!!d.verdict && <T tone="muted">{signed ? t.sign.by(d.byline?.journalist ?? "", day(d.signed_at ?? null)) : t.sign.unsigned}</T>}
@@ -260,7 +265,7 @@ export default function ClaimDetail() {
         </View>
       </Section>
 
-      <Section title={t.detail.analysis}>
+      <Section title={t.detail.analysis} onLayout={event => { anchors.current.evidence = event.nativeEvent.layout.y; }}>
         {a ? (
           <Card>
             {!!a.reason && (
@@ -335,7 +340,7 @@ export default function ClaimDetail() {
         </View>
       </Section>
 
-      <Section title={t.detail.comments}>
+      <Section title={t.detail.comments} onLayout={event => { anchors.current.discussion = event.nativeEvent.layout.y; }}>
         {comments?.length ? (
           comments.map((m) => (
             <Card key={m.id} style={{ gap: 4 }}>
@@ -352,7 +357,7 @@ export default function ClaimDetail() {
         <Button label={t.detail.send} disabled={!comment.trim()} onPress={send} />
       </Section>
     </Screen>
-    {awaiting && d.verdict_suggested && <SignBar label={t.detail.signSuggested(t.verdict[d.verdict_suggested])} onPress={() => setChoice(d.verdict_suggested!)} />}
+    {awaiting && d.verdict_suggested && <SignBar label={t.detail.signSuggested(t.verdict[d.verdict_suggested])} onPress={() => { setChoice(d.verdict_suggested!); requestAnimationFrame(() => jump("verdict")); }} />}
     </>
   );
 }
