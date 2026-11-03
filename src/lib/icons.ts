@@ -37,7 +37,12 @@ import {
   Paperclip as PPaperclip,
   PaperPlaneTilt as PPaperPlaneTilt,
   PencilLine as PPencilLine,
+  Play as PPlay,
   Plus as PPlus,
+  Stop as PStop,
+  Microphone as PMicrophone,
+  MapPin as PMapPin,
+  Trash as PTrash,
   Question as PQuestion,
   Scan as PScan,
   SealCheck as PSealCheck,
@@ -115,3 +120,8 @@ export const CheckCircle = duo(PCheckCircle);
 export const CircleDashed = duo(PCircleDashed);
 export const SpinnerGap = duo(PSpinnerGap);
 export const XCircle = duo(PXCircle);
+export const Play = duo(PPlay);
+export const Stop = duo(PStop);
+export const Microphone = duo(PMicrophone);
+export const MapPin = duo(PMapPin);
+export const Trash = duo(PTrash);

@@ -30,7 +30,16 @@ export type ClaimData = {
   source_count?: number;
   assignee_id?: string | null;
   analysis?: Analysis;
+  // Written by the signing route only (`POST …/items/{id}/sign`), never by a PATCH.
+  reason?: string;
+  signed_by?: string;
+  signed_at?: string;
+  byline?: { newsroom?: string; journalist?: string; signed_at?: string };
+  voice_note?: { file_id: string; seconds?: number | null; language?: string };
 };
+
+/** A signed verdict: the newsroom's byline is on it (« Signer et publier »). */
+export const isSigned = (d: ClaimData) => !!d.verdict && !!d.signed_by;
 
 export type Analysis = {
   claims: string[];
@@ -69,3 +78,11 @@ export type CheckResult = {
   needs_text?: boolean;
   read_error?: string;
 };
+
+// « Diffuser » and « Le trajet » (brief 7.1-7.3), as the desk's API returns them.
+export type Formats = Schemas["FormatsOut"];
+export type Trajet = Schemas["TrajetOut"];
+export type DiffuseResult = Schemas["DiffuseOut"];
+export type Gap = Schemas["GapOut"];
+// « Entendu à la radio » (brief 5.2).
+export type Clip = Schemas["ClipOut"];

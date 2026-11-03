@@ -2,12 +2,13 @@ import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams } from "expo-router";
 import { ArrowLeft, FileText, type Icon, ImageSquare, Link, Paperclip, TextT, VideoCamera, Waveform } from "@/lib/icons";
 import { useState } from "react";
-import { Alert, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import useSWR from "swr";
 
 import { OfflineNotice } from "@/components/outbox";
 import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
+import { SignPanel } from "@/components/sign-panel";
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictPanel, styles } from "@/components/ui";
 import { VerificationNotice } from "@/components/verification";
 import { api, ApiError, fetcher } from "@/lib/api";
@@ -15,9 +16,9 @@ import { cachedAt } from "@/lib/cache";
 import { pace } from "@/lib/light";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
-import { useT } from "@/lib/i18n";
+import { day, useT } from "@/lib/i18n";
 import { fonts, radius, tracking, useTheme } from "@/lib/theme";
-import { type ClaimData, type Comment, type Item, type ItemPatch, type Source, STATUSES, type Status, type Verdict, VERDICTS } from "@/lib/types";
+import { type ClaimData, type Comment, type Item, type ItemPatch, isSigned, type Source, STATUSES, type Status, type Verdict, VERDICTS } from "@/lib/types";
 import { uploadFile } from "@/lib/upload";
 import { useWorkspace, useWs } from "@/lib/workspace";
 import { goBack } from "@/lib/nav";
@@ -45,6 +46,8 @@ export default function ClaimDetail() {
   const [link, setLink] = useState("");
   const [upload, setUpload] = useState<number | null>(null);
   const [comment, setComment] = useState("");
+  // The verdict being signed (« Signer et publier »): the panel opens under the verdict buttons.
+  const [choice, setChoice] = useState<Verdict | null>(null);
 
   // Offline, a kept copy still opens: only a dossier never fetched shows the error.
   if (error && !item) {
@@ -77,14 +80,22 @@ export default function ClaimDetail() {
     }
   }
 
+  /** A verdict is signed, with its public explanation, through the desk's own route; removing one is a plain edit. */
   function decide(verdict: Verdict | null) {
-    const status = statusAfter(verdict, item!.status as Status);
-    if (!verdict) return patch({ status, data: { verdict: null } });
-    const against = d.verdict_suggested && d.verdict_suggested !== verdict ? `\n\n${t.detail.againstAi(t.verdict[d.verdict_suggested])}` : "";
-    Alert.alert(t.detail.confirmTitle(t.verdict[verdict]), t.detail.confirmBody + against, [
-      { text: t.common.cancel, style: "cancel" },
-      { text: t.detail.confirm, onPress: () => patch({ status, data: { verdict } }) },
-    ]);
+    setChoice(null);
+    if (!verdict) return patch({ status: statusAfter(null, item!.status as Status), data: { verdict: null } });
+    setChoice(verdict);
+  }
+
+  /** « Publier la version signée »; an older unsigned verdict is published as before, by status. */
+  async function publish() {
+    if (!isSigned(d)) return patch({ status: "published" });
+    try {
+      mutate(await api<Item>(`${base}/release`, { method: "POST" }), { revalidate: false });
+      setNotice(null);
+    } catch {
+      setNotice(t.detail.saveFailed);
+    }
   }
 
   async function analyse() {
@@ -141,7 +152,8 @@ export default function ClaimDetail() {
   }
 
   const a = d.analysis;
-  const awaiting = !d.verdict && !!d.verdict_suggested;
+  const awaiting = !d.verdict && !!d.verdict_suggested && !choice;
+  const signed = isSigned(d);
   const sourceTitle = (sid?: string) => sources?.find((s) => s.id === sid)?.title;
 
   return (
@@ -170,6 +182,7 @@ export default function ClaimDetail() {
       <Section title={t.detail.verdict}>
         <View style={{ gap: 10 }}>
           {d.verdict ? <VerdictPanel verdict={d.verdict} /> : <T tone="muted">{t.verdict.none}</T>}
+          {!!d.verdict && <T tone="muted">{signed ? t.sign.by(d.byline?.journalist ?? "", day(d.signed_at ?? null)) : t.sign.unsigned}</T>}
           {d.verdict_suggested && d.verdict_suggested !== d.verdict && <VerdictPanel verdict={d.verdict_suggested} suggested />}
         </View>
         <View style={{ gap: 8 }}>
@@ -205,6 +218,21 @@ export default function ClaimDetail() {
               );
             })}
           </View>
+          {choice && (
+            <SignPanel
+              key={choice}
+              ws={ws}
+              item={item}
+              verdict={choice}
+              onDone={(next) => {
+                mutate(next, { revalidate: false });
+                setChoice(null);
+              }}
+              onCancel={() => setChoice(null)}
+            />
+          )}
+          {!choice && !!d.verdict && !signed && <Button label={t.sign.title(t.verdict[d.verdict])} variant="outline" onPress={() => setChoice(d.verdict!)} />}
+          {!choice && signed && item.status === "verified" && <Button label={t.sign.release} variant="outline" onPress={publish} />}
         </View>
       </Section>
 
@@ -218,7 +246,8 @@ export default function ClaimDetail() {
             verdict={d.verdict}
             sources={sources ?? []}
             desk={current?.name ?? t.app.name}
-            onShared={() => item.status === "verified" && patch({ status: "published" })}
+            verified={current?.verification === "approved"}
+            onShared={() => item.status === "verified" && publish()}
           />
         </Section>
       )}
@@ -323,7 +352,7 @@ export default function ClaimDetail() {
         <Button label={t.detail.send} disabled={!comment.trim()} onPress={send} />
       </Section>
     </Screen>
-    {awaiting && d.verdict_suggested && <SignBar label={t.detail.signSuggested(t.verdict[d.verdict_suggested])} onPress={() => decide(d.verdict_suggested!)} />}
+    {awaiting && d.verdict_suggested && <SignBar label={t.detail.signSuggested(t.verdict[d.verdict_suggested])} onPress={() => setChoice(d.verdict_suggested!)} />}
     </>
   );
 }

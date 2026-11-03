@@ -47,9 +47,8 @@ export async function lighten(p: Picked): Promise<Picked> {
   }
 }
 
-/** Presigned PUT straight to storage (with progress), then the API turns it into a source. */
-export async function uploadFile(ws: string, file: Picked, onProgress: (share: number) => void, itemId?: string): Promise<Source> {
-  const f = await lighten(normalise(file));
+/** Presigned PUT straight to storage (with progress): the file is left `pending`, for the caller to complete. */
+async function putToStorage(ws: string, f: Picked, onProgress: (share: number) => void): Promise<string> {
   if (!ACCEPTED.test(f.mime)) throw new ApiError(415, "unsupported_type", f.mime);
   if (!f.size) throw new ApiError(400, "unreadable", "Unknown file size");
   if (f.size > MAX_BYTES) throw new ApiError(413, "too_large", "Files are limited to 25 MB");
@@ -66,7 +65,19 @@ export async function uploadFile(ws: string, file: Picked, onProgress: (share: n
   const res = await task.uploadAsync();
   if (!res || res.status >= 300) throw new ApiError(res?.status ?? 0, "upload_failed", "Upload failed");
   onProgress(1);
-  return api<Source>(`/workspaces/${ws}/files/${up.file_id}/complete`, {
+  return up.file_id;
+}
+
+/** Upload without turning the file into a source: a voice note is attached by its own route and never read. */
+export async function uploadUnread(ws: string, file: Picked, onProgress: (share: number) => void): Promise<string> {
+  return putToStorage(ws, normalise(file), onProgress);
+}
+
+/** Presigned PUT straight to storage (with progress), then the API turns it into a source. */
+export async function uploadFile(ws: string, file: Picked, onProgress: (share: number) => void, itemId?: string): Promise<Source> {
+  const f = await lighten(normalise(file));
+  const fileId = await putToStorage(ws, f, onProgress);
+  return api<Source>(`/workspaces/${ws}/files/${fileId}/complete`, {
     method: "POST",
     body: JSON.stringify(itemId ? { item_id: itemId } : {}),
   });

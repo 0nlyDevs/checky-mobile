@@ -120,6 +120,10 @@ export const mg: Overrides = {
     unknown: "Tsy hita io fampandrenesana io.",
   },
   card: {
+    formats: { square: "Karatra 1080 × 1080", story: "Sata 9:16" }, // relire (mg)
+    sealed: "Samy misy QR misy tombo-kase avy amin'ny rédaction ny endrika rehetra: tsy mandalo ny skana ny karatra sandoka « Checky hoe ».", // relire (mg)
+    unsealed: "Tsy misy ny tombo-kase: hivoaka tsy misy QR ny karatra. Hamarino fa voamarina ny rédaction ary mamoaka ny didiny.", // relire (mg)
+    notPublished: "Avoahy ny didy nosoniavina mba hisy QR misy tombo-kase ny karatra.", // relire (mg)
     title: "Zarao ny didy",
     language: "Fiteny",
     languages: { fr: "Frantsay", mg: "Malagasy" },
@@ -236,7 +240,7 @@ export const mg: Overrides = {
     confirmBody: "Ho hitan'ny tranom-gazety manontolo ny didy ary hiova ho Voamarina ny antontan-taratasy.",
     againstAi: (v: string) => `« ${v} » no natolotry ny IA.`,
     confirm: "Hamafiso",
-    signSuggested: (v: string) => `Hamafiso ny « ${v} »`,
+    signSuggested: (v: string) => `Asio sonia ny « ${v} »`, // relire (mg)
     clear: "Esory ny didy",
     analysis: "Fanadihadiana ny loharano",
     analyse: "Hadihadio ny loharano",
@@ -595,5 +599,43 @@ export const mg: Overrides = {
     failed: "Tsy nahavaly aho. Jereo ny fifandraisana ary andramo indray.",
     tooMany: "Be loatra ny fanontaniana misesy. Andramo indray afaka minitra vitsivitsy.",
     clear: "Resaka vaovao",
+  },
+
+  // relire (mg)
+  sign: {
+    title: (v: string) => `Asio sonia ny « ${v} »`,
+    lead: "Ny sonianao no mametraka ny didy eo ambanin'ny anaran'ny rédaction. Tsy mivoaka izy raha tsy efa navoaka.",
+    reason: "Fanazavana ho an'ny besinimaro",
+    reasonPlaceholder: "Nahoana ity didy ity, amin'ny fehezanteny iray na roa.",
+    tooShort: "Manorata fanazavana litera 10 farafahakeliny.",
+    publish: "Asio sonia ary avoahy",
+    only: "Asio sonia fa aza avoaka",
+    release: "Avoahy ny dika nosoniavina",
+    by: (who: string, when: string) => `Nosoniavin'i ${who}, ny ${when}`,
+    unsigned: "Voafidy ny didy fa mbola tsy nosoniavina.",
+    failed: "Tsy voatahiry ny sonia. Andramo indray.",
+  },
+  // relire (mg)
+  voice: {
+    title: "Hafatra am-peon'ny rédaction",
+    lead: "Ny fandavana amin'ny teny malagasy, 30 segondra, amin'ny feonao manokana: ho an'ireo vondrona mihaino kokoa noho ny mamaky. Tsy adikan'ny milina an-tsoratra mihitsy.",
+    record: "Raketo ny feo",
+    stop: "Ajanony",
+    elapsed: (s: number, max: number) => `${s} / ${max} s`,
+    takeLength: (s: number) => `${s} segondra voarakitra. Henoy indray alohan'ny hitahirizana.`,
+    listen: "Henoy indray",
+    pause: "Fiato",
+    keep: "Tehirizo",
+    redo: "Avereno",
+    saving: "Mandefa…",
+    saved: "Voatahiry ny hafatra am-peo: henoina ao amin'ny pejy ho an'ny besinimaro izy.",
+    kept: (s: number | null) => (s ? `Voatahiry ny hafatra am-peo · ${s} s` : "Voatahiry ny hafatra am-peo"),
+    share: "Zarao amin'ny WhatsApp",
+    shareTitle: (ref: string) => `Fandavana ${ref}`,
+    again: "Raketo indray",
+    remove: "Esory",
+    micDenied: "Tsy ekena ny mikrô: avelao ao amin'ny fikirakirana ny finday.",
+    notSigned: "Asio sonia aloha ny didy.",
+    failed: "Tsy voatahiry ny hafatra am-peo. Andramo indray.",
   },
 };
