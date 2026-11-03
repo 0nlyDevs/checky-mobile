@@ -114,7 +114,12 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
           <Stack.Screen name="citoyen/verifier" />
           <Stack.Screen name="citoyen/signaler" />
           <Stack.Screen name="citoyen/suivi/[token]" />
+        </Stack.Protected>
+        {/* Public, kept on the phone: readable by everyone, account or not. */}
+        <Stack.Protected guard={citizen || inDesk}>
           <Stack.Screen name="citoyen/verdict/[id]" />
+          <Stack.Screen name="registre" />
+          <Stack.Screen name="verdicts" />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="connexion" />
@@ -128,6 +133,8 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
           <Stack.Screen name="analyse" />
           <Stack.Screen name="affirmation/[id]" />
           <Stack.Screen name="nouvelle" options={{ presentation: "modal" }} />
+          <Stack.Screen name="annuaire" />
+          <Stack.Screen name="chiffres" />
         </Stack.Protected>
       </Stack>
     </>

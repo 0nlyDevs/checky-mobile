@@ -3,6 +3,7 @@ import { Alert, View } from "react-native";
 import useSWR from "swr";
 
 import { LanguagePicker } from "@/components/language-picker";
+import { OfflineLinks } from "@/components/offline-links";
 import { useSyncNow } from "@/components/offline-sync";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Chip, Notice, Screen, Section, T, styles } from "@/components/ui";
@@ -97,6 +98,7 @@ export default function Settings() {
         <T tone="muted">{sync.at ? t.offline.synced(stamp(sync.at)) : t.offline.never}</T>
         {sync.failed && <Notice tone="error">{t.offline.syncFailed}</Notice>}
         <Button label={sync.running ? t.offline.syncing : t.offline.sync} busy={sync.running} variant="outline" onPress={() => syncNow(true)} />
+        <OfflineLinks desk />
       </Section>
       <Section title={t.settings.health}>
         {error ? (

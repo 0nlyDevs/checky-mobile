@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router/js-tabs";
-import { ChatTeardropText, Gear, ListChecks, Scan } from "@/lib/icons";
+import { ChatTeardropText, Gear, ListChecks, Newspaper, Scan } from "@/lib/icons";
 import { type ColorValue, View } from "react-native";
 
 import { CheckyButton } from "@/components/checky-button";
@@ -22,6 +22,7 @@ export default function TabsLayout() {
         screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: c.background } }}
       >
         <Tabs.Screen name="index" options={{ title: t.tabs.analyse, tabBarIcon: icon(Scan) }} />
+        <Tabs.Screen name="rubrique" options={{ title: t.rubrique.tab, tabBarIcon: icon(Newspaper) }} />
         <Tabs.Screen name="affirmations" options={{ title: t.tabs.claims, tabBarIcon: icon(ListChecks) }} />
         <Tabs.Screen name="verifier" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
         <Tabs.Screen name="reglages" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />

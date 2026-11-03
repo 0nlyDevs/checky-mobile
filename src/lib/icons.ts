@@ -2,6 +2,12 @@ import { createElement, type ComponentType } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import {
   ArrowLeft as PArrowLeft,
+  Stamp as PStamp,
+  Phone as PPhone,
+  Globe as PGlobe,
+  Envelope as PEnvelope,
+  ChartBar as PChartBar,
+  AddressBook as PAddressBook,
   ArrowSquareOut as PArrowSquareOut,
   Broadcast as PBroadcast,
   CheckCircle as PCheckCircle,
@@ -56,6 +62,12 @@ function duo(Base: ComponentType<IconProps>): Icon {
 }
 
 export const ArrowLeft = duo(PArrowLeft);
+export const Stamp = duo(PStamp);
+export const Phone = duo(PPhone);
+export const Globe = duo(PGlobe);
+export const Envelope = duo(PEnvelope);
+export const ChartBar = duo(PChartBar);
+export const AddressBook = duo(PAddressBook);
 export const ArrowSquareOut = duo(PArrowSquareOut);
 export const Broadcast = duo(PBroadcast);
 export const CaretRight = duo(PCaretRight);
