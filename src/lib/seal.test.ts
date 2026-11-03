@@ -79,3 +79,19 @@ test("anything else is not a seal", () => {
   assert.equal(checkSeal("WIFI:S:home;T:WPA;P:secret;;", store).status, "not_seal");
   assert.equal(parseSeal("https://checky.example/sceau/0a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d#%%%.x.y"), null);
 });
+
+test("a QR pointed at another registry entry borrows nothing from it", () => {
+  const other = "11111111-2222-4333-8444-555555555555";
+  const decoy = { ...v.registry[0], id: other, title: "Autre communiqué", is_demo: true };
+  const plain = { ...v.registry[0], is_demo: false };
+  const moved = v.communique_url.replace(v.registry[0].id, other);
+  const r = checkSeal(moved, { ...store, registry: [plain, decoy] });
+  assert.equal(r.status, "authentic");
+  if (r.status !== "authentic") return;
+  assert.equal(r.demo, false);
+  // Only what was signed is shown, never the entry's fields.
+  assert.equal(r.fields.title, "Fin des délestages");
+  // A verdict's id never picks up a registry entry's flag either.
+  const vr = checkSeal(v.verdict_url, { ...store, registry: [{ ...decoy, id: "3f1c2a4e-8b7d-4c1e-9a2b-5d6e7f8a9b0c" }] });
+  assert.equal(vr.status === "authentic" && vr.demo, false);
+});

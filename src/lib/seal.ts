@@ -188,7 +188,6 @@ export function checkSeal(text: string, store: SealStore): SealResult {
   if (!parsed) return { status: "not_seal", text };
   const kind = parsed.type === "verdict" ? "verdict" : "communique";
   const entry = store.registry.find((e) => e.id === parsed.id);
-  const demo = !!entry?.is_demo;
 
   let message: string;
   let signature: string;
@@ -235,7 +234,10 @@ export function checkSeal(text: string, store: SealStore): SealResult {
     kind === "verdict"
       ? { title: str(payload.title) ?? "", verdict: str(payload.verdict) ?? undefined, ref: str(payload.ref), date: str(payload.signed_at) }
       : { title: str(payload.title) ?? "", issuer: str(payload.issuer) ?? undefined, number: str(payload.number), date: str(payload.issued_on) };
-  return { status: "authentic", kind, fields, signer: key.issuer, newsroom: key.newsroom, demo };
+  // The id in the URL is not signed: a registry entry vouches for nothing (not even « démo »)
+  // unless its own fields are exactly the signed message.
+  const bound = kind === "communique" && !!entry && canonical(communiquePayload(entry)) === message;
+  return { status: "authentic", kind, fields, signer: key.issuer, newsroom: key.newsroom, demo: bound && !!entry.is_demo };
 }
 
 /** « vérification 145 » for FAN-0145 (`seal.check_number`). */
