@@ -1,0 +1,9 @@
+expo.modules.checkytext.checky-text-pngs-0 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/build/generated/res/pngs/debug
+expo.modules.checkytext.checky-text-updated_navigation_xml-1 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/build/generated/updated_navigation_xml/debug
+expo.modules.checkytext.checky-text-mergeDebugResources-2 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+expo.modules.checkytext.checky-text-mergeDebugResources-3 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+expo.modules.checkytext.checky-text-debug-4 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/build/intermediates/merged_res/debug/mergeDebugResources
+expo.modules.checkytext.checky-text-debug-5 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/build/intermediates/packaged_res/debug/packageDebugResources
+expo.modules.checkytext.checky-text-debug-6 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/debug/res
+expo.modules.checkytext.checky-text-main-7 /home/cocofioren/HACK/fanilo-wt/mobile-reseaux/modules/checky-text/android/src/main/res
+gradleHome-0 /home/cocofioren/.gradle

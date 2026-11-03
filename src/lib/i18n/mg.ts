@@ -360,6 +360,8 @@ export const mg: Overrides = {
       failed: "Nolavin'ny mpizara ny fandefasana.",
     },
   },
+  // relire (mg)
+  clip: { ask: "Hamarina izay vao nadikao ve?", check: "Hamarino", dismiss: "Tsia, misaotra", link: "Rohy nadika", text: "Soratra nadika" },
   status: { to_check: "Hohamarinina", in_progress: "Eo am-panaovana", verified: "Voamarina", published: "Navoaka" },
   verdict: {
     true: "Marina",
