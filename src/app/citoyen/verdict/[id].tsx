@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { Button, Card, Notice, Screen, Section, T, VerdictBadge, styles } from "@/components/ui";
 import { type CardRef, shareCard, VerdictCardView } from "@/components/verdict-card";
 import { ago } from "@/lib/format";
-import { useT } from "@/lib/i18n";
+import { useLang, useT } from "@/lib/i18n";
 import { publicFetcher, type PublicVerdict, verdictLink } from "@/lib/public";
 import { fonts, tracking, useTheme } from "@/lib/theme";
 import type { Verdict } from "@/lib/types";
@@ -15,6 +15,7 @@ import type { Verdict } from "@/lib/types";
 /** A published verdict, as the newsroom wrote it, to read and pass on. */
 export default function PublicVerdictScreen() {
   const t = useT();
+  const lang = useLang();
   const c = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
@@ -76,7 +77,7 @@ export default function PublicVerdictScreen() {
         </Section>
       )}
       <Section title={t.citizen.share}>
-        <VerdictCardView width={width - 32} cardRef={cardRef} verdict={verdict} title={v.title} reason={(v.reason ?? "").slice(0, 280)} sources={v.sources} refLabel={v.ref} desk={v.newsroom.name} lang="fr" />
+        <VerdictCardView width={width - 32} cardRef={cardRef} verdict={verdict} title={v.title} reason={(v.reason ?? "").slice(0, 280)} sources={v.sources} refLabel={v.ref} desk={v.newsroom.name} lang={lang === "mg" ? "mg" : "fr"} />
         {/* Stacked: side by side, both labels are cut at 390 and 360 px. */}
         <View style={{ gap: 8 }}>
           <Button
