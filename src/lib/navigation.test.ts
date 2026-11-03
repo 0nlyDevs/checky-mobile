@@ -11,13 +11,13 @@ test("only a signed-in platform admin can open newsroom review", () => {
 });
 
 test("assistant links open the matching native screen for old and new web paths", () => {
-  for (const path of ["/verdicts/abc", "/verifies/abc", "https://checky.example/verdicts/abc?q=test#sources"]) assert.equal(mobileRoute(path, false), "/citoyen/verdict/abc");
-  for (const path of ["/track/abc", "/suivi/abc"]) assert.equal(mobileRoute(path, false), "/citoyen/suivi/abc");
-  assert.equal(mobileRoute("/report", false), "/citoyen/signaler");
-  assert.equal(mobileRoute("/w/newsroom/claims/item", true), "/affirmation/item");
-  assert.equal(mobileRoute("/w/newsroom/beat", true), "/rubrique");
-  assert.equal(mobileRoute("/w/newsroom/directory", true), "/annuaire");
-  assert.equal(mobileRoute("/w/newsroom/affirmations/item", true), "/affirmation/item");
+  for (const path of ["/verdicts/abc", "/verifies/abc", "https://checky.example/verdicts/abc?q=test#sources"]) assert.equal(mobileRoute(path, false), "/citizen/verdict/abc");
+  for (const path of ["/track/abc", "/suivi/abc"]) assert.equal(mobileRoute(path, false), "/citizen/track/abc");
+  assert.equal(mobileRoute("/report", false), "/citizen/report");
+  assert.equal(mobileRoute("/w/newsroom/claims/item", true), "/claim/item");
+  assert.equal(mobileRoute("/w/newsroom/beat", true), "/beat");
+  assert.equal(mobileRoute("/w/newsroom/directory", true), "/directory");
+  assert.equal(mobileRoute("/w/newsroom/affirmations/item", true), "/claim/item");
 });
 
 test("public assistant links cannot open journalist or admin screens", () => {

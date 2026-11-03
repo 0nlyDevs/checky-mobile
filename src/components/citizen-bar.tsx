@@ -12,9 +12,9 @@ type Tab = { path: string; also?: string[]; icon: Icon; key: "check" | "verdicts
 
 /** The public site's menu, on the phone: Vérifier, Les verdicts, Signaler, Scanner. */
 const TABS: Tab[] = [
-  { path: "/citoyen", also: ["/citoyen/verifier"], icon: Scan, key: "check" },
+  { path: "/citizen", also: ["/citizen/verify"], icon: Scan, key: "check" },
   { path: "/verdicts", icon: Newspaper, key: "verdicts" },
-  { path: "/citoyen/signaler", icon: PaperPlaneTilt, key: "report" },
+  { path: "/citizen/report", icon: PaperPlaneTilt, key: "report" },
   { path: "/scanner", icon: QrCode, key: "scan" },
 ];
 
@@ -22,7 +22,7 @@ const TABS: Tab[] = [
 export function useCitizenBar(): boolean {
   const { mode } = useMode();
   const path = usePathname();
-  return mode === "citizen" && (path.startsWith("/citoyen") || ["/verdicts", "/registre", "/scanner"].includes(path));
+  return mode === "citizen" && (path.startsWith("/citizen") || ["/verdicts", "/registry", "/scanner"].includes(path));
 }
 
 /** The ink bar of citizen mode, drawn like the desk's tab bar: the current place is a paper pill. */
@@ -51,7 +51,7 @@ export function CitizenBar() {
       }}
     >
       {TABS.map((tab) => {
-        const selected = tab.path === path || !!tab.also?.includes(path) || (tab.key === "verdicts" && path.startsWith("/citoyen/verdict/")) || (tab.key === "report" && (path.startsWith("/citoyen/suivi/") || path === "/citoyen/signalements"));
+        const selected = tab.path === path || !!tab.also?.includes(path) || (tab.key === "verdicts" && path.startsWith("/citizen/verdict/")) || (tab.key === "report" && (path.startsWith("/citizen/track/") || path === "/citizen/reports"));
         const color = selected ? c.navActiveForeground : c.navForeground;
         const label = t.citizenNav[tab.key];
         const Glyph = tab.icon;

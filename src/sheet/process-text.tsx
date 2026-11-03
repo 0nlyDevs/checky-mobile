@@ -158,7 +158,7 @@ function ClipboardPart({ desk }: { desk: Desk }) {
 
 /** Opens the full app on a screen, then closes the sheet. The check is handed over in memory:
  * the sheet and the app share one JS runtime (same React host). */
-async function openInApp(path: "analyse" | "citoyen/verifier", id: string, close: () => void) {
+async function openInApp(path: "analyze" | "citizen/verify", id: string, close: () => void) {
   await Linking.openURL(createURL(`/${path}`, { queryParams: { id } })).catch(() => null);
   close();
 }
@@ -202,7 +202,7 @@ function CheckPart({ text, desk, close }: { text: string; desk: Desk; close: () 
   const a = result?.analysis;
   const seeAll = () => {
     const check = isLink(text) ? { url: text.trim() } : { text };
-    void openInApp(desk ? "analyse" : "citoyen/verifier", handOff({ ...check, result: result ?? undefined }), close);
+    void openInApp(desk ? "analyze" : "citizen/verify", handOff({ ...check, result: result ?? undefined }), close);
   };
 
   return (

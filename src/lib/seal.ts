@@ -6,10 +6,11 @@ import { sha256, sha512 } from "@noble/hashes/sha2.js";
  * made by the server.
  *
  * Three QR formats:
- * - a signed verdict card: `…/verifies/{id}#<b64u(message)>.<signature>.<key_id>`
- * - a sealed communiqué: `…/sceau/{cid}#<b64u(canonical payload)>.<signature>.<key_id>`
- * - an older communiqué QR: `…/sceau/{cid}#<signature>`, whose signed fields are rebuilt from
+ * - a signed verdict card: `…/verdicts/{id}#<b64u(message)>.<signature>.<key_id>`
+ * - a sealed communiqué: `…/seal/{cid}#<b64u(canonical payload)>.<signature>.<key_id>`
+ * - an older communiqué QR: `…/seal/{cid}#<signature>`, whose signed fields are rebuilt from
  *   the registry kept on the phone.
+ * Cards and communiqués printed before the web's English paths carry `/verifies` and `/sceau`: both read.
  *
  * A seal proves who signed these words, never that they are true. Anything we cannot settle
  * offline says so (« Émetteur inconnu de ce téléphone »), it never says « Faux ». */
@@ -141,7 +142,7 @@ export function communiquePayload(e: RegistryEntry): Record<string, string | nul
   return { issuer: e.issuer, number: e.number, issued_on: e.issued_on, title: e.title, fingerprint: e.fingerprint || fingerprint(e.text) };
 }
 
-const QR = /^https?:\/\/[^/?#\s]+(?:\/[^?#\s]*)?\/(verifies|sceau)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?(?:\?[^#\s]*)?#(\S+)$/i;
+const QR = /^https?:\/\/[^/?#\s]+(?:\/[^?#\s]*)?\/(verdicts|verifies|seal|sceau)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?(?:\?[^#\s]*)?#(\S+)$/i;
 
 /** The QR's text as one of our seals, or null. Regex, not URL: React Native's URL lacks `hash`. */
 export function parseSeal(text: string): Parsed | null {
@@ -150,7 +151,8 @@ export function parseSeal(text: string): Parsed | null {
   const [, where, rawId, fragment] = m;
   const id = rawId.toLowerCase();
   const parts = fragment.split(".");
-  if (parts.length === 1 && where.toLowerCase() === "sceau") return { type: "communique_legacy", id, signature: parts[0] };
+  const kind = where.toLowerCase();
+  if (parts.length === 1 && (kind === "seal" || kind === "sceau")) return { type: "communique_legacy", id, signature: parts[0] };
   if (parts.length !== 3) return null;
   const [packed, signature, keyId] = parts;
   let message: string;
@@ -159,7 +161,7 @@ export function parseSeal(text: string): Parsed | null {
   } catch {
     return null;
   }
-  return { type: where.toLowerCase() === "verifies" ? "verdict" : "communique", id, message, signature, keyId };
+  return { type: kind === "verdicts" || kind === "verifies" ? "verdict" : "communique", id, message, signature, keyId };
 }
 
 function verifies(publicKey: string, message: string, signature: string): boolean {

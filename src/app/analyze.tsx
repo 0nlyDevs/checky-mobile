@@ -187,7 +187,7 @@ export default function Analyse() {
       }
       const links = [result.url, ...picked].filter((u, i, all): u is string => !!u && all.indexOf(u) === i);
       for (const link of links) await act({ kind: "attach_link", item_id: made.item_id, url: link }).catch(() => null);
-      router.replace({ pathname: "/affirmation/[id]", params: { id: made.item_id } });
+      router.replace({ pathname: "/claim/[id]", params: { id: made.item_id } });
       if (entry) outbox.remove(entry.id);
     } catch {
       setError(t.check.trackFailed);
@@ -259,7 +259,7 @@ export default function Analyse() {
           {result.tracked && (
             <Card style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
               <T style={{ flex: 1 }}>{t.check.tracked(result.tracked.ref ?? result.tracked.title)}</T>
-              <Button label={t.common.open} variant="outline" onPress={() => router.push({ pathname: "/affirmation/[id]", params: { id: result.tracked!.item_id } })} />
+              <Button label={t.common.open} variant="outline" onPress={() => router.push({ pathname: "/claim/[id]", params: { id: result.tracked!.item_id } })} />
             </Card>
           )}
 

@@ -48,7 +48,6 @@ function cited(answer: string): Set<number> {
   return out;
 }
 
-/** A page of the web the agent opens, as the screen of this app when there is one. */
 /**
  * Checky's assistant, as on the web: without an account the visitors' guide (`/public/agent`:
  * published verdicts with citations, a tip drafted then sent by the citizen, the follow-up of their
@@ -146,13 +145,13 @@ export default function Assistant() {
           newsroom: res.newsroom?.name ?? ac.newsroom_name ?? "",
           at: new Date().toISOString(),
         });
-        patchAction(turn, ac.id, { state: "done", outcome: a.sent(res.ref), link: `/citoyen/suivi/${res.token}` });
+        patchAction(turn, ac.id, { state: "done", outcome: a.sent(res.ref), link: `/citizen/track/${res.token}` });
       } else if (ws) {
         const res = await api<{ item_id: string; ref: string | null }>(`/workspaces/${ws}/copilot/act`, {
           method: "POST",
           body: JSON.stringify({ kind: ac.kind, item_id: ac.item_id, title: ac.title, body: ac.text, origin: ac.origin, url: ac.url, status: ac.status }),
         });
-        patchAction(turn, ac.id, { state: "done", outcome: res.ref ? `${a.done} ${res.ref}.` : a.done, link: `/affirmation/${res.item_id}` });
+        patchAction(turn, ac.id, { state: "done", outcome: res.ref ? `${a.done} ${res.ref}.` : a.done, link: `/claim/${res.item_id}` });
       }
     } catch (err) {
       const note = err instanceof ApiError && err.status === 403 ? a.forbidden : err instanceof ApiError && err.status === 429 ? a.tooMany : a.actFailed;
@@ -226,7 +225,7 @@ export default function Assistant() {
                         <Pressable
                           key={ci.n}
                           accessibilityRole="link"
-                          onPress={() => (ci.id && ci.verdict ? router.push({ pathname: "/citoyen/verdict/[id]", params: { id: ci.id } }) : openWeb(ci.url))}
+                          onPress={() => (ci.id && ci.verdict ? router.push({ pathname: "/citizen/verdict/[id]", params: { id: ci.id } }) : openWeb(ci.url))}
                           style={[styles.row, { gap: 6 }]}
                         >
                           <T style={{ flex: 1, textDecorationLine: "underline" }} numberOfLines={2}>

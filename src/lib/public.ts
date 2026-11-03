@@ -55,7 +55,7 @@ export function deviceCountry(): string | null {
 }
 
 /** The shareable page of a published verdict on the web. */
-export const verdictLink = (id: string) => `${WEB_URL}/verifies/${id}`;
+export const verdictLink = (id: string) => `${WEB_URL}/verdicts/${id}`;
 
 // Tips sent from this phone, so their follow-up can be found again (the token is the only key).
 export type MyTip = { token: string; ref: string; title: string; newsroom: string; at: string };

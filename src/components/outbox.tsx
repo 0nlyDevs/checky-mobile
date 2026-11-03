@@ -59,9 +59,9 @@ export function OutboxList({ kind }: { kind?: Entry["kind"] }) {
   function open(e: Entry) {
     if (e.kind === "claim" && e.itemId) {
       remove(e.id);
-      router.push({ pathname: "/affirmation/[id]", params: { id: e.itemId } });
+      router.push({ pathname: "/claim/[id]", params: { id: e.itemId } });
     } else if (e.kind === "check") {
-      router.push({ pathname: "/analyse", params: { id: handOff({ queued: e.id }) } });
+      router.push({ pathname: "/analyze", params: { id: handOff({ queued: e.id }) } });
     }
   }
 

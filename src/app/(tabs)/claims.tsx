@@ -44,7 +44,7 @@ export default function Claims() {
   return (
     <SafeAreaView edges={chrome ? [] : ["top"]} style={{ flex: 1, backgroundColor: c.background }}>
       <View style={{ gap: 12, padding: 16, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: c.border, backgroundColor: c.background }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}><T tone="title" style={{ flex: 1 }}>{t.claims.title}</T><Button label={t.claims.new} icon={Plus} variant="outline" onPress={() => router.push("/nouvelle")} /></View>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}><T tone="title" style={{ flex: 1 }}>{t.claims.title}</T><Button label={t.claims.new} icon={Plus} variant="outline" onPress={() => router.push("/new")} /></View>
         <Field accessibilityLabel={t.claims.search} placeholder={t.claims.search} value={q} onChangeText={setQ} returnKeyType="search" autoCorrect={false} />
         <ScrollView horizontal showsHorizontalScrollIndicator contentContainerStyle={{ gap: 8, paddingBottom: 4 }}><Chip label={t.claims.filters.all} selected={!status} onPress={() => setStatus(null)} />{STATUSES.map(s => <Chip key={s} label={t.claims.filters[s]} selected={status === s} onPress={() => setStatus(s)} />)}</ScrollView>
       </View>

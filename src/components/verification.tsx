@@ -34,7 +34,7 @@ export function VerificationNotice({ membership, always }: { membership: Members
           icon={ArrowSquareOut}
           variant="outline"
           accessibilityHint={v.onWeb}
-          onPress={() => openWeb(`${WEB_URL}/w/${membership.workspace_id}/parametres#verification`)}
+          onPress={() => openWeb(`${WEB_URL}/w/${membership.workspace_id}/settings#verification`)}
         />
       )}
     </Card>

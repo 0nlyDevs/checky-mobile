@@ -22,23 +22,23 @@ export function AppHeader() {
   const { current, me } = useWorkspace();
   const [open, setOpen] = useState(false);
   const desk = mode === "journalist" && !!current;
-  const home: Href = desk ? "/rubrique" : mode === "journalist" ? "/bienvenue" : "/citoyen";
-  const root = ["/", "/rubrique", "/affirmations", "/verifier", "/reglages", "/citoyen"].includes(path);
+  const home: Href = desk ? "/beat" : mode === "journalist" ? "/welcome" : "/citizen";
+  const root = ["/", "/beat", "/claims", "/verify", "/settings", "/citizen"].includes(path);
   const go = (href: Href) => { setOpen(false); router.navigate(href); };
   const rows: { label: string; detail?: string; icon: Icon; href: Href }[] = [
     { label: t.navigation.home, icon: Newspaper, href: home },
-    ...(desk || mode === "citizen" ? [{ label: desk ? t.analyse.title : t.citizen.check, icon: Scan, href: (desk ? "/" : "/citoyen/verifier") as Href }] : []),
+    ...(desk || mode === "citizen" ? [{ label: desk ? t.analyse.title : t.citizen.check, icon: Scan, href: (desk ? "/" : "/citizen/verify") as Href }] : []),
     ...(desk ? [
-      { label: t.claims.title, icon: ListChecks, href: "/affirmations" as Href },
-      { label: t.tabs.ask, icon: ChatTeardropText, href: "/verifier" as Href },
-      { label: t.directory.title, icon: AddressBook, href: "/annuaire" as Href },
-      { label: t.figures.title, icon: ChartBar, href: "/chiffres" as Href },
-    ] : mode === "citizen" ? [{ label: t.tip.title, icon: PaperPlaneTilt, href: "/citoyen/signaler" as Href }, { label: t.citizen.mine, icon: ListChecks, href: "/citoyen/signalements" as Href }] : []),
+      { label: t.claims.title, icon: ListChecks, href: "/claims" as Href },
+      { label: t.tabs.ask, icon: ChatTeardropText, href: "/verify" as Href },
+      { label: t.directory.title, icon: AddressBook, href: "/directory" as Href },
+      { label: t.figures.title, icon: ChartBar, href: "/figures" as Href },
+    ] : mode === "citizen" ? [{ label: t.tip.title, icon: PaperPlaneTilt, href: "/citizen/report" as Href }, { label: t.citizen.mine, icon: ListChecks, href: "/citizen/reports" as Href }] : []),
     { label: t.citizen.latest, icon: SealCheck, href: "/verdicts" },
-    { label: t.registry.title, icon: Stamp, href: "/registre" },
+    { label: t.registry.title, icon: Stamp, href: "/registry" },
     { label: t.scanner.title, icon: QrCode, href: "/scanner" },
     { label: t.assistant.title, icon: Microphone, href: "/assistant" },
-    { label: t.navigation.account, icon: Gear, href: desk ? "/reglages" : "/preferences" },
+    { label: t.navigation.account, icon: Gear, href: desk ? "/settings" : "/preferences" },
     ...(me?.platform_admin ? [{ label: t.navigation.admin, detail: t.navigation.adminHint, icon: SealCheck, href: "/administration" as Href }] : []),
   ];
   const control = { minHeight: 44, paddingHorizontal: 10, flexDirection: "row" as const, alignItems: "center" as const, gap: 6, borderRadius: 99 };
@@ -59,7 +59,7 @@ export function AppHeader() {
           <ScrollView contentContainerStyle={{ padding: 20, gap: 8 }}>
             <Text style={{ fontFamily: fonts.semibold, fontSize: 15, color: c.mutedForeground, marginBottom: 10 }}>{desk ? current?.name : t.navigation.public}</Text>
             {rows.map(({ href, label, detail, icon: Glyph }) => <Pressable key={String(href)} accessibilityRole="button" onPress={() => go(href)} style={({ pressed }) => ({ flexDirection: "row", gap: 16, alignItems: "center", minHeight: 58, padding: 16, borderRadius: 16, backgroundColor: pressed ? c.accent : c.card, borderWidth: 1, borderColor: c.border })}><Glyph size={23} color={c.foreground} /><View style={{ flex: 1 }}><Text style={{ fontFamily: fonts.semibold, fontSize: 16, color: c.foreground }}>{label}</Text>{detail && <Text style={{ fontFamily: fonts.regular, fontSize: 12, color: c.mutedForeground }}>{detail}</Text>}</View></Pressable>)}
-            {!desk && <Pressable accessibilityRole="button" onPress={() => { setOpen(false); setMode("journalist"); router.replace("/connexion"); }} style={{ padding: 20, minHeight: 56 }}><Text style={{ fontFamily: fonts.semibold, color: c.foreground }}>{t.citizen.journalist}</Text></Pressable>}
+            {!desk && <Pressable accessibilityRole="button" onPress={() => { setOpen(false); setMode("journalist"); router.replace("/sign-in"); }} style={{ padding: 20, minHeight: 56 }}><Text style={{ fontFamily: fonts.semibold, color: c.foreground }}>{t.citizen.journalist}</Text></Pressable>}
           </ScrollView>
         </SafeAreaView>
       </Modal>

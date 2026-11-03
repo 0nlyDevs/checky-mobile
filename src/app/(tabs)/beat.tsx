@@ -41,11 +41,11 @@ export default function MyBeat() {
 
       <View style={{ flexDirection: "row", gap: 10 }}>
         <Button label={t.citizen.check} icon={Scan} style={{ flex: 1 }} onPress={() => router.navigate("/")} />
-        <Button label={t.directory.title} icon={AddressBook} variant="outline" style={{ flex: 1 }} onPress={() => router.push("/annuaire")} />
+        <Button label={t.directory.title} icon={AddressBook} variant="outline" style={{ flex: 1 }} onPress={() => router.push("/directory")} />
       </View>
-      {r && r.to_sign.length > 0 && <Card style={{ backgroundColor: c.primary, borderColor: c.primary, padding: 22 }}><T style={{ color: c.primaryForeground, fontFamily: fonts.medium, fontSize: 13 }}>{t.navigation.attention}</T><T style={{ color: c.primaryForeground, fontFamily: fonts.display, fontSize: 29, lineHeight: 35 }}>{r.to_sign.length} · {t.rubrique.toSign}</T><Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/affirmation/[id]", params: { id: r.to_sign[0].id } })} style={{ minHeight: 44, justifyContent: "center" }}><T style={{ color: c.primaryForeground, fontFamily: fonts.semibold, textDecorationLine: "underline" }}>{t.navigation.resume}</T></Pressable></Card>}
+      {r && r.to_sign.length > 0 && <Card style={{ backgroundColor: c.primary, borderColor: c.primary, padding: 22 }}><T style={{ color: c.primaryForeground, fontFamily: fonts.medium, fontSize: 13 }}>{t.navigation.attention}</T><T style={{ color: c.primaryForeground, fontFamily: fonts.display, fontSize: 29, lineHeight: 35 }}>{r.to_sign.length} · {t.rubrique.toSign}</T><Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/claim/[id]", params: { id: r.to_sign[0].id } })} style={{ minHeight: 44, justifyContent: "center" }}><T style={{ color: c.primaryForeground, fontFamily: fonts.semibold, textDecorationLine: "underline" }}>{t.navigation.resume}</T></Pressable></Card>}
       {r && <ContentRail title={t.rubrique.toSign} items={r.to_sign} itemKey={i => i.id} renderItem={i => <ClaimRow item={i} compact />} />}
-      {r && <ContentRail title={t.rubrique.mine} items={r.mine.filter(i => !r.to_sign.some(s => s.id === i.id))} itemKey={i => i.id} renderItem={i => <ClaimRow item={i} compact />} onSeeAll={() => router.navigate("/affirmations")} />}
+      {r && <ContentRail title={t.rubrique.mine} items={r.mine.filter(i => !r.to_sign.some(s => s.id === i.id))} itemKey={i => i.id} renderItem={i => <ClaimRow item={i} compact />} onSeeAll={() => router.navigate("/claims")} />}
 
       {r && r.circulating.length > 0 && (
         <Section title={t.rubrique.circulating}>
@@ -54,7 +54,7 @@ export default function MyBeat() {
               key={`${x.kind}-${x.id}`}
               accessibilityRole={x.item_id ? "button" : undefined}
               disabled={!x.item_id}
-              onPress={() => x.item_id && router.push({ pathname: "/affirmation/[id]", params: { id: x.item_id } })}
+              onPress={() => x.item_id && router.push({ pathname: "/claim/[id]", params: { id: x.item_id } })}
             >
               <Card style={{ gap: 4 }}>
                 <T tone="label">{[t.rubrique.kind[x.kind] ?? x.kind, x.station, ago(x.at), x.demo ? t.offline.demo : ""].filter(Boolean).join(" · ")}</T>
@@ -72,7 +72,7 @@ export default function MyBeat() {
       )}
 
       {r && r.contacts.length > 0 && (
-        <ContentRail title={t.rubrique.contacts} items={r.contacts} itemKey={x => x.id} onSeeAll={() => router.push("/annuaire")} renderItem={x => (
+        <ContentRail title={t.rubrique.contacts} items={r.contacts} itemKey={x => x.id} onSeeAll={() => router.push("/directory")} renderItem={x => (
             <Card style={{ gap: 10, padding: 20, minHeight: 180 }}>
               <T style={{ fontFamily: fonts.semibold }}>{x.name}</T>
               <T tone="muted">{[x.role, x.institution, x.region, x.is_demo ? t.offline.demo : ""].filter(Boolean).join(" · ")}</T>
@@ -88,7 +88,7 @@ export default function MyBeat() {
           )} />
       )}
 
-      {r && <ContentRail title={t.rubrique.figures} items={r.figures} itemKey={f => f.id} renderItem={f => <FigureCard f={f} />} onSeeAll={() => router.push("/chiffres")} />}
+      {r && <ContentRail title={t.rubrique.figures} items={r.figures} itemKey={f => f.id} renderItem={f => <FigureCard f={f} />} onSeeAll={() => router.push("/figures")} />}
 
       {r && r.angles.length > 0 && (
         <ContentRail title={t.rubrique.angles} items={r.angles} itemKey={a => `${a.title}-${a.kind}`} renderItem={a => (

@@ -13,7 +13,7 @@ export function PublicVerdictRow({ v, n }: { v: PublicVerdict; n?: number }) {
   const c = useTheme();
   return (
     <Pressable
-      onPress={() => router.push({ pathname: "/citoyen/verdict/[id]", params: { id: v.id } })}
+      onPress={() => router.push({ pathname: "/citizen/verdict/[id]", params: { id: v.id } })}
       accessibilityRole="link"
       style={({ pressed }) => ({ backgroundColor: c.card, borderColor: c.border, borderWidth: 1, borderRadius: radius.card, padding: 14, gap: 8, transform: [{ scale: pressed ? 0.97 : 1 }], opacity: pressed ? 0.9 : 1 })}
     >

@@ -6,7 +6,7 @@ import { InkTabBar } from "@/components/tab-bar";
 import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
-/** The desk's ink bar at the bottom of the phone; the paper pill shows where you are. The Checky button floats above it. */
+/** The desk's bottom bar; the fixed header keeps the menu and assistant outside the scroll area. */
 export default function TabsLayout() {
   const t = useT();
   const c = useTheme();
@@ -21,10 +21,10 @@ export default function TabsLayout() {
         screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: c.background } }}
       >
         <Tabs.Screen name="index" options={{ title: t.tabs.analyse, tabBarIcon: icon(Scan) }} />
-        <Tabs.Screen name="rubrique" options={{ title: t.rubrique.tab, tabBarIcon: icon(Newspaper) }} />
-        <Tabs.Screen name="affirmations" options={{ title: t.tabs.claims, tabBarIcon: icon(ListChecks) }} />
-        <Tabs.Screen name="verifier" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
-        <Tabs.Screen name="reglages" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />
+        <Tabs.Screen name="beat" options={{ title: t.rubrique.tab, tabBarIcon: icon(Newspaper) }} />
+        <Tabs.Screen name="claims" options={{ title: t.tabs.claims, tabBarIcon: icon(ListChecks) }} />
+        <Tabs.Screen name="verify" options={{ title: t.tabs.ask, tabBarIcon: icon(ChatTeardropText) }} />
+        <Tabs.Screen name="settings" options={{ title: t.tabs.settings, tabBarIcon: icon(Gear) }} />
       </Tabs>
     </View>
   );

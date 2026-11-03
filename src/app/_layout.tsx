@@ -94,9 +94,9 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   useEffect(() => {
     if (!ready) return;
     if (signedIn && !current) {
-      if (path !== "/bienvenue" && !(platformAdmin && (["/administration", "/assistant", "/preferences", "/registre", "/scanner", "/verdicts"].includes(path) || path.startsWith("/citoyen/verdict/")))) router.replace("/bienvenue");
-    } else if (signedIn && current && ["/accueil", "/connexion", "/inscription", "/bienvenue"].includes(path)) {
-      router.replace("/rubrique");
+      if (path !== "/welcome" && !(platformAdmin && (["/administration", "/assistant", "/preferences", "/registry", "/scanner", "/verdicts"].includes(path) || path.startsWith("/citizen/verdict/")))) router.replace("/welcome");
+    } else if (signedIn && current && ["/home", "/sign-in", "/sign-up", "/welcome"].includes(path)) {
+      router.replace("/beat");
     }
   }, [ready, signedIn, current, platformAdmin, path, router]);
 
@@ -109,8 +109,8 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
       return;
     }
     if (chosen.current === null && !signedIn) {
-      if (mode === "citizen") router.replace("/citoyen");
-      else if (mode === "journalist") router.replace("/connexion");
+      if (mode === "citizen") router.replace("/citizen");
+      else if (mode === "journalist") router.replace("/sign-in");
     }
     chosen.current = mode;
   }, [ready, mode, signedIn, router]);
@@ -145,27 +145,27 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
     <>
       <StatusBar style="auto" />
       <OfflineSync desk={inDesk} />
-      {inDesk && <ShareForwarder to="/analyse" />}
+      {inDesk && <ShareForwarder to="/analyze" />}
       {inDesk && <NotificationOpener />}
       {inDesk && <NativeSurfaces />}
-      {citizen && <ShareForwarder to="/citoyen/verifier" />}
+      {citizen && <ShareForwarder to="/citizen/verify" />}
       <AppChromeContext value={inDesk || citizen || platformAdmin}>
         <Stack screenOptions={{ headerShown: inDesk || citizen || platformAdmin, header: AppHeader, contentStyle: { backgroundColor: c.background } }}>
           {/* The first screen allowed is where the app opens. */}
           <Stack.Protected guard={!signedIn && !mode}>
-            <Stack.Screen name="accueil" />
+            <Stack.Screen name="home" />
           </Stack.Protected>
           <Stack.Protected guard={citizen}>
-            <Stack.Screen name="citoyen/index" />
-            <Stack.Screen name="citoyen/verifier" />
-            <Stack.Screen name="citoyen/signaler" />
-            <Stack.Screen name="citoyen/signalements" />
-            <Stack.Screen name="citoyen/suivi/[token]" />
+            <Stack.Screen name="citizen/index" />
+            <Stack.Screen name="citizen/verify" />
+            <Stack.Screen name="citizen/report" />
+            <Stack.Screen name="citizen/reports" />
+            <Stack.Screen name="citizen/track/[token]" />
           </Stack.Protected>
           {/* Public, kept on the phone: readable by everyone, account or not. */}
           <Stack.Protected guard={citizen || inDesk || platformAdmin}>
-            <Stack.Screen name="citoyen/verdict/[id]" />
-            <Stack.Screen name="registre" />
+            <Stack.Screen name="citizen/verdict/[id]" />
+            <Stack.Screen name="registry" />
             <Stack.Screen name="verdicts" />
             <Stack.Screen name="scanner" />
             <Stack.Screen name="assistant" />
@@ -175,25 +175,25 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
             <Stack.Screen name="administration" />
           </Stack.Protected>
           <Stack.Protected guard={!signedIn}>
-            <Stack.Screen name="connexion" />
-            <Stack.Screen name="inscription" />
+            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="sign-up" />
           </Stack.Protected>
           <Stack.Protected guard={signedIn && !current}>
-            <Stack.Screen name="bienvenue" />
+            <Stack.Screen name="welcome" />
           </Stack.Protected>
           <Stack.Protected guard={inDesk}>
             <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="analyse" />
+            <Stack.Screen name="analyze" />
             <Stack.Screen name="lot" />
-            <Stack.Screen name="affirmation/[id]" />
-            <Stack.Screen name="nouvelle" options={{ presentation: "modal" }} />
-            <Stack.Screen name="annuaire" />
-            <Stack.Screen name="chiffres" />
+            <Stack.Screen name="claim/[id]" />
+            <Stack.Screen name="new" options={{ presentation: "modal" }} />
+            <Stack.Screen name="directory" />
+            <Stack.Screen name="figures" />
           </Stack.Protected>
         </Stack>
       </AppChromeContext>
-      {inDesk && <ClipboardOffer to="/analyse" />}
-      {citizen && <ClipboardOffer to="/citoyen/verifier" />}
+      {inDesk && <ClipboardOffer to="/analyze" />}
+      {citizen && <ClipboardOffer to="/citizen/verify" />}
       {citizen && <CitizenBar />}
     </>
   );
@@ -202,7 +202,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
 /** Something shared to Checky from another app (a WhatsApp video, a TikTok link…) opens the analysis
  * in the desk, or the "already checked?" screen for a citizen. Several screenshots at once go to
  * the desk's queue together and open the batch screen, where they are grouped by rumour. */
-function ShareForwarder({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
+function ShareForwarder({ to }: { to: "/analyze" | "/citizen/verify" }) {
   const router = useRouter();
   const outbox = useOutbox();
   const { hasShareIntent, shareIntent, resetShareIntent } = useShareIntentContext();
@@ -216,7 +216,7 @@ function ShareForwarder({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
       size: file.size,
     }));
     resetShareIntent();
-    if (to === "/analyse" && files.length > 1) {
+    if (to === "/analyze" && files.length > 1) {
       const batch = `b${Date.now().toString(36)}`;
       // Asked now, while Checky is on screen: Android refuses both from the background.
       void askToNotify();
@@ -257,7 +257,7 @@ function NotificationOpener() {
     seen.current = id;
     const data = response.notification.request.content.data as { entry?: unknown; batch?: unknown };
     if (typeof data.batch === "string") router.push({ pathname: "/lot", params: { batch: data.batch } });
-    else if (typeof data.entry === "string") router.push({ pathname: "/analyse", params: { id: handOff({ queued: data.entry }) } });
+    else if (typeof data.entry === "string") router.push({ pathname: "/analyze", params: { id: handOff({ queued: data.entry }) } });
     Notifications.clearLastNotificationResponseAsync().catch(() => null);
   }, [response, router]);
 
