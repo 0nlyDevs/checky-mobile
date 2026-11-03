@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved -- @noble/ed25519 ships only a "module" entry, which the lint resolver ignores; tsc and Metro resolve it
 import * as ed from "@noble/ed25519";
 import { sha256, sha512 } from "@noble/hashes/sha2.js";
 
