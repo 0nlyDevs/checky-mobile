@@ -286,6 +286,7 @@ export const t = {
     server: "Serveur",
     demo: "Recharger la démonstration",
     demoDone: "Démonstration rechargée.",
+    demoFailed: "La démonstration n'a pas pu être rechargée. Vérifiez la connexion et réessayez.",
     demoConfirm: "Remplacer les affirmations de démonstration par une copie neuve ?",
     signOutPending: (n: number) =>
       n === 1 ? "1 élément n'est pas encore envoyé. Il sera effacé de ce téléphone." : `${n} éléments ne sont pas encore envoyés. Ils seront effacés de ce téléphone.`,

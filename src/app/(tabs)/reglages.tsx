@@ -48,8 +48,12 @@ export default function Settings() {
       {
         text: t.detail.confirm,
         onPress: async () => {
-          await api(`/workspaces/${current.workspace_id}/demo/reset`, { method: "POST" }).catch(() => null);
-          Alert.alert(t.settings.demoDone);
+          try {
+            await api(`/workspaces/${current.workspace_id}/demo/reset`, { method: "POST" });
+            Alert.alert(t.settings.demoDone);
+          } catch {
+            Alert.alert(t.settings.demoFailed);
+          }
         },
       },
     ]);
