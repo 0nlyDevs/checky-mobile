@@ -17,7 +17,7 @@ import {
 import Animated, { cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { fonts, radius, tracking, useTheme } from "@/lib/theme";
 import type { Status, Verdict } from "@/lib/types";
 
@@ -150,6 +150,7 @@ export const VERDICT_ICON: Record<Verdict, Icon> = {
 
 /** Never colour alone: icon + label. Confirmed = solid fill; AI suggestion = dashed outline on soft ground. */
 export function VerdictBadge({ verdict, suggested, large, bare }: { verdict: Verdict; suggested?: boolean; large?: boolean; bare?: boolean }) {
+  const t = useT();
   const c = useTheme();
   const v = c.verdict[verdict];
   const Icon = VERDICT_ICON[verdict];
@@ -181,6 +182,7 @@ export function VerdictBadge({ verdict, suggested, large, bare }: { verdict: Ver
 
 /** Spec 4.5: a suggestion is a dashed 2 px frame in the verdict ink on its wash; a confirmed verdict is solid. */
 export function VerdictPanel({ verdict, suggested, children }: { verdict: Verdict; suggested?: boolean; children?: ReactNode }) {
+  const t = useT();
   const c = useTheme();
   const v = c.verdict[verdict];
   return (
@@ -211,6 +213,7 @@ export const STATUS_ICON: Record<Status, Icon> = {
 
 /** Status is not truth: ink icons, never verdict colours. */
 export function StatusLabel({ status }: { status: string }) {
+  const t = useT();
   const c = useTheme();
   const Icon = STATUS_ICON[status as Status] ?? CircleDashed;
   return (

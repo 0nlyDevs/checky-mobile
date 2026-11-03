@@ -4,11 +4,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { TAB_BAR_HEIGHT } from "@/components/tab-bar";
 import { Sparkle } from "@/lib/icons";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
 /** Floats above the tab bar at the right: opens Analyser and puts the cursor in its paste field. */
 export function CheckyButton() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const { bottom } = useSafeAreaInsets();

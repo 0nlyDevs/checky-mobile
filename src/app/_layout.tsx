@@ -14,7 +14,7 @@ import { Button, Notice } from "@/components/ui";
 import { authClient } from "@/lib/auth";
 import { persistentCache } from "@/lib/cache";
 import { type Check, handOff } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useLangReady, useT } from "@/lib/i18n";
 import { ModeProvider, useMode } from "@/lib/mode";
 import { onReconnect } from "@/lib/network";
 import { OutboxProvider } from "@/lib/outbox";
@@ -32,7 +32,9 @@ export default function RootLayout() {
     BricolageGrotesque_800ExtraBold,
     CormorantGaramond_500Medium_Italic,
   });
-  if (!loaded) return null;
+  // The stored language is read first, so nothing opens in one language and turns into another.
+  const langReady = useLangReady();
+  if (!loaded || !langReady) return null;
   return (
     // Kept until the journalist is signed in, so a share made while signed out is not lost.
     <ShareIntentProvider options={{ resetOnBackground: false }}>
@@ -63,6 +65,7 @@ function Session() {
 }
 
 function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) {
+  const t = useT();
   const c = useTheme();
   const { current, loading, error, refresh } = useWorkspace();
   const { mode, loaded, setMode } = useMode();

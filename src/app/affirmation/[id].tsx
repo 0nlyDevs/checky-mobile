@@ -12,7 +12,7 @@ import { VerificationNotice } from "@/components/verification";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { fonts, radius, tracking, useTheme } from "@/lib/theme";
 import { type ClaimData, type Comment, type Item, type ItemPatch, type Source, STATUSES, type Status, type Verdict, VERDICTS } from "@/lib/types";
 import { uploadFile } from "@/lib/upload";
@@ -27,6 +27,7 @@ function statusAfter(verdict: Verdict | null, status: Status): Status {
 }
 
 export default function ClaimDetail() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const ws = useWs();

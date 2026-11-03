@@ -10,7 +10,7 @@ import { Brand } from "@/components/brand";
 import { Button, Card, Field, Screen, Section, T } from "@/components/ui";
 import { ago } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useMode } from "@/lib/mode";
 import { deviceCountry, type MyTip, myTips, publicFetcher } from "@/lib/public";
 import { fonts, useTheme } from "@/lib/theme";
@@ -21,6 +21,7 @@ type Page = { items: import("@/lib/public").PublicVerdict[]; total: number };
 
 /** The citizen's home: paste or share something, see the latest published verdicts and one's own tips. */
 export default function CitizenHome() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const { setMode } = useMode();

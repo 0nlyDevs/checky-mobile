@@ -3,12 +3,11 @@ import { View } from "react-native";
 import { Button, Card, T } from "@/components/ui";
 import { WEB_URL } from "@/lib/config";
 import { openWeb } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { ArrowSquareOut, Hourglass, type Icon, LockSimple, SealCheck, Warning } from "@/lib/icons";
 import { fonts, useTheme } from "@/lib/theme";
 import type { Membership } from "@/lib/types";
 
-const v = t.verification;
 const ICON: Record<string, Icon> = { none: LockSimple, pending: Hourglass, refused: Warning, approved: SealCheck };
 
 /**
@@ -18,6 +17,7 @@ const ICON: Record<string, Icon> = { none: LockSimple, pending: Hourglass, refus
  */
 export function VerificationNotice({ membership, always }: { membership: Membership; always?: boolean }) {
   const c = useTheme();
+  const v = useT().verification;
   const status = membership.verification in ICON ? membership.verification : "none";
   if (status === "approved" && !always) return null;
   const Icon = ICON[status];

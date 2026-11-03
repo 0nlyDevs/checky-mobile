@@ -9,7 +9,7 @@ import { api, clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
 import { clearCache } from "@/lib/cache";
 import { API_URL } from "@/lib/config";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { fonts } from "@/lib/theme";
 import type { Health } from "@/lib/types";
 import { useOutbox } from "@/lib/outbox";
@@ -18,6 +18,7 @@ import { useWorkspace } from "@/lib/workspace";
 type Check = { status: string; latency_ms?: number | null };
 
 export default function Settings() {
+  const t = useT();
   const inset = useTabInset();
   const { me, current, choose, refresh } = useWorkspace();
   const outbox = useOutbox();

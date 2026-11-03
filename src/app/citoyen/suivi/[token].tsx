@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Card, Notice, Section, Step, T, styles } from "@/components/ui";
 import { ago } from "@/lib/format";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { publicFetcher, type TipStatus } from "@/lib/public";
 import { fonts, useTheme } from "@/lib/theme";
 
@@ -15,6 +15,7 @@ const ORDER = ["to_check", "in_progress", "verified", "published"];
 
 /** Where a citizen's tip stands, refreshed every 30 s; its verdict once published. */
 export default function FollowTip() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const { token, routed } = useLocalSearchParams<{ token: string; routed?: string }>();

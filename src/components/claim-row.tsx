@@ -3,11 +3,12 @@ import { Pressable, View } from "react-native";
 
 import { StatusLabel, T, VerdictBadge } from "@/components/ui";
 import { span } from "@/lib/format";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import type { ClaimData, Item } from "@/lib/types";
 
 export function ClaimRow({ item }: { item: Item }) {
+  const t = useT();
   const c = useTheme();
   const d = item.data as ClaimData;
   const verdict = d.verdict ?? null;

@@ -10,7 +10,7 @@ import { Button, Card, Field, Notice, Screen, Section, Step, type StepState, T, 
 import { api, ApiError } from "@/lib/api";
 import { host } from "@/lib/format";
 import { type Check, openWeb, pickUp } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { tr, useT } from "@/lib/i18n";
 import { isNetworkError, isOnline } from "@/lib/network";
 import { useOutbox } from "@/lib/outbox";
 import { postStream } from "@/lib/sse";
@@ -26,6 +26,7 @@ const ORIGIN: Record<string, Origin> = { facebook: "facebook", whatsapp: "whatsa
 /** One shared video, photo, link or text, checked end to end: what it says, warning signs, what
  * fact-checkers already say, a suggested verdict. Nothing reaches the desk until "Suivre". */
 export default function Analyse() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const ws = useWs();
@@ -58,6 +59,8 @@ export default function Analyse() {
 
   const run = useCallback(
     async (pasted?: string) => {
+      // Read at call time: a language switch must not restart (and abort) a running check.
+      const t = tr();
       abort.current?.abort();
       const ctrl = new AbortController();
       abort.current = ctrl;
@@ -126,6 +129,7 @@ export default function Analyse() {
   /** Into "À envoyer": kept on the phone, sent and analysed when the network is back. An upload
    * that already went through is not sent again. */
   const later = useCallback(() => {
+    const t = tr();
     if (!job) return;
     try {
       outbox.add({ kind: "check", check: { url: job.url, text: job.text, file: job.file }, sourceId: sourceId.current ?? undefined });

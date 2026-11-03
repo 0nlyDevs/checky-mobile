@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 import { Button, Chip, Field, Notice, Screen, T, styles } from "@/components/ui";
 import { api } from "@/lib/api";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { isNetworkError, isOnline } from "@/lib/network";
 import { useOutbox } from "@/lib/outbox";
 import type { Origin } from "@/lib/types";
@@ -13,6 +13,7 @@ import { useWs } from "@/lib/workspace";
 const ORIGINS: Origin[] = ["whatsapp", "facebook", "tiktok", "radio", "press", "other"];
 
 export default function NewClaim() {
+  const t = useT();
   const ws = useWs();
   const router = useRouter();
   const [title, setTitle] = useState("");

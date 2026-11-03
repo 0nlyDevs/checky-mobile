@@ -5,13 +5,14 @@ import { Brand } from "@/components/brand";
 import { Button, Field, Notice, Screen, T } from "@/components/ui";
 import { api } from "@/lib/api";
 import { authClient } from "@/lib/auth";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import type { Workspace } from "@/lib/types";
 import { useWorkspace } from "@/lib/workspace";
 
 /** Signed in but in no newsroom yet: create one (optionally with the demo claims) or join with an invite. */
 export default function Welcome() {
+  const t = useT();
   const c = useTheme();
   const { refresh, choose } = useWorkspace();
   const [name, setName] = useState("");

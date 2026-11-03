@@ -3,12 +3,13 @@ import { Pressable, View } from "react-native";
 
 import { Brand } from "@/components/brand";
 import { Screen, T } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { type Mode, useMode } from "@/lib/mode";
 import { fonts, radius, useTheme } from "@/lib/theme";
 
 /** First launch: a citizen checking something, or a journalist going to the desk. */
 export default function Start() {
+  const t = useT();
   const { setMode } = useMode();
   // Once a mode is set this screen is no longer allowed, and the root stack opens the right side.
   const pick = (mode: Mode) => setMode(mode);

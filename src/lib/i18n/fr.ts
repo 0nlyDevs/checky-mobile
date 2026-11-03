@@ -1,4 +1,4 @@
-// Every string the app shows, in French (Malagasy later as a sibling file).
+// Every string the app shows, in French: the source. mg.ts and en.ts override it key by key (lib/i18n/index.ts).
 export const t = {
   app: { name: "Checky", tagline: "Vérifier avant de diffuser." },
   common: {

@@ -5,13 +5,14 @@ import { Pressable, View } from "react-native";
 import { Button, Card, Notice, Section, T } from "@/components/ui";
 import { host } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { tr, useT } from "@/lib/i18n";
 import { useOnline } from "@/lib/network";
 import { type Entry, useOutbox } from "@/lib/outbox";
 import { fonts, useTheme } from "@/lib/theme";
 
 /** Shown at the top of the desk screens while the phone has no network. */
 export function OfflineNotice({ stale }: { stale?: boolean }) {
+  const t = useT();
   const online = useOnline();
   const { entries } = useOutbox();
   const pending = entries.filter((e) => e.state === "waiting" || e.state === "sending").length;
@@ -25,6 +26,7 @@ export function OfflineNotice({ stale }: { stale?: boolean }) {
 }
 
 function label(e: Entry): { kind: string; title: string } {
+  const t = tr();
   if (e.kind === "claim") return { kind: t.outbox.kind.claim, title: e.claim?.title ?? "" };
   const c = e.check ?? {};
   if (c.file) return { kind: t.outbox.kind[c.file.mime.split("/")[0]] ?? t.outbox.kind.application, title: c.file.name };
@@ -34,6 +36,7 @@ function label(e: Entry): { kind: string; title: string } {
 
 /** Status words with ink icons: being queued says nothing about whether a claim is true. */
 function stateOf(e: Entry, online: boolean): { Icon: Icon; word: string } {
+  const t = tr();
   if (e.state === "done") return { Icon: Checks, word: e.kind === "claim" ? t.outbox.state.created : t.outbox.state.done };
   if (e.state === "failed") return { Icon: WarningOctagon, word: `${t.outbox.state.failed} · ${t.outbox.errors[e.error ?? "failed"] ?? t.outbox.errors.failed}` };
   if (e.state === "sending") return { Icon: CloudArrowUp, word: t.outbox.state.sending };
@@ -42,6 +45,7 @@ function stateOf(e: Entry, online: boolean): { Icon: Icon; word: string } {
 
 /** "À envoyer": what was captured offline, and what came back once sent. */
 export function OutboxList({ kind }: { kind?: Entry["kind"] }) {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const online = useOnline();
