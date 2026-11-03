@@ -78,3 +78,11 @@ export type CheckResult = {
   needs_text?: boolean;
   read_error?: string;
 };
+
+// « Diffuser » and « Le trajet » (brief 7.1-7.3), as the desk's API returns them.
+export type Formats = Schemas["FormatsOut"];
+export type Trajet = Schemas["TrajetOut"];
+export type DiffuseResult = Schemas["DiffuseOut"];
+export type Gap = Schemas["GapOut"];
+// « Entendu à la radio » (brief 5.2).
+export type Clip = Schemas["ClipOut"];
