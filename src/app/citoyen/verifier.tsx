@@ -7,13 +7,14 @@ import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Button, Card, Field, Notice, Screen, Section, Step, T, styles } from "@/components/ui";
 import { ApiError } from "@/lib/api";
 import { handOff, pickUp } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { tr, useT } from "@/lib/i18n";
 import { type Ask, deviceCountry, type Match, type PublicVerdict, publicApi } from "@/lib/public";
 import { fonts, useTheme } from "@/lib/theme";
 
 /** "Est-ce déjà vérifié ?" for something a citizen shared or pasted. Only verdicts a newsroom has
  * published are shown, never an AI verdict; with nothing found, the citizen can send a tip. */
 export default function CitizenCheck() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -26,6 +27,7 @@ export default function CitizenCheck() {
   const started = useRef(false);
 
   const run = useCallback(async (q: string) => {
+    const t = tr();
     if (!q.trim()) return;
     setBusy(true);
     setError(null);

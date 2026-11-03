@@ -2,16 +2,18 @@ import { useState } from "react";
 import { Pressable, Switch, View } from "react-native";
 
 import { Brand } from "@/components/brand";
+import { LanguagePicker } from "@/components/language-picker";
 import { Button, Field, Notice, Screen, T } from "@/components/ui";
 import { api } from "@/lib/api";
 import { authClient } from "@/lib/auth";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import type { Workspace } from "@/lib/types";
 import { useWorkspace } from "@/lib/workspace";
 
 /** Signed in but in no newsroom yet: create one (optionally with the demo claims) or join with an invite. */
 export default function Welcome() {
+  const t = useT();
   const c = useTheme();
   const { refresh, choose } = useWorkspace();
   const [name, setName] = useState("");
@@ -71,6 +73,7 @@ export default function Welcome() {
       <Field label={t.welcome.invite} placeholder={t.welcome.invitePlaceholder} value={invite} onChangeText={setInvite} autoCapitalize="none" />
       <Button label={t.welcome.join} variant="outline" busy={busy === "join"} disabled={!invite.trim() || !!busy} onPress={join} />
       {error && <Notice tone="error">{error}</Notice>}
+      <LanguagePicker />
       <Button label={t.settings.signOut} variant="ghost" onPress={() => authClient.signOut()} />
     </Screen>
   );

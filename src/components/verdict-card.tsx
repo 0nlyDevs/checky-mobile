@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 import { captureRef } from "react-native-view-shot";
 
 import { VERDICT_ICON } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { fonts } from "@/lib/theme";
 import { light } from "@/lib/tokens";
 import type { Verdict } from "@/lib/types";
@@ -35,6 +35,7 @@ export function VerdictCardView({ width, cardRef, ...p }: Props & { width: numbe
 }
 
 function Card({ verdict, title, reason, sources, refLabel, desk, lang }: Props) {
+  const t = useT();
   const words = t.card.words[lang];
   const Icon = VERDICT_ICON[verdict];
   const names = sources.filter((v, i, a) => !!v && a.indexOf(v) === i).slice(0, 3);

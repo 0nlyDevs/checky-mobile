@@ -10,12 +10,13 @@ import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Chip, Field, Notice, T } from "@/components/ui";
 import { fetcher } from "@/lib/api";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { type ItemPage, STATUSES } from "@/lib/types";
 import { useWs } from "@/lib/workspace";
 
 export default function Claims() {
+  const t = useT();
   const c = useTheme();
   const inset = useTabInset();
   const ws = useWs();

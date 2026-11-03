@@ -4,11 +4,12 @@ import { type ColorValue, View } from "react-native";
 
 import { CheckyButton } from "@/components/checky-button";
 import { InkTabBar } from "@/components/tab-bar";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
 /** The desk's ink bar at the bottom of the phone; the paper pill shows where you are. The Checky button floats above it. */
 export default function TabsLayout() {
+  const t = useT();
   const c = useTheme();
   const icon =
     (Icon: typeof Scan) =>

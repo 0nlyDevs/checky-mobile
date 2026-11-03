@@ -6,10 +6,11 @@ import { Brand } from "@/components/brand";
 import { Button, Field, Notice, Screen, T } from "@/components/ui";
 import { clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useMode } from "@/lib/mode";
 
 export function AuthForm({ mode }: { mode: "in" | "up" }) {
+  const t = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

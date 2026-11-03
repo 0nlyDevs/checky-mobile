@@ -9,11 +9,12 @@ import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
 import { handOff } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
 /** Home: what to check. Most checks arrive by the share sheet; this screen is for the rest. */
 export default function AnalyseHome() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const inset = useTabInset();

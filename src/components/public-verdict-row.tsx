@@ -3,12 +3,13 @@ import { Pressable } from "react-native";
 
 import { T, VerdictBadge } from "@/components/ui";
 import { ago } from "@/lib/format";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import type { PublicVerdict } from "@/lib/public";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import type { Verdict } from "@/lib/types";
 
 export function PublicVerdictRow({ v, n }: { v: PublicVerdict; n?: number }) {
+  const t = useT();
   const c = useTheme();
   return (
     <Pressable

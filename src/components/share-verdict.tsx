@@ -5,11 +5,12 @@ import { Share, useWindowDimensions, View } from "react-native";
 import { Button, Card, Chip, Field, Notice, T, styles } from "@/components/ui";
 import { type CardLang, type CardRef, shareCard, VerdictCardView } from "@/components/verdict-card";
 import { api, ApiError } from "@/lib/api";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import type { ClaimData, Item, Source, Verdict } from "@/lib/types";
 
 /** F5 on the phone: the 1080 × 1080 card and its post, shared to WhatsApp, Facebook… once the verdict is confirmed. */
 export function ShareVerdict({ ws, item, verdict, sources, desk, onShared }: { ws: string; item: Item; verdict: Verdict; sources: Source[]; desk: string; onShared: () => void }) {
+  const t = useT();
   const { width } = useWindowDimensions();
   const d = item.data as ClaimData & { posts?: Partial<Record<CardLang, string>> };
   const [lang, setLang] = useState<CardLang>("fr");

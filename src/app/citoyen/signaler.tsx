@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { Button, Chip, Field, Notice, Screen, T, styles } from "@/components/ui";
 import { ApiError } from "@/lib/api";
 import { pickUp } from "@/lib/handoff";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { deviceCountry, type Newsroom, publicApi, publicFetcher, rememberTip } from "@/lib/public";
 import { useTheme } from "@/lib/theme";
 import type { components } from "@/lib/api-schema";
@@ -22,6 +22,7 @@ const ORIGINS: Origin[] = ["whatsapp", "facebook", "tiktok", "radio", "press", "
 /** Send a tip to a newsroom, or let Checky route it by place and country; its follow-up link is
  * remembered on this phone. */
 export default function Report() {
+  const t = useT();
   const c = useTheme();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();

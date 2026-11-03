@@ -2,19 +2,22 @@ import { CaretRight, type Icon, MagnifyingGlass, Newspaper } from "@/lib/icons";
 import { Pressable, View } from "react-native";
 
 import { Brand } from "@/components/brand";
+import { LanguagePicker } from "@/components/language-picker";
 import { Screen, T } from "@/components/ui";
-import { t } from "@/lib/i18n/fr";
+import { useT } from "@/lib/i18n";
 import { type Mode, useMode } from "@/lib/mode";
 import { fonts, radius, useTheme } from "@/lib/theme";
 
 /** First launch: a citizen checking something, or a journalist going to the desk. */
 export default function Start() {
+  const t = useT();
   const { setMode } = useMode();
   // Once a mode is set this screen is no longer allowed, and the root stack opens the right side.
   const pick = (mode: Mode) => setMode(mode);
   return (
     <Screen contentContainerStyle={{ padding: 16, paddingTop: 56, gap: 24 }}>
       <Brand />
+      <LanguagePicker />
       <T tone="title">{t.app.tagline}</T>
       <T tone="muted">{t.start.lead}</T>
       <Choice icon={MagnifyingGlass} title={t.start.citizen} hint={t.start.citizenHint} primary onPress={() => pick("citizen")} />

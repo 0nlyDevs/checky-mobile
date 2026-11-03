@@ -36,10 +36,19 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/analyse` | The check, step by step: upload → transcription → read → claims and warning signs → search → suggested verdict. Then the content, the dashed AI suggestion and the quotes it rests on, the warning signs, the file's AI traces (C2PA, generator tags such as Sora or Midjourney), reverse image search, and results to tick. **Suivre dans le desk** creates the claim and attaches the file and the ticked sources |
 | `/affirmations` | The newsroom's claims, filtered by status, searchable |
 | `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), **Partager le verdict** (the 1080 × 1080 card in French or Malagasy and the post written from the verdict, through the share sheet; sharing moves a verified claim to Publié, as in the desk), status, AI source analysis, sources (add a link or a file), comments |
-| `/verifier` | Ask every source of the newsroom; the answer streams and cites its passages |
-| `/reglages` | Account, newsroom switch and its verification status (the request is made on the web desk), service health, demo reset, sign out |
+| `/verifier` | **Avant l'antenne** (default): the caller's claim, typed or dictated with the keyboard's microphone, is matched against published verdicts (`/public/match`, then the newsroom's own through `/items/similar`). A match shows « Déjà vérifié : … » with the newsroom, the date and a two-sentence radio line to copy; with none, it never says « Faux »: it says nothing is published, gives a neutral line for the air, shows whether the desk already follows it, and offers **Suivre dans le desk** (origin radio, queued offline). **Nos sources**: ask every source of the newsroom; the answer streams and cites its passages |
+| `/reglages` | Language, account, newsroom switch and its verification status (the request is made on the web desk), service health, demo reset, sign out |
 
 Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link in the desk, or `/citoyen/verifier` in citizen mode. A share made before a mode is chosen, or while a journalist is signed out, waits until then.
+
+## Languages
+
+The interface is in Malagasy, French and English, switched in one tap (Réglages, the first-launch screen, the citizen home and the newsroom welcome screen). The choice is kept in SecureStore (`fanilo.lang`); until one is made, the phone's language decides: Malagasy → Malagasy, French → French, anything else → English.
+
+- `src/lib/i18n/fr.ts` is the source. `en.ts` and `mg.ts` override it key by key and French fills any gap (`merge` in `src/lib/i18n/core.ts`); they are typed against French, so an unknown key fails `tsc`.
+- Screens read strings with `useT()` (`src/lib/i18n/index.ts`), so a switch re-renders them; helpers outside components use `tr()`. Dates use the language's locale (`day()`).
+- **Every new string goes into `fr.ts`, with its English in `en.ts` and its Malagasy in `mg.ts`.** `mg.ts` is machine-drafted and marked `// relire (mg)`: a Malagasy speaker must reread it. Its verdict and status words match the web's public site.
+- The verdict card keeps its own language picker (French or Malagasy labels); a citizen's card follows the interface (Malagasy, otherwise French).
 
 ## Working without a network
 
@@ -59,7 +68,7 @@ src/components/     ui.tsx (text, buttons, fields, verdict badge, status, steps)
 src/lib/            config, auth (Better Auth client), api (JWT + fetch), sse (streams via expo/fetch),
                     upload (presigned PUT with progress, then wait for the ingest job), workspace context,
                     network (expo-network), cache (SWR kept on disk), outbox ("À envoyer" queue),
-                    theme (DESIGN.md tokens from the desk), types, i18n/fr.ts (every string)
+                    theme (DESIGN.md tokens from the desk), types, i18n/ (fr.ts every string, en.ts and mg.ts over it)
 src/lib/api-schema.d.ts   Generated from fanilo-base's OpenAPI (npm run gen:api)
 ```
 
@@ -108,7 +117,8 @@ iOS needs a Mac with Xcode (`npx expo run:ios`) or EAS Build (`npx eas-cli build
 ## Checks
 
 ```bash
-npx tsc --noEmit && npx eslint src
+npx tsc --noEmit && npx eslint src && npm test
+npx expo export --platform android   # the bundle builds
 npm run gen:api     # after an API schema change in fanilo-base (expects it checked out next to this repo)
 ```
 
