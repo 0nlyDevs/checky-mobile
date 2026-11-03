@@ -16,6 +16,7 @@ import { authClient } from "@/lib/auth";
 import { persistentCache } from "@/lib/cache";
 import { type Check, handOff } from "@/lib/handoff";
 import { useLangReady, useT } from "@/lib/i18n";
+import { LightProvider } from "@/lib/light";
 import { ModeProvider, useMode } from "@/lib/mode";
 import { onReconnect } from "@/lib/network";
 import { OutboxProvider } from "@/lib/outbox";
@@ -44,7 +45,9 @@ export default function RootLayout() {
             refetches. The cache is kept on the phone so what was opened stays readable offline. */}
         <SWRConfig value={{ revalidateOnFocus: false, dedupingInterval: 4000, provider: persistentCache, initReconnect: onReconnect }}>
           <ModeProvider>
-            <Session />
+            <LightProvider>
+              <Session />
+            </LightProvider>
           </ModeProvider>
         </SWRConfig>
       </SafeAreaProvider>

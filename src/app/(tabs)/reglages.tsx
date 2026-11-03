@@ -3,6 +3,7 @@ import { Alert, View } from "react-native";
 import useSWR from "swr";
 
 import { LanguagePicker } from "@/components/language-picker";
+import { LightSwitch } from "@/components/light";
 import { OfflineLinks } from "@/components/offline-links";
 import { useSyncNow } from "@/components/offline-sync";
 import { useTabInset } from "@/components/tab-bar";
@@ -94,6 +95,7 @@ export default function Settings() {
         {current && <VerificationNotice membership={current} always />}
         {current && <Button label={t.settings.demo} variant="outline" onPress={resetDemo} />}
       </Section>
+      <LightSwitch />
       <Section title={t.offline.title} note={t.offline.lead}>
         <T tone="muted">{sync.at ? t.offline.synced(stamp(sync.at)) : t.offline.never}</T>
         {sync.failed && <Notice tone="error">{t.offline.syncFailed}</Notice>}

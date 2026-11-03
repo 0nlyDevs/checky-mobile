@@ -3,6 +3,7 @@ import { createContext, type ReactNode, useCallback, useContext, useEffect, useM
 import { AppState } from "react-native";
 
 import { api, ApiError } from "@/lib/api";
+import { pace, useLight } from "@/lib/light";
 import { isNetworkError, isOnline, onReconnect } from "@/lib/network";
 import { postStream } from "@/lib/sse";
 import type { CheckResult, Origin } from "@/lib/types";
@@ -116,6 +117,7 @@ export function OutboxProvider({ children }: { children: ReactNode }) {
   const ref = useRef(all);
   const running = useRef(false);
   const user = me?.id ?? null;
+  const { light } = useLight();
 
   const commit = useCallback((next: Entry[]) => {
     ref.current = next;
@@ -207,13 +209,14 @@ export function OutboxProvider({ children }: { children: ReactNode }) {
     const app = AppState.addEventListener("change", (s) => s === "active" && void flush());
     const tick = setInterval(() => {
       if (ref.current.some((e) => e.user === user && e.state === "waiting")) void flush();
-    }, 30_000);
+    }, pace(30_000));
     return () => {
       off();
       app.remove();
       clearInterval(tick);
     };
-  }, [user, flush]);
+    // `light` re-arms the timer at the new pace.
+  }, [user, flush, light]);
 
   const value = useMemo<Ctx>(() => {
     const ws = current?.workspace_id;

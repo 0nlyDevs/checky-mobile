@@ -8,6 +8,7 @@ import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Card, Notice, Section, Step, T, styles } from "@/components/ui";
 import { ago } from "@/lib/format";
 import { useT } from "@/lib/i18n";
+import { useLight } from "@/lib/light";
 import { publicFetcher, type TipStatus } from "@/lib/public";
 import { fonts, useTheme } from "@/lib/theme";
 
@@ -21,7 +22,8 @@ export default function FollowTip() {
   const { token, routed } = useLocalSearchParams<{ token: string; routed?: string }>();
   // How Checky chose the newsroom, said once, right after sending (only known keys are shown).
   const how = routed && Object.hasOwn(t.tip.routed, routed) ? t.tip.routed[routed] : undefined;
-  const { data, error, isLoading, mutate } = useSWR<TipStatus>(`/tips/${token}`, publicFetcher, { refreshInterval: 30_000 });
+  const { light } = useLight();
+  const { data, error, isLoading, mutate } = useSWR<TipStatus>(`/tips/${token}`, publicFetcher, { refreshInterval: light ? 120_000 : 30_000 });
   const reached = data ? ORDER.indexOf(data.status) : -1;
 
   return (

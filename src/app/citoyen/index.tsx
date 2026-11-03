@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Brand } from "@/components/brand";
 import { LanguagePicker } from "@/components/language-picker";
+import { LightSuggest, LightSwitch } from "@/components/light";
 import { OfflineLinks } from "@/components/offline-links";
 import { OfflineNotice } from "@/components/outbox";
 import { Button, Card, Field, Screen, Section, T } from "@/components/ui";
@@ -54,6 +55,7 @@ export default function CitizenHome() {
         <T tone="title">{t.citizen.title}</T>
         <T tone="muted">{t.citizen.lead}</T>
       </View>
+      <LightSuggest />
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
         <ShareNetwork size={20} color={c.foreground} />
         <T style={{ flex: 1, fontSize: 15 }}>{t.citizen.shareHint}</T>
@@ -96,6 +98,7 @@ export default function CitizenHome() {
       <LanguagePicker />
       <Section title={t.offline.title}>
         <OfflineLinks desk={false} />
+        <LightSwitch />
       </Section>
       <Button
         label={t.citizen.journalist}

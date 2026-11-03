@@ -5,6 +5,7 @@ import { ClipboardText, Images, QrCode, ShareNetwork } from "@/lib/icons";
 import { type ComponentRef, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 
+import { LightSuggest } from "@/components/light";
 import { OfflineNotice, OutboxList } from "@/components/outbox";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Field, Notice, Screen, T } from "@/components/ui";
@@ -63,6 +64,7 @@ export default function AnalyseHome() {
         <T tone="muted">{t.analyse.lead}</T>
       </View>
       <OfflineNotice />
+      <LightSuggest />
       <OutboxList />
       <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
         <ShareNetwork size={20} color={c.foreground} />

@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { AppState } from "react-native";
 import { useSWRConfig } from "swr";
 
+import { isLight } from "@/lib/light";
 import { onReconnect } from "@/lib/network";
 import { syncOffline } from "@/lib/offline";
 import { useWorkspace } from "@/lib/workspace";
@@ -19,7 +20,7 @@ export function useSyncNow(desk: boolean): (force: boolean) => void {
         ws,
         room: roomKey ? { slug, name } : null,
         prime: (key, data) => void mutate(key, data, { revalidate: false }),
-        light: false,
+        light: isLight(),
         force,
       });
     },

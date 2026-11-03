@@ -12,6 +12,7 @@ import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VER
 import { VerificationNotice } from "@/components/verification";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { cachedAt } from "@/lib/cache";
+import { pace } from "@/lib/light";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
 import { useT } from "@/lib/i18n";
@@ -91,7 +92,7 @@ export default function ClaimDetail() {
     try {
       const job = await api<{ id: string }>(`${base}/analyze`, { method: "POST" });
       for (let i = 0; i < 60; i++) {
-        await new Promise((r) => setTimeout(r, 2500));
+        await new Promise((r) => setTimeout(r, pace(2500)));
         const j = await api<{ status: string }>(`/workspaces/${ws}/jobs/${job.id}`);
         if (j.status === "done" || j.status === "failed") break;
       }

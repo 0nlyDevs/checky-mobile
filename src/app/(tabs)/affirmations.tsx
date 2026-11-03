@@ -12,6 +12,7 @@ import { Button, Chip, Field, Notice, T } from "@/components/ui";
 import { fetcher } from "@/lib/api";
 import { cachedAt } from "@/lib/cache";
 import { useT } from "@/lib/i18n";
+import { useLight } from "@/lib/light";
 import { useTheme } from "@/lib/theme";
 import { type ItemPage, STATUSES } from "@/lib/types";
 import { useWs } from "@/lib/workspace";
@@ -28,10 +29,13 @@ export default function Claims() {
   const key = `/workspaces/${ws}/items?${params}`;
   const { data, error, isLoading, mutate } = useSWR<ItemPage>(key, fetcher, { keepPreviousData: true });
 
+  const { light } = useLight();
+  // Mode léger: a list fetched in the last 5 minutes is not fetched again on every visit.
   useFocusEffect(
     useCallback(() => {
+      if (light && Date.now() - (cachedAt(key) ?? 0) < 5 * 60_000) return;
       void mutate();
-    }, [mutate]),
+    }, [mutate, light, key]),
   );
 
   return (

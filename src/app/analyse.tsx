@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowSquareOut, CheckSquare, SealCheck, Sparkle, Square } fr
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 
+import { OnDemand } from "@/components/light";
 import { OfflineNotice } from "@/components/outbox";
 import { Button, Card, Field, Notice, Screen, Section, Step, type StepState, T, VerdictPanel, styles } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
@@ -393,9 +394,19 @@ function LinkRow({ label, url }: { label: string; url: string }) {
 
 function Preview({ uri, mime }: { uri: string; mime: string }) {
   if (mime.startsWith("image/")) {
-    return <Image source={{ uri }} contentFit="contain" style={{ width: "100%", height: 220, borderRadius: radius.card }} accessibilityIgnoresInvertColors />;
+    return (
+      <OnDemand kind="image">
+        <Image source={{ uri }} contentFit="contain" style={{ width: "100%", height: 220, borderRadius: radius.card }} accessibilityIgnoresInvertColors />
+      </OnDemand>
+    );
   }
-  if (mime.startsWith("video/")) return <VideoPreview uri={uri} />;
+  if (mime.startsWith("video/")) {
+    return (
+      <OnDemand kind="video">
+        <VideoPreview uri={uri} />
+      </OnDemand>
+    );
+  }
   return null;
 }
 
