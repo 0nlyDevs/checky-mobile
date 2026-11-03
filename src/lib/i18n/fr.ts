@@ -153,7 +153,7 @@ export const t = {
         claim: "Ilay filazana",
         sources: "Loharano",
         by: (desk: string) => `Nohamarinin'ny ${desk}`,
-        verdicts: { true: "Marina", misleading: "Mamitaka", false: "Diso", unverifiable: "Tsy hay antoka" } as Record<string, string>,
+        verdicts: { true: "Marina", misleading: "Mamitaka", false: "Diso", unverifiable: "Tsy voamarina" } as Record<string, string>,
         number: (n: number) => `fanamarinana ${n}`,
         scan: "Skaneo hanamarinana ity karatra ity", // relire (mg)
         verified: "Voamarin'i Checky", // relire (mg)
