@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 
+import { BeforeAir } from "@/components/before-air";
 import { useTabInset } from "@/components/tab-bar";
-import { Button, Card, Field, Notice, Screen, Section, T } from "@/components/ui";
+import { Button, Card, Chip, Field, Notice, Screen, Section, T, styles } from "@/components/ui";
 import { ApiError } from "@/lib/api";
 import { useT } from "@/lib/i18n";
 import { postStream } from "@/lib/sse";
@@ -11,11 +12,13 @@ import { useWs } from "@/lib/workspace";
 
 type Passage = { n: number; source_title?: string; title?: string; text: string };
 
-/** Ask every source of the newsroom: the answer streams in, and cites its passages. */
+/** « Avant l'antenne » first (a caller's claim against published verdicts), then « Nos sources »: ask every
+ * source of the newsroom, the answer streams in and cites its passages. */
 export default function Ask() {
   const t = useT();
   const inset = useTabInset();
   const ws = useWs();
+  const [view, setView] = useState<"air" | "sources">("air");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [passages, setPassages] = useState<Passage[]>([]);
@@ -51,29 +54,37 @@ export default function Ask() {
 
   return (
     <Screen bottomInset={inset}>
-      <View style={{ gap: 6 }}>
-        <T tone="title">{t.ask.title}</T>
-        <T tone="muted">{t.ask.lead}</T>
+      <T tone="title">{t.ask.title}</T>
+      <View accessibilityRole="tablist" style={styles.wrap}>
+        <Chip label={t.antenne.tab} selected={view === "air"} onPress={() => setView("air")} />
+        <Chip label={t.antenne.sourcesTab} selected={view === "sources"} onPress={() => setView("sources")} />
       </View>
-      <Field placeholder={t.ask.placeholder} value={question} onChangeText={setQuestion} multiline style={{ minHeight: 72, textAlignVertical: "top" }} />
-      <Button label={t.ask.submit} busy={busy} disabled={question.trim().length < 2} onPress={ask} />
-      {error && <Notice tone="error">{error}</Notice>}
-      {!!answer && (
-        <Card>
-          <Answer text={answer} />
-        </Card>
-      )}
-      {passages.length > 0 && (
-        <Section title={t.ask.passages}>
-          {passages.map((p) => (
-            <Card key={p.n} style={{ gap: 4 }}>
-              <T tone="label">
-                [{p.n}] {p.source_title ?? p.title ?? ""}
-              </T>
-              <T numberOfLines={6}>{p.text}</T>
+      {view === "air" ? (
+        <BeforeAir />
+      ) : (
+        <>
+          <T tone="muted">{t.ask.lead}</T>
+          <Field placeholder={t.ask.placeholder} value={question} onChangeText={setQuestion} multiline style={{ minHeight: 72, textAlignVertical: "top" }} />
+          <Button label={t.ask.submit} busy={busy} disabled={question.trim().length < 2} onPress={ask} />
+          {error && <Notice tone="error">{error}</Notice>}
+          {!!answer && (
+            <Card>
+              <Answer text={answer} />
             </Card>
-          ))}
-        </Section>
+          )}
+          {passages.length > 0 && (
+            <Section title={t.ask.passages}>
+              {passages.map((p) => (
+                <Card key={p.n} style={{ gap: 4 }}>
+                  <T tone="label">
+                    [{p.n}] {p.source_title ?? p.title ?? ""}
+                  </T>
+                  <T numberOfLines={6}>{p.text}</T>
+                </Card>
+              ))}
+            </Section>
+          )}
+        </>
       )}
     </Screen>
   );

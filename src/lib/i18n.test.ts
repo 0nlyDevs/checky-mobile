@@ -39,3 +39,15 @@ test("the radio line takes one sentence of the reason", () => {
   assert.equal(firstSentence(""), "");
   assert.ok(firstSentence("x".repeat(400)).length <= 220);
 });
+
+for (const [name, dict] of [["fr", fr], ["en", merge(fr, en)], ["mg", merge(fr, mg)]] as const) {
+  test(`${name}: the radio line names the newsroom, the claim and the verdict; the unverified line no verdict`, () => {
+    const word = dict.verdict.false;
+    const line = dict.antenne.line("Radio Test", "Des ravisseurs à Antsirabe", word, "Aucun enlèvement signalé.");
+    for (const part of ["Radio Test", "Des ravisseurs à Antsirabe", word.toLowerCase(), "Aucun enlèvement signalé."]) assert.ok(line.includes(part), `${name}: ${part} in ${line}`);
+    // Read on air when nothing is published: it must not carry a verdict word (as a word, not inside one).
+    for (const v of [dict.verdict.true, dict.verdict.false, dict.verdict.misleading]) {
+      assert.ok(!new RegExp(`(^|[^\\p{L}])${v}($|[^\\p{L}])`, "iu").test(dict.antenne.unverifiedLine), `${name}: unverified line says ${v}`);
+    }
+  });
+}
