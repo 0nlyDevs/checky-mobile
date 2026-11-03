@@ -1,4 +1,5 @@
 import { File } from "expo-file-system";
+import { Image } from "expo-image";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
@@ -9,7 +10,7 @@ import { openWeb } from "@/lib/handoff";
 import { tr, useT } from "@/lib/i18n";
 import { ArrowSquareOut } from "@/lib/icons";
 import { IMAGE_TYPES, type ImageCheck, MAX_IMAGE_BYTES, publicImageCheck } from "@/lib/public";
-import { fonts, useTheme } from "@/lib/theme";
+import { fonts, radius, useTheme } from "@/lib/theme";
 
 type Picked = { uri: string; mime: string; name: string; size?: number | null };
 
@@ -77,6 +78,13 @@ export function ImageCheckCard({ file }: { file: Picked }) {
 
   return (
     <Card>
+      {/* The photo being examined, so there is no doubt which one the hints are about. */}
+      <Image
+        source={{ uri: file.uri }}
+        contentFit="cover"
+        accessibilityLabel={i.thumbnail}
+        style={{ width: "100%", height: 200, borderRadius: radius.card, backgroundColor: c.muted }}
+      />
       <T style={{ fontFamily: fonts.bold, fontSize: 17 }}>{i.title}</T>
       <T tone="muted">{i.lead}</T>
       {!result && !error && <Step label={i.checking} state="running" />}

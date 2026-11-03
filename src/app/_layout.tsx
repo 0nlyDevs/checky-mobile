@@ -5,7 +5,7 @@ import { Stack, useRouter } from "expo-router";
 import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SWRConfig } from "swr";
@@ -76,6 +76,23 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
   const { current, loading, error, refresh } = useWorkspace();
   const { mode, loaded, setMode } = useMode();
   const ready = loaded && !pending && !(signedIn && loading && !current);
+  const router = useRouter();
+  const chosen = useRef<string | null | undefined>(undefined);
+
+  // A mode chosen on the first screen opens its own home. Left to Stack.Protected, the
+  // welcome screen gave way to whichever public screen it found first: the scanner.
+  useEffect(() => {
+    if (!ready) return;
+    if (chosen.current === undefined) {
+      chosen.current = mode;
+      return;
+    }
+    if (chosen.current === null && !signedIn) {
+      if (mode === "citizen") router.replace("/citoyen");
+      else if (mode === "journalist") router.replace("/connexion");
+    }
+    chosen.current = mode;
+  }, [ready, mode, signedIn, router]);
 
   // Signing out of the desk comes back to the sign-in screen, not the citizen side.
   useEffect(() => {

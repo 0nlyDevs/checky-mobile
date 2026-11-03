@@ -541,6 +541,7 @@ export const en: Overrides = {
     title: "What the picture says",
     pick: "A photo from the gallery",
     another: "Examine another photo",
+    thumbnail: "The photo being examined",
     permission: "Checky needs access to your photos to examine the one you pick.",
     lead: "Hints, never proof: a picture with no trace can still be made up or taken out of context.",
     checking: "Examining the picture…",

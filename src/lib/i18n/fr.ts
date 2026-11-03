@@ -580,6 +580,7 @@ export const t = {
     title: "Ce que dit l'image",
     pick: "Une photo de la galerie",
     another: "Examiner une autre photo",
+    thumbnail: "La photo examinée",
     permission: "Checky a besoin d'accéder à vos photos pour examiner celle que vous choisissez.",
     lead: "Des indices, jamais une preuve : une image sans trace peut quand même être fabriquée ou sortie de son contexte.",
     checking: "Examen de l'image…",
