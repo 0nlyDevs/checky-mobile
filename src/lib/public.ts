@@ -18,7 +18,7 @@ export type Verify = Schemas["app__modules__verify_public__VerifyOut"];
 export type Review = Schemas["ReviewOut"];
 export type Fact = Schemas["FactOut"];
 export type ImageCheck = Schemas["ImageOut"];
-/** Formats and size the public image check takes (fanilo-base `imagecheck.IMAGE_TYPES`, 5 MB). */
+/** Formats and size the public image check takes (checky-platform `imagecheck.IMAGE_TYPES`, 5 MB). */
 export const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 

@@ -585,7 +585,7 @@ export const t = {
     showVideo: "Afficher la vidéo",
     onDemand: "Mode léger : touchez pour charger.",
   },
-  // « Est-ce déjà vérifié ? » for citizens, in the web's three layers (fanilo-base /public/verify).
+  // « Est-ce déjà vérifié ? » for citizens, in the web's three layers (checky-platform /public/verify).
   publicCheck: {
     alert: {
       title: "Ce qui doit vous alerter",

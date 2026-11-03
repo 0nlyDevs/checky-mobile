@@ -1,7 +1,7 @@
 import * as ed from "@noble/ed25519";
 import { sha256, sha512 } from "@noble/hashes/sha2.js";
 
-/** Checking a Checky seal QR with no network (brief 3.4, 4.6), the phone's twin of fanilo-base's
+/** Checking a Checky seal QR with no network (brief 3.4, 4.6), the phone's twin of checky-platform's
  * `app/core/seal.py`. Pure: no React Native import, so `node --test` runs it against signatures
  * made by the server.
  *

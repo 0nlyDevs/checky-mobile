@@ -61,7 +61,7 @@
     "ios": "expo run:ios",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "gen:api": "npx -y openapi-typescript@7 ../fanilo-base/packages/shared/openapi.json -o src/lib/api-schema.d.ts",
+    "gen:api": "npx -y openapi-typescript@7 ../checky-platform/packages/shared/openapi.json -o src/lib/api-schema.d.ts",
     "test": "node --test src/lib/*.test.ts"
   },
   "private": true

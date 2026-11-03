@@ -4,7 +4,7 @@ import { test } from "node:test";
 
 import { canonical, checkSeal, communiquePayload, fingerprint, fromBase64, fromUtf8, normalise, parseSeal, utf8, type SealStore } from "./seal.ts";
 
-// Signed by fanilo-base's app/core/seal.py (verdict_payload, canonical, b64u, fingerprint), not by
+// Signed by checky-platform's app/core/seal.py (verdict_payload, canonical, b64u, fingerprint), not by
 // this code: the phone must accept exactly what the server signs.
 const v = JSON.parse(readFileSync(new URL("./seal.vector.json", import.meta.url), "utf8"));
 const store: SealStore = { keys: v.keys, revoked: v.revoked, registry: v.registry };

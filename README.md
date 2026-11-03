@@ -15,7 +15,7 @@ Citizens use it too, with no account. On first launch the app asks who is using 
 - **Citizen:** a shared post or a pasted rumour is compared with the verdicts newsrooms have published (« Est-ce déjà vérifié ? »). Only published verdicts are shown, never an AI verdict. If nothing matches, the citizen sends it to a newsroom as a tip and follows it until its verdict comes out. A verdict can be passed on as a card image or as text with its link.
 - **Journalist:** the desk, as below.
 
-It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the responsive website. It talks to the same backend as the web desk ([`fanilo-base`](https://github.com/0nlyDevs/fanilo-base)):
+It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the responsive website. It talks to the same backend as the web desk ([`checky-platform`](https://github.com/0nlyDevs/checky-platform)):
 
 - **Better Auth** (in the Next.js app): email and password sign-in through the Expo plugin; the session cookie is kept in SecureStore.
 - **FastAPI** (`/api/v1`): called with the short-lived JWT from `/api/auth/token`.
@@ -103,10 +103,10 @@ src/lib/            config, auth (Better Auth client), api (JWT + fetch), sse (s
                     upload (presigned PUT with progress, then wait for the ingest job), workspace context,
                     network (expo-network), cache (SWR kept on disk), outbox ("À envoyer" queue),
                     theme (DESIGN.md tokens from the desk), types, i18n/ (fr.ts every string, en.ts and mg.ts over it)
-src/lib/api-schema.d.ts   Generated from fanilo-base's OpenAPI (npm run gen:api)
+src/lib/api-schema.d.ts   Generated from checky-platform's OpenAPI (npm run gen:api)
 ```
 
-Design follows the desk's "Grille d'antenne" (`fanilo-base/apps/web/DESIGN.md`):
+Design follows the desk's "Grille d'antenne" (`checky-platform/apps/web/DESIGN.md`):
 
 - An ink tab bar with a manila marker. Anton for titles, Public Sans for text, Barlow Condensed for FAN refs.
 - Verdicts always show an icon and a label. An AI suggestion is a dashed outline on a soft background.
@@ -115,7 +115,7 @@ Design follows the desk's "Grille d'antenne" (`fanilo-base/apps/web/DESIGN.md`):
 
 ## Setup
 
-Prerequisites: Node 22+, JDK 17 and the Android SDK (platform 36, build-tools 36; Gradle downloads the NDK). You also need a running `fanilo-base`: the web app on :3000 and the API on :8000. Its `apps/web/lib/auth.ts` must include the `expo()` plugin and trust `fanilo://`.
+Prerequisites: Node 22+, JDK 17 and the Android SDK (platform 36, build-tools 36; Gradle downloads the NDK). You also need a running `checky-platform`: the web app on :3000 and the API on :8000. Its `apps/web/lib/auth.ts` must include the `expo()` plugin and trust `fanilo://`.
 
 ```bash
 npm install
@@ -153,10 +153,10 @@ iOS needs a Mac with Xcode (`npx expo run:ios`) or EAS Build (`npx eas-cli build
 ```bash
 npx tsc --noEmit && npx eslint src index.ts modules && npm test
 npx expo export --platform android   # the bundle builds
-npm run gen:api     # after an API schema change in fanilo-base (expects it checked out next to this repo)
+npm run gen:api     # after an API schema change in checky-platform (expects it checked out next to this repo)
 ```
 
-## Backend pieces this app relies on (fanilo-base)
+## Backend pieces this app relies on (checky-platform)
 
 - `POST /workspaces/{ws}/files/upload-url` then `…/complete`. Videos (`mp4`, `webm`, `quicktime`, `3gpp`) are accepted. Their soundtrack is pulled out with ffmpeg and transcribed by Groq Whisper; the container's tags are scanned for AI generators.
 - `POST /workspaces/{ws}/link-check {source_id}` checks an uploaded file on its transcript (or text, or EXIF).

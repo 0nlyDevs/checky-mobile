@@ -1,7 +1,7 @@
 // relire (mg)
 // Malagasy, machine-drafted from fr.ts: to be reread by a Malagasy speaker before it ships. Any key
 // missing here falls back to French (lib/i18n/index.ts). The verdict and status words match the web's
-// public site (fanilo-base apps/web/lib/i18n/mg.ts) and the SMS line.
+// public site (checky-platform apps/web/lib/i18n/mg.ts) and the SMS line.
 import type { Overrides } from "./core";
 
 export const mg: Overrides = {
@@ -544,7 +544,7 @@ export const mg: Overrides = {
     showVideo: "Asehoy ny horonan-tsary",
     onDemand: "Mode léger: kitiho raha hampiditra.",
   },
-  // relire (mg): from the web's public site and assistant (fanilo-base lib/i18n/mg*.ts) where they exist.
+  // relire (mg): from the web's public site and assistant (checky-platform lib/i18n/mg*.ts) where they exist.
   publicCheck: {
     alert: {
       title: "Izay tokony hampitandrina anao",
