@@ -23,6 +23,18 @@ export async function publicApi<T>(path: string, init: RequestInit = {}): Promis
 
 export const publicFetcher = <T>(path: string) => publicApi<T>(path);
 
+/** The phone's country as an ISO code, read from its locale (« fr-MG » → MG), or null. Public
+ * searches cover every newsroom and put this country's first among equal answers, as on the web. */
+export function deviceCountry(): string | null {
+  try {
+    const parts = Intl.DateTimeFormat().resolvedOptions().locale.split(/[-_]/);
+    const region = parts.slice(1).find((p) => /^[A-Za-z]{2}$/.test(p));
+    return region ? region.toUpperCase() : null;
+  } catch {
+    return null;
+  }
+}
+
 /** The shareable page of a published verdict on the web. */
 export const verdictLink = (id: string) => `${WEB_URL}/verifies/${id}`;
 

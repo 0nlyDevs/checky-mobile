@@ -12,8 +12,10 @@ import { ago } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
 import { useMode } from "@/lib/mode";
-import { type MyTip, myTips, publicFetcher } from "@/lib/public";
+import { deviceCountry, type MyTip, myTips, publicFetcher } from "@/lib/public";
 import { fonts, useTheme } from "@/lib/theme";
+
+const country = deviceCountry();
 
 type Page = { items: import("@/lib/public").PublicVerdict[]; total: number };
 
@@ -24,7 +26,7 @@ export default function CitizenHome() {
   const { setMode } = useMode();
   const [text, setText] = useState("");
   const [tips, setTips] = useState<MyTip[]>([]);
-  const { data: latest } = useSWR<Page>("/verdicts?limit=5", publicFetcher);
+  const { data: latest } = useSWR<Page>(`/verdicts?limit=5${country ? `&country=${country}` : ""}`, publicFetcher);
 
   useFocusEffect(
     useCallback(() => {
