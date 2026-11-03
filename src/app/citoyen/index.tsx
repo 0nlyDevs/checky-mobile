@@ -8,6 +8,7 @@ import useSWR from "swr";
 
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Brand } from "@/components/brand";
+import { CheckyButton } from "@/components/checky-button";
 import { LanguagePicker } from "@/components/language-picker";
 import { LightSuggest, LightSwitch } from "@/components/light";
 import { OfflineLinks } from "@/components/offline-links";
@@ -60,71 +61,83 @@ export default function CitizenHome() {
     if (res.canceled || !a) return;
     const mime = a.mimeType ?? "image/jpeg";
     const name = a.fileName ?? `photo.${mime.split("/")[1] ?? "jpg"}`;
-    router.push({ pathname: "/citoyen/verifier", params: { id: handOff({ text: text.trim() || undefined, file: { uri: a.uri, mime, name, size: a.fileSize } }) } });
+    router.push({
+      pathname: "/citoyen/verifier",
+      params: { id: handOff({ text: text.trim() || undefined, file: { uri: a.uri, mime, name, size: a.fileSize } }) },
+    });
   }
 
   return (
-    <Screen>
-      <Brand />
-      <View style={{ gap: 6 }}>
-        <T tone="title">{t.citizen.title}</T>
-        <T tone="muted">{t.citizen.lead}</T>
-      </View>
-      <LightSuggest />
-      <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
-        <ShareNetwork size={20} color={c.foreground} />
-        <T style={{ flex: 1, fontSize: 15 }}>{t.citizen.shareHint}</T>
-      </Card>
-      <Field placeholder={t.citizen.placeholder} value={text} onChangeText={setText} multiline style={{ minHeight: 96, textAlignVertical: "top" }} />
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <Button label={t.citizen.paste} icon={ClipboardText} variant="outline" style={{ flex: 1 }} onPress={async () => setText((await Clipboard.getStringAsync()).trim())} />
-        <Button label={t.citizen.check} style={{ flex: 1 }} disabled={!text.trim()} onPress={check} />
-      </View>
-      <Button label={t.image.pick} icon={ImageSquare} variant="outline" onPress={pickPhoto} />
-      {photoError && <Notice tone="error">{photoError}</Notice>}
-      <Button label={t.scanner.title} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
+    <View style={{ flex: 1 }}>
+      <Screen bottomInset={96}>
+        <Brand />
+        <View style={{ gap: 6 }}>
+          <T tone="title">{t.citizen.title}</T>
+          <T tone="muted">{t.citizen.lead}</T>
+        </View>
+        <LightSuggest />
+        <Card style={{ flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: c.muted, borderColor: c.muted }}>
+          <ShareNetwork size={20} color={c.foreground} />
+          <T style={{ flex: 1, fontSize: 15 }}>{t.citizen.shareHint}</T>
+        </Card>
+        <Field placeholder={t.citizen.placeholder} value={text} onChangeText={setText} multiline style={{ minHeight: 96, textAlignVertical: "top" }} />
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <Button
+            label={t.citizen.paste}
+            icon={ClipboardText}
+            variant="outline"
+            style={{ flex: 1 }}
+            onPress={async () => setText((await Clipboard.getStringAsync()).trim())}
+          />
+          <Button label={t.citizen.check} style={{ flex: 1 }} disabled={!text.trim()} onPress={check} />
+        </View>
+        <Button label={t.image.pick} icon={ImageSquare} variant="outline" onPress={pickPhoto} />
+        {photoError && <Notice tone="error">{photoError}</Notice>}
+        <Button label={t.scanner.title} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
 
-      {tips.length > 0 && (
-        <Section title={t.citizen.mine}>
-          {tips.map((tip) => (
-            <Link key={tip.token} href={{ pathname: "/citoyen/suivi/[token]", params: { token: tip.token } }} asChild>
-              <Pressable accessibilityRole="link">
-                <Card style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <T tone="tabular">{tip.ref}</T>
-                    <T numberOfLines={2} style={{ fontFamily: fonts.medium }}>
-                      {tip.title}
-                    </T>
-                    <T tone="muted">
-                      {tip.newsroom} · {ago(tip.at)}
-                    </T>
-                  </View>
-                  <CaretRight size={20} color={c.foreground} />
-                </Card>
-              </Pressable>
-            </Link>
-          ))}
+        {tips.length > 0 && (
+          <Section title={t.citizen.mine}>
+            {tips.map((tip) => (
+              <Link key={tip.token} href={{ pathname: "/citoyen/suivi/[token]", params: { token: tip.token } }} asChild>
+                <Pressable accessibilityRole="link">
+                  <Card style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                    <View style={{ flex: 1, gap: 2 }}>
+                      <T tone="tabular">{tip.ref}</T>
+                      <T numberOfLines={2} style={{ fontFamily: fonts.medium }}>
+                        {tip.title}
+                      </T>
+                      <T tone="muted">
+                        {tip.newsroom} · {ago(tip.at)}
+                      </T>
+                    </View>
+                    <CaretRight size={20} color={c.foreground} />
+                  </Card>
+                </Pressable>
+              </Link>
+            ))}
+          </Section>
+        )}
+
+        <Section title={t.citizen.latest}>
+          <OfflineNotice stale={!!latest} at={cachedAt(latestKey)} />
+          {latest?.items.length ? latest.items.map((v) => <PublicVerdictRow key={v.id} v={v} />) : <T tone="muted">{t.citizen.noLatest}</T>}
         </Section>
-      )}
 
-      <Section title={t.citizen.latest}>
-        <OfflineNotice stale={!!latest} at={cachedAt(latestKey)} />
-        {latest?.items.length ? latest.items.map((v) => <PublicVerdictRow key={v.id} v={v} />) : <T tone="muted">{t.citizen.noLatest}</T>}
-      </Section>
-
-      <LanguagePicker />
-      <Section title={t.offline.title}>
-        <OfflineLinks desk={false} />
-        <LightSwitch />
-      </Section>
-      <Button
-        label={t.citizen.journalist}
-        variant="ghost"
-        onPress={() => {
-          setMode("journalist");
-          router.replace("/connexion");
-        }}
-      />
-    </Screen>
+        <LanguagePicker />
+        <Section title={t.offline.title}>
+          <OfflineLinks desk={false} />
+          <LightSwitch />
+        </Section>
+        <Button
+          label={t.citizen.journalist}
+          variant="ghost"
+          onPress={() => {
+            setMode("journalist");
+            router.replace("/connexion");
+          }}
+        />
+      </Screen>
+      <CheckyButton tabs={false} />
+    </View>
   );
 }

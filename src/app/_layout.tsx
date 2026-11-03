@@ -125,6 +125,7 @@ function Routes({ signedIn, pending }: { signedIn: boolean; pending: boolean }) 
           <Stack.Screen name="registre" />
           <Stack.Screen name="verdicts" />
           <Stack.Screen name="scanner" />
+          <Stack.Screen name="assistant" />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="connexion" />

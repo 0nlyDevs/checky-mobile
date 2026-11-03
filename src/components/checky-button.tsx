@@ -7,8 +7,8 @@ import { Sparkle } from "@/lib/icons";
 import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
-/** Floats above the tab bar at the right: opens Analyser and puts the cursor in its paste field. */
-export function CheckyButton() {
+/** Floats at the bottom right, above the tab bar in the desk: opens the assistant, as on the web. */
+export function CheckyButton({ tabs = true }: { tabs?: boolean }) {
   const t = useT();
   const c = useTheme();
   const router = useRouter();
@@ -16,12 +16,12 @@ export function CheckyButton() {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={t.tabs.checky}
-      onPress={() => router.navigate({ pathname: "/", params: { focus: String(Date.now()) } })}
+      accessibilityLabel={t.assistant.open}
+      onPress={() => router.push("/assistant")}
       style={({ pressed }) => ({
         position: "absolute",
         right: 16,
-        bottom: TAB_BAR_HEIGHT + bottom + 16,
+        bottom: (tabs ? TAB_BAR_HEIGHT : 0) + bottom + 16,
         width: 56,
         height: 56,
         borderRadius: 28,
