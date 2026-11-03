@@ -27,7 +27,7 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/accueil` | First launch: citizen or journalist (kept in SecureStore, `fanilo.mode`) |
 | `/citoyen` | Citizen home: paste a rumour, the tips sent from this phone, the latest published verdicts |
 | `/citoyen/verifier` | Published verdicts that match (`/public/match`) and the public assistant's cited answer (`/public/ask`); otherwise « Signaler à une rédaction » |
-| `/citoyen/signaler` | Send a tip (`/public/tips`); its follow-up token is remembered on the phone |
+| `/citoyen/signaler` | Send a tip (`/public/tips`) to a chosen newsroom, or « Je ne sais pas : Checky choisit » (routed by the place typed and the phone's country); its follow-up token is remembered on the phone |
 | `/citoyen/suivi/[token]` | Where the tip stands, refreshed every 30 s, and its verdict once published |
 | `/citoyen/verdict/[id]` | A published verdict: reason, post, sources; share the card image or the text with its web link |
 | `/connexion`, `/inscription` | Sign in, sign up (same accounts as the desk) |

@@ -17,7 +17,9 @@ const ORDER = ["to_check", "in_progress", "verified", "published"];
 export default function FollowTip() {
   const c = useTheme();
   const router = useRouter();
-  const { token } = useLocalSearchParams<{ token: string }>();
+  const { token, routed } = useLocalSearchParams<{ token: string; routed?: string }>();
+  // How Checky chose the newsroom, said once, right after sending (only known keys are shown).
+  const how = routed && Object.hasOwn(t.tip.routed, routed) ? t.tip.routed[routed] : undefined;
   const { data, error, isLoading, mutate } = useSWR<TipStatus>(`/tips/${token}`, publicFetcher, { refreshInterval: 30_000 });
   const reached = data ? ORDER.indexOf(data.status) : -1;
 
@@ -40,6 +42,7 @@ export default function FollowTip() {
             <T tone="muted">
               {data.newsroom.name} · {t.follow.received(ago(data.received_at))}
             </T>
+            {how && <Notice>{how(data.newsroom.name)}</Notice>}
             <Card>
               {ORDER.map((s, i) => (
                 <Step key={s} label={t.follow.steps[s]} state={i < reached || (i === reached && s === "published") ? "done" : i === reached ? "running" : "waiting"} />
