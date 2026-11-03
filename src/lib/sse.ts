@@ -9,11 +9,13 @@ export async function postStream(
   body: unknown,
   onEvent: (event: string, data: unknown) => void,
   signal?: AbortSignal,
+  /** `false` for the public routes (`/public/agent`): no account, no token. */
+  auth = true,
 ): Promise<void> {
-  const token = await getApiToken();
+  const token = auth ? await getApiToken() : null;
   const res = await fetch(`${API_URL}/api/v1${path}`, {
     method: "POST",
-    headers: { "content-type": "application/json", accept: "text/event-stream", authorization: `Bearer ${token}` },
+    headers: { "content-type": "application/json", accept: "text/event-stream", ...(token ? { authorization: `Bearer ${token}` } : {}) },
     body: JSON.stringify(body),
     signal,
   });
