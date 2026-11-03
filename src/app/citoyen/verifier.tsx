@@ -135,9 +135,12 @@ function Known({ result, asked, onAsk }: { result: Verify; asked: string; onAsk:
   const t = useT();
   const c = useTheme();
   const p = t.publicCheck;
-  const known = result.known ?? [];
+  // The tone's signs get their own box, first: what the citizen can see for themselves.
+  const tone = (result.known ?? []).find((x) => x.kind === "tone" && x.signals?.length);
+  const known = (result.known ?? []).filter((x) => x !== tone);
   return (
     <>
+      {tone && <Alert fact={tone} />}
       {known.length ? (
         <Section title={p.factsTitle}>
           {known.map((fact, i) => (
@@ -161,6 +164,30 @@ function Known({ result, asked, onAsk }: { result: Verify; asked: string; onAsk:
       </Card>
       <Notify text={asked} />
     </>
+  );
+}
+
+/** « Ce qui doit vous alerter »: each sign the tone lexicon found in the message, with its words.
+ * Found in code, no model; it says nothing of truth. */
+function Alert({ fact }: { fact: Fact }) {
+  const t = useT();
+  const c = useTheme();
+  const a = t.publicCheck.alert;
+  return (
+    <View style={{ borderWidth: 2, borderColor: c.foreground, borderRadius: radius.card, backgroundColor: c.card, padding: 14, gap: 8 }}>
+      <T style={{ fontFamily: fonts.bold, fontSize: 18 }}>{a.title}</T>
+      {!!fact.level && <T style={{ fontFamily: fonts.semibold }}>{a.level[fact.level] ?? fact.level}</T>}
+      {(fact.signals ?? []).map((sg, i) => (
+        <T key={`${sg.kind}-${i}`}>
+          <Text style={{ fontFamily: fonts.semibold }}>{a.kinds[sg.kind] ?? sg.kind}</Text>
+          {"  "}
+          <Text style={{ fontFamily: fonts.quote, fontSize: 18 }}>« {sg.quote} »</Text>
+        </T>
+      ))}
+      <T tone="muted" style={{ fontSize: 13 }}>
+        {a.lead}
+      </T>
+    </View>
   );
 }
 

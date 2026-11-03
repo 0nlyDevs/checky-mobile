@@ -476,6 +476,20 @@ export const en: Overrides = {
     onDemand: "Light mode: tap to load.",
   },
   publicCheck: {
+    alert: {
+      title: "What should alert you",
+      lead: "Turns of phrase typical of rumours, found word for word in the message, without AI. They don't say whether it is true.",
+      level: { sensationnaliste: "Sensational tone", "marqué": "Loaded tone" },
+      kinds: {
+        urgency: "Urgency",
+        share: "Call to share",
+        emotive: "Emotionally charged words",
+        hidden: "Claimed censorship",
+        caps: "Written in capitals",
+        exclamations: "Exclamation marks",
+        emoji: "Alarm emoji",
+      },
+    },
     layers: ["Signed verdicts", "Fact-checkers", "What is known"],
     busy: "The service is busy. Try again in a moment.",
     signedTitle: "A newsroom checked this message",

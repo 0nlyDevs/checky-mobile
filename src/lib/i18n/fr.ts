@@ -507,6 +507,20 @@ export const t = {
   },
   // « Est-ce déjà vérifié ? » for citizens, in the web's three layers (fanilo-base /public/verify).
   publicCheck: {
+    alert: {
+      title: "Ce qui doit vous alerter",
+      lead: "Des tournures typiques des rumeurs, repérées mot à mot dans le message, sans IA. Elles ne disent pas si c'est vrai.",
+      level: { sensationnaliste: "Ton sensationnaliste", "marqué": "Ton marqué" } as Record<string, string>,
+      kinds: {
+        urgency: "Urgence",
+        share: "Appel à partager",
+        emotive: "Mots chargés d'émotion",
+        hidden: "Prétendue censure",
+        caps: "Écrit en majuscules",
+        exclamations: "Points d'exclamation",
+        emoji: "Émoji d'alarme",
+      } as Record<string, string>,
+    },
     layers: ["Verdicts signés", "Fact-checkeurs", "Ce que l'on sait"],
     busy: "Le service est très demandé. Réessayez dans un instant.",
     signedTitle: "Une rédaction a vérifié ce message",

@@ -480,6 +480,20 @@ export const mg: Overrides = {
   },
   // relire (mg): from the web's public site and assistant (fanilo-base lib/i18n/mg*.ts) where they exist.
   publicCheck: {
+    alert: {
+      title: "Izay tokony hampitandrina anao",
+      lead: "Fomba fiteny mahazatra amin'ny tsaho, hita teny tsirairay ao amin'ny hafatra, tsy nisy IA. Tsy milaza izy ireo raha marina na tsia.",
+      level: { sensationnaliste: "Feo manaitra", "marqué": "Feo mafy" },
+      kinds: {
+        urgency: "Maika",
+        share: "Antso hizara",
+        emotive: "Teny mampientanentana",
+        hidden: "Sivana lazaina",
+        caps: "Soratra lehibe daholo",
+        exclamations: "Marika fiantsoana",
+        emoji: "Emoji fanairana",
+      },
+    },
     layers: ["Didy nosoniavina", "Mpanamarina", "Izay fantatra"],
     busy: "Be mpampiasa ny tolotra. Andramo indray afaka kelikely.",
     signedTitle: "Nohamarinin'ny mpanao gazety ity hafatra ity",
