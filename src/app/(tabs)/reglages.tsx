@@ -74,8 +74,7 @@ export default function Settings() {
             <Chip key={m.workspace_id} label={m.name} selected={m.workspace_id === current?.workspace_id} onPress={() => choose(m.workspace_id)} />
           ))}
         </View>
-        {current && <T tone="muted">{t.settings.role[current.role] ?? current.role}</T>}
-        {current?.role === "admin" && <Button label={t.settings.demo} variant="outline" onPress={resetDemo} />}
+        {current && <Button label={t.settings.demo} variant="outline" onPress={resetDemo} />}
       </Section>
       <Section title={t.settings.health}>
         {error ? (
