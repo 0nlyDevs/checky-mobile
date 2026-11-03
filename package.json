@@ -1,7 +1,7 @@
 {
   "name": "fanilo-mobile",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.ts",
   "dependencies": {
     "@better-auth/expo": "^1.7.12",
     "@expo-google-fonts/bricolage-grotesque": "^0.4.1",
@@ -11,6 +11,7 @@
     "better-auth": "^1.7.12",
     "expo": "~58.0.21",
     "expo-audio": "~58.0.11",
+    "expo-background-task": "~58.0.12",
     "expo-build-properties": "~58.0.11",
     "expo-camera": "~58.0.14",
     "expo-clipboard": "~58.0.4",
@@ -23,6 +24,7 @@
     "expo-image-picker": "~58.0.10",
     "expo-linking": "~58.0.15",
     "expo-network": "~58.0.4",
+    "expo-notifications": "~58.1.7",
     "expo-router": "~58.0.28",
     "expo-secure-store": "~58.0.2",
     "expo-share-intent": "^9.0.0",
@@ -30,6 +32,7 @@
     "expo-splash-screen": "~58.0.12",
     "expo-status-bar": "~58.0.4",
     "expo-system-ui": "~58.0.7",
+    "expo-task-manager": "~58.0.13",
     "expo-video": "~58.0.13",
     "expo-web-browser": "~58.0.7",
     "phosphor-react-native": "^3.0.6",

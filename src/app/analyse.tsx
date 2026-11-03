@@ -13,13 +13,15 @@ import { host } from "@/lib/format";
 import { type Check, openWeb, pickUp } from "@/lib/handoff";
 import { tr, useT } from "@/lib/i18n";
 import { isNetworkError, isOnline } from "@/lib/network";
-import { useOutbox } from "@/lib/outbox";
+import { askToNotify } from "@/lib/notify";
+import { holdForBackground, useOutbox } from "@/lib/outbox";
 import { postStream } from "@/lib/sse";
 import { fonts, radius, useTheme } from "@/lib/theme";
 import type { CheckResult, Origin } from "@/lib/types";
 import { uploadFile, waitReady } from "@/lib/upload";
 import { useWs } from "@/lib/workspace";
 import { goBack } from "@/lib/nav";
+import { moveToBack } from "../../modules/checky-text";
 
 type Steps = Record<string, { state: StepState; detail?: string }>;
 
@@ -44,7 +46,9 @@ export default function Analyse() {
   const order = [...(isFile ? ["upload", "ingest"] : []), "read", "claims", "search", "verdict"];
 
   const [steps, setSteps] = useState<Steps>({});
-  const [result, setResult] = useState<CheckResult | null>(entry?.result ?? null);
+  // Already checked in the selection-menu sheet: shown as is.
+  const preset = handed?.result;
+  const [result, setResult] = useState<CheckResult | null>(entry?.result ?? preset ?? null);
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [extra, setExtra] = useState("");
@@ -142,12 +146,29 @@ export default function Analyse() {
     }
   }, [job, outbox]);
 
+  /** « Continuer en arrière-plan »: the queue takes the check over (an upload already done is
+   * kept), the app steps back to where the journalist was, and a notification says when it is ready. */
+  const background = useCallback(async () => {
+    const t = tr();
+    if (!job) return;
+    abort.current?.abort();
+    await askToNotify();
+    holdForBackground();
+    try {
+      outbox.add({ kind: "check", check: { url: job.url, text: job.text, file: job.file }, sourceId: sourceId.current ?? undefined, notify: true });
+    } catch {
+      return setError(t.check.failed);
+    }
+    router.replace("/");
+    moveToBack();
+  }, [job, outbox, router]);
+
   useEffect(() => {
-    if (started.current || !job || entry) return;
+    if (started.current || !job || entry || preset) return;
     started.current = true;
     void isOnline().then((on) => (on ? run() : later()));
     return () => abort.current?.abort();
-  }, [run, later, job, entry]);
+  }, [run, later, job, entry, preset]);
 
   async function track() {
     if (!result) return;
@@ -213,12 +234,18 @@ export default function Analyse() {
           <Button label={t.outbox.back} onPress={() => router.replace("/")} />
         </>
       ) : (
-        (!entry || Object.keys(steps).length > 0) && (
+        ((!entry && !preset) || Object.keys(steps).length > 0) && (
           <Card>
             {order.map((k) => (
               <Step key={k} label={t.check.steps[k]} state={steps[k]?.state ?? "waiting"} detail={steps[k]?.detail} />
             ))}
-            {running && <Button label={t.check.stop} variant="ghost" onPress={() => abort.current?.abort()} />}
+            {running && (
+              <>
+                <Button label={t.background.go} variant="outline" onPress={background} />
+                <T tone="muted">{t.background.hint}</T>
+                <Button label={t.check.stop} variant="ghost" onPress={() => abort.current?.abort()} />
+              </>
+            )}
           </Card>
         )
       )}

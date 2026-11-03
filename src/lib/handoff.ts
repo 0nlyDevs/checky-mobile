@@ -1,5 +1,7 @@
 import { Linking } from "react-native";
 
+import type { CheckResult } from "@/lib/types";
+
 /** What the analysis screen checks. Handed over in memory, never through route params, so a
  * `fanilo://analyse?file=…` deep link from a web page cannot make the app upload a local file
  * or start a check on its own. */
@@ -10,6 +12,8 @@ export type Check = {
   shared?: boolean;
   /** An outbox entry (`lib/outbox.tsx`) sent once the network came back. */
   queued?: string;
+  /** Already checked (the selection-menu sheet): shown as is, not run again. */
+  result?: CheckResult;
 };
 
 const pending = new Map<string, Check>();

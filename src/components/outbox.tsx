@@ -51,8 +51,10 @@ export function OutboxList({ kind }: { kind?: Entry["kind"] }) {
   const router = useRouter();
   const online = useOnline();
   const { entries, progress, remove, retry } = useOutbox();
-  const list = kind ? entries.filter((e) => e.kind === kind) : entries;
-  if (!list.length) return null;
+  // A batch of screenshots is one line here; its screen groups them by rumour.
+  const list = (kind ? entries.filter((e) => e.kind === kind) : entries).filter((e) => !e.batch);
+  const batches = kind && kind !== "check" ? [] : [...new Set(entries.filter((e) => e.batch).map((e) => e.batch as string))];
+  if (!list.length && !batches.length) return null;
 
   function open(e: Entry) {
     if (e.kind === "claim" && e.itemId) {
@@ -65,6 +67,23 @@ export function OutboxList({ kind }: { kind?: Entry["kind"] }) {
 
   return (
     <Section title={t.outbox.title}>
+      {batches.map((b) => {
+        const all = entries.filter((e) => e.batch === b);
+        const done = all.filter((e) => e.state === "done" || e.state === "failed").length;
+        return (
+          <Card key={b} style={{ gap: 8 }}>
+            <T tone="label">{t.batch.title}</T>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+              {done === all.length ? <Checks size={15} color={c.foreground} /> : <CloudArrowUp size={15} color={c.foreground} />}
+              <T style={{ fontSize: 14, fontFamily: fonts.medium, flex: 1 }}>{t.batch.progress(done, all.length)}</T>
+            </View>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <Button label={t.common.open} onPress={() => router.push({ pathname: "/lot", params: { batch: b } })} style={{ flex: 1 }} />
+              {done === all.length && <Button label={t.outbox.remove} variant="ghost" onPress={() => all.forEach((e) => remove(e.id))} style={{ flex: 1 }} />}
+            </View>
+          </Card>
+        );
+      })}
       {list.map((e) => {
         const { kind: k, title } = label(e);
         const { Icon, word } = stateOf(e, online);
