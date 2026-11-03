@@ -2,6 +2,8 @@ import { createElement, type ComponentType } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import {
   ArrowLeft as PArrowLeft,
+  QrCode as PQrCode,
+  Camera as PCamera,
   Stamp as PStamp,
   Phone as PPhone,
   Globe as PGlobe,
@@ -62,6 +64,8 @@ function duo(Base: ComponentType<IconProps>): Icon {
 }
 
 export const ArrowLeft = duo(PArrowLeft);
+export const QrCode = duo(PQrCode);
+export const Camera = duo(PCamera);
 export const Stamp = duo(PStamp);
 export const Phone = duo(PPhone);
 export const Globe = duo(PGlobe);

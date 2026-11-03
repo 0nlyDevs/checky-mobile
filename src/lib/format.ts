@@ -31,7 +31,8 @@ export function host(url: string | null | undefined): string {
  * Hermes' Intl is not on every phone). */
 export function stamp(at: number | string | null | undefined): string {
   if (at === null || at === undefined) return "";
-  const d = new Date(at);
+  // `2026-11-03T05:12Z` (a seal's minute) gets its seconds back for engines that want them.
+  const d = new Date(typeof at === "string" ? at.replace(/T(\d\d:\d\d)Z$/, "T$1:00Z") : at);
   if (Number.isNaN(d.getTime())) return "";
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");

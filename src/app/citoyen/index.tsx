@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { CaretRight, ClipboardText, ShareNetwork } from "@/lib/icons";
+import { CaretRight, ClipboardText, QrCode, ShareNetwork } from "@/lib/icons";
 import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import useSWR from "swr";
@@ -63,6 +63,7 @@ export default function CitizenHome() {
         <Button label={t.citizen.paste} icon={ClipboardText} variant="outline" style={{ flex: 1 }} onPress={async () => setText((await Clipboard.getStringAsync()).trim())} />
         <Button label={t.citizen.check} style={{ flex: 1 }} disabled={!text.trim()} onPress={check} />
       </View>
+      <Button label={t.scanner.title} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
 
       {tips.length > 0 && (
         <Section title={t.citizen.mine}>

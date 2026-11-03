@@ -1,7 +1,7 @@
 import * as Clipboard from "expo-clipboard";
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ClipboardText, Images, ShareNetwork } from "@/lib/icons";
+import { ClipboardText, Images, QrCode, ShareNetwork } from "@/lib/icons";
 import { type ComponentRef, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 
@@ -69,6 +69,7 @@ export default function AnalyseHome() {
         <T style={{ flex: 1, fontSize: 15 }}>{t.analyse.shareHint}</T>
       </Card>
       <Button label={t.analyse.pick} icon={Images} onPress={pick} />
+      <Button label={t.scanner.open} icon={QrCode} variant="outline" onPress={() => router.push("/scanner")} />
       <View style={{ gap: 12 }}>
         <Field
           ref={urlField}
