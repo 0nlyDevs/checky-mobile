@@ -55,6 +55,10 @@ export const en: Overrides = {
     journalist: "I'm a journalist",
     journalistHint: "Sign in to your newsroom's desk.",
   },
+  pages: {
+    notFound: { title: "This page does not exist", lead: "The link may be incomplete, or the screen has moved.", home: "Back to the home screen" },
+    error: { title: "Something went wrong", lead: "This screen could not be shown. Nothing you had saved is lost.", retry: "Try again", home: "Back to the home screen" },
+  },
   citizenNav: { check: "Check", verdicts: "Verdicts", report: "Report", scan: "Scanner" },
   citizen: {
     title: "Check something",

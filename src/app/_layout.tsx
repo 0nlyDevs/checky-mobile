@@ -1,7 +1,7 @@
 import { BricolageGrotesque_400Regular, BricolageGrotesque_500Medium, BricolageGrotesque_600SemiBold, BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold } from "@expo-google-fonts/bricolage-grotesque";
 import { CormorantGaramond_500Medium_Italic } from "@expo-google-fonts/cormorant-garamond";
 import { useFonts } from "expo-font";
-import { Stack, useRouter, usePathname } from "expo-router";
+import { Stack, useRouter, usePathname, type ErrorBoundaryProps } from "expo-router";
 import { ShareIntentProvider, useShareIntentContext } from "expo-share-intent";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -11,6 +11,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SWRConfig } from "swr";
 
 import { CitizenBar } from "@/components/citizen-bar";
+import { StatusScreen } from "@/components/status-screen";
 import { ClipboardOffer } from "@/components/clipboard-offer";
 import { OfflineSync } from "@/components/offline-sync";
 import { Button, Notice } from "@/components/ui";
@@ -208,4 +209,10 @@ function ShareForwarder({ to }: { to: "/analyse" | "/citoyen/verifier" }) {
   }, [hasShareIntent, shareIntent, resetShareIntent, router, to]);
 
   return null;
+}
+
+/** An error anywhere in the app shows Checky's own screen with Réessayer, instead of closing it.
+ * Navigation itself may be what failed here, so the way out is to render again. */
+export function ErrorBoundary({ retry }: ErrorBoundaryProps) {
+  return <StatusScreen kind="error" onRetry={() => void retry()} />;
 }

@@ -52,6 +52,11 @@ export const t = {
     journalist: "Je suis journaliste",
     journalistHint: "Connectez-vous au desk de votre rédaction.",
   },
+  // The not found and error screens (src/app/+not-found.tsx, the root ErrorBoundary).
+  pages: {
+    notFound: { title: "Cette page n'existe pas", lead: "Le lien est peut-être incomplet, ou l'écran a été déplacé.", home: "Revenir à l'accueil" },
+    error: { title: "Quelque chose n'a pas marché", lead: "Cet écran n'a pas pu s'afficher. Rien de ce que vous aviez enregistré n'est perdu.", retry: "Réessayer", home: "Revenir à l'accueil" },
+  },
   citizenNav: { check: "Vérifier", verdicts: "Les verdicts", report: "Signaler", scan: "Scanner" },
   citizen: {
     title: "Vérifier une info",

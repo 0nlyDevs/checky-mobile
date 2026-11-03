@@ -57,6 +57,10 @@ export const mg: Overrides = {
     journalist: "Mpanao gazety aho",
     journalistHint: "Midira amin'ny desk-n'ny tranom-gazetinao.",
   },
+  pages: {
+    notFound: { title: "Tsy misy ity pejy ity", lead: "Mety tsy feno ny rohy, na nafindra toerana ilay efijery.", home: "Hiverina amin'ny fandraisana" },
+    error: { title: "Nisy zavatra tsy nety", lead: "Tsy nety niseho ity efijery ity. Tsy very izay efa voatahirinao.", retry: "Andramo indray", home: "Hiverina amin'ny fandraisana" },
+  },
   citizenNav: { check: "Hamarino", verdicts: "Ny didy", report: "Hampandre", scan: "Scanner" },
   citizen: {
     title: "Hanamarina vaovao",
