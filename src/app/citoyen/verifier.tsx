@@ -8,7 +8,7 @@ import { Button, Card, Field, Notice, Screen, Section, Step, T, styles } from "@
 import { ApiError } from "@/lib/api";
 import { handOff, pickUp } from "@/lib/handoff";
 import { t } from "@/lib/i18n/fr";
-import { type Ask, type Match, type PublicVerdict, publicApi } from "@/lib/public";
+import { type Ask, deviceCountry, type Match, type PublicVerdict, publicApi } from "@/lib/public";
 import { fonts, useTheme } from "@/lib/theme";
 
 /** "Est-ce déjà vérifié ?" for something a citizen shared or pasted. Only verdicts a newsroom has
@@ -37,7 +37,7 @@ export default function CitizenCheck() {
           if (e instanceof ApiError && e.status === 429) throw e;
           return null;
         }),
-        publicApi<Match[]>("/match", { method: "POST", body: JSON.stringify({ text: q.slice(0, 4000) }) }),
+        publicApi<Match[]>("/match", { method: "POST", body: JSON.stringify({ text: q.slice(0, 4000), country: deviceCountry() }) }),
       ]);
       setAnswer(asked);
       // The assistant's cited verdicts first, then any other close match.

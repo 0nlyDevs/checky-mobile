@@ -27,7 +27,7 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/accueil` | First launch: citizen or journalist (kept in SecureStore, `fanilo.mode`) |
 | `/citoyen` | Citizen home: paste a rumour, the tips sent from this phone, the latest published verdicts |
 | `/citoyen/verifier` | Published verdicts that match (`/public/match`) and the public assistant's cited answer (`/public/ask`); otherwise « Signaler à une rédaction » |
-| `/citoyen/signaler` | Send a tip (`/public/tips`); its follow-up token is remembered on the phone |
+| `/citoyen/signaler` | Send a tip (`/public/tips`) to a chosen newsroom, or « Je ne sais pas : Checky choisit » (routed by the place typed and the phone's country); its follow-up token is remembered on the phone |
 | `/citoyen/suivi/[token]` | Where the tip stands, refreshed every 30 s, and its verdict once published |
 | `/citoyen/verdict/[id]` | A published verdict: reason, post, sources; share the card image or the text with its web link |
 | `/connexion`, `/inscription` | Sign in, sign up (same accounts as the desk) |
@@ -37,7 +37,7 @@ It is a native app (Expo SDK 58, React Native 0.88, Expo Router), not the respon
 | `/affirmations` | The newsroom's claims, filtered by status, searchable |
 | `/affirmation/[id]` | A claim: verdict (confirmed with a dialog; never colour alone), **Partager le verdict** (the 1080 × 1080 card in French or Malagasy and the post written from the verdict, through the share sheet; sharing moves a verified claim to Publié, as in the desk), status, AI source analysis, sources (add a link or a file), comments |
 | `/verifier` | Ask every source of the newsroom; the answer streams and cites its passages |
-| `/reglages` | Account, newsroom switch, service health, demo reset (admin), sign out |
+| `/reglages` | Account, newsroom switch and its verification status (the request is made on the web desk), service health, demo reset, sign out |
 
 Shared content arrives through [`expo-share-intent`](https://github.com/achorein/expo-share-intent) (Android intent filters for `text/*`, `image/*`, `video/*`, `audio/*` and PDF; an iOS share extension). `ShareForwarder` in `src/app/_layout.tsx` opens `/analyse` with the shared file or link in the desk, or `/citoyen/verifier` in citizen mode. A share made before a mode is chosen, or while a journalist is signed out, waits until then.
 

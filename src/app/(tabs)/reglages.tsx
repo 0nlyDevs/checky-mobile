@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Chip, Notice, Screen, Section, T, styles } from "@/components/ui";
+import { VerificationNotice } from "@/components/verification";
 import { api, clearApiToken } from "@/lib/api";
 import { authClient } from "@/lib/auth";
 import { clearCache } from "@/lib/cache";
@@ -47,8 +48,12 @@ export default function Settings() {
       {
         text: t.detail.confirm,
         onPress: async () => {
-          await api(`/workspaces/${current.workspace_id}/demo/reset`, { method: "POST" }).catch(() => null);
-          Alert.alert(t.settings.demoDone);
+          try {
+            await api(`/workspaces/${current.workspace_id}/demo/reset`, { method: "POST" });
+            Alert.alert(t.settings.demoDone);
+          } catch {
+            Alert.alert(t.settings.demoFailed);
+          }
         },
       },
     ]);
@@ -74,8 +79,8 @@ export default function Settings() {
             <Chip key={m.workspace_id} label={m.name} selected={m.workspace_id === current?.workspace_id} onPress={() => choose(m.workspace_id)} />
           ))}
         </View>
-        {current && <T tone="muted">{t.settings.role[current.role] ?? current.role}</T>}
-        {current?.role === "admin" && <Button label={t.settings.demo} variant="outline" onPress={resetDemo} />}
+        {current && <VerificationNotice membership={current} always />}
+        {current && <Button label={t.settings.demo} variant="outline" onPress={resetDemo} />}
       </Section>
       <Section title={t.settings.health}>
         {error ? (

@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { SIGN_BAR_ROOM, SignBar } from "@/components/sign-bar";
 import { ShareVerdict } from "@/components/share-verdict";
 import { Button, Card, Chip, Field, Notice, Screen, Section, StatusLabel, T, VERDICT_ICON, VerdictPanel, styles } from "@/components/ui";
+import { VerificationNotice } from "@/components/verification";
 import { api, ApiError, fetcher } from "@/lib/api";
 import { ago, span } from "@/lib/format";
 import { openWeb } from "@/lib/handoff";
@@ -58,8 +59,6 @@ export default function ClaimDetail() {
   }
 
   const d = item.data as ClaimData;
-  const role = current?.role ?? "journalist";
-  const canEdit = item.author_id === me?.id || role === "editor" || role === "admin";
 
   async function patch(change: ItemPatch) {
     const previous = item;
@@ -67,9 +66,9 @@ export default function ClaimDetail() {
     try {
       mutate(await api<Item>(base, { method: "PATCH", body: JSON.stringify(change) }), { revalidate: false });
       setNotice(null);
-    } catch (e) {
+    } catch {
       mutate(previous, { revalidate: false });
-      setNotice(e instanceof ApiError && e.status === 403 ? t.detail.forbidden : t.detail.saveFailed);
+      setNotice(t.detail.saveFailed);
     }
   }
 
@@ -137,7 +136,7 @@ export default function ClaimDetail() {
   }
 
   const a = d.analysis;
-  const awaiting = canEdit && !d.verdict && !!d.verdict_suggested;
+  const awaiting = !d.verdict && !!d.verdict_suggested;
   const sourceTitle = (sid?: string) => sources?.find((s) => s.id === sid)?.title;
 
   return (
@@ -167,46 +166,45 @@ export default function ClaimDetail() {
           {d.verdict ? <VerdictPanel verdict={d.verdict} /> : <T tone="muted">{t.verdict.none}</T>}
           {d.verdict_suggested && d.verdict_suggested !== d.verdict && <VerdictPanel verdict={d.verdict_suggested} suggested />}
         </View>
-        {canEdit && (
-          <View style={{ gap: 8 }}>
-            <T tone="muted">{t.detail.decide}</T>
-            <View style={styles.wrap}>
-              {VERDICTS.map((v) => {
-                const Icon = VERDICT_ICON[v];
-                const on = d.verdict === v;
-                const tone = c.verdict[v];
-                return (
-                  <Pressable
-                    key={v}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: on }}
-                    onPress={() => (on ? decide(null) : decide(v))}
-                    style={{
-                      flexBasis: "47%",
-                      flexGrow: 1,
-                      minHeight: 48,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                      borderRadius: radius.control,
-                      borderWidth: on ? 0 : 1,
-                      borderColor: tone.ink,
-                      backgroundColor: on ? tone.fill : c.card,
-                    }}
-                  >
-                    <Icon size={18} color={on ? tone.on : tone.ink} />
-                    <T style={{ fontFamily: fonts.semibold, color: on ? tone.on : tone.ink }}>{t.verdict[v]}</T>
-                  </Pressable>
-                );
-              })}
-            </View>
+        <View style={{ gap: 8 }}>
+          <T tone="muted">{t.detail.decide}</T>
+          <View style={styles.wrap}>
+            {VERDICTS.map((v) => {
+              const Icon = VERDICT_ICON[v];
+              const on = d.verdict === v;
+              const tone = c.verdict[v];
+              return (
+                <Pressable
+                  key={v}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: on }}
+                  onPress={() => (on ? decide(null) : decide(v))}
+                  style={{
+                    flexBasis: "47%",
+                    flexGrow: 1,
+                    minHeight: 48,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    borderRadius: radius.control,
+                    borderWidth: on ? 0 : 1,
+                    borderColor: tone.ink,
+                    backgroundColor: on ? tone.fill : c.card,
+                  }}
+                >
+                  <Icon size={18} color={on ? tone.on : tone.ink} />
+                  <T style={{ fontFamily: fonts.semibold, color: on ? tone.on : tone.ink }}>{t.verdict[v]}</T>
+                </Pressable>
+              );
+            })}
           </View>
-        )}
+        </View>
       </Section>
 
       {!!d.verdict && (
-        <Section title={t.card.title}>
+        <Section title={t.card.title} note={current && current.verification !== "approved" ? t.verification.shareNote : undefined}>
+          {current && <VerificationNotice membership={current} />}
           <ShareVerdict
             key={d.verdict}
             ws={ws}
@@ -214,7 +212,7 @@ export default function ClaimDetail() {
             verdict={d.verdict}
             sources={sources ?? []}
             desk={current?.name ?? t.app.name}
-            onShared={() => item.status === "verified" && canEdit && patch({ status: "published" })}
+            onShared={() => item.status === "verified" && patch({ status: "published" })}
           />
         </Section>
       )}
@@ -222,7 +220,7 @@ export default function ClaimDetail() {
       <Section title={t.detail.status}>
         <View style={styles.wrap}>
           {STATUSES.filter((s) => s !== "published" || item.status === "verified" || item.status === "published").map((s) => (
-            <Chip key={s} label={t.status[s]} selected={item.status === s} onPress={() => canEdit && item.status !== s && patch({ status: s })} />
+            <Chip key={s} label={t.status[s]} selected={item.status === s} onPress={() => item.status !== s && patch({ status: s })} />
           ))}
         </View>
       </Section>
