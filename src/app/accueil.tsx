@@ -2,6 +2,7 @@ import { CaretRight, type Icon, MagnifyingGlass, Newspaper } from "@/lib/icons";
 import { Pressable, View } from "react-native";
 
 import { Brand } from "@/components/brand";
+import { LanguagePicker } from "@/components/language-picker";
 import { Screen, T } from "@/components/ui";
 import { useT } from "@/lib/i18n";
 import { type Mode, useMode } from "@/lib/mode";
@@ -16,6 +17,7 @@ export default function Start() {
   return (
     <Screen contentContainerStyle={{ padding: 16, paddingTop: 56, gap: 24 }}>
       <Brand />
+      <LanguagePicker />
       <T tone="title">{t.app.tagline}</T>
       <T tone="muted">{t.start.lead}</T>
       <Choice icon={MagnifyingGlass} title={t.start.citizen} hint={t.start.citizenHint} primary onPress={() => pick("citizen")} />

@@ -7,6 +7,7 @@ import useSWR from "swr";
 
 import { PublicVerdictRow } from "@/components/public-verdict-row";
 import { Brand } from "@/components/brand";
+import { LanguagePicker } from "@/components/language-picker";
 import { Button, Card, Field, Screen, Section, T } from "@/components/ui";
 import { ago } from "@/lib/format";
 import { handOff } from "@/lib/handoff";
@@ -86,6 +87,7 @@ export default function CitizenHome() {
         {latest?.items.length ? latest.items.map((v) => <PublicVerdictRow key={v.id} v={v} />) : <T tone="muted">{t.citizen.noLatest}</T>}
       </Section>
 
+      <LanguagePicker />
       <Button
         label={t.citizen.journalist}
         variant="ghost"

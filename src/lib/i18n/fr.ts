@@ -301,6 +301,10 @@ export const t = {
     signOutPending: (n: number) =>
       n === 1 ? "1 élément n'est pas encore envoyé. Il sera effacé de ce téléphone." : `${n} éléments ne sont pas encore envoyés. Ils seront effacés de ce téléphone.`,
   },
+  lang: {
+    title: "Langue",
+    hint: "Langue de l'application",
+  },
   // Verified newsrooms (same words as the desk's banner): only a verified, public newsroom publishes.
   verification: {
     banner: {

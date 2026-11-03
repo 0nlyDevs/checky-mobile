@@ -2,6 +2,7 @@ import Constants from "expo-constants";
 import { Alert, View } from "react-native";
 import useSWR from "swr";
 
+import { LanguagePicker } from "@/components/language-picker";
 import { useTabInset } from "@/components/tab-bar";
 import { Button, Card, Chip, Notice, Screen, Section, T, styles } from "@/components/ui";
 import { VerificationNotice } from "@/components/verification";
@@ -73,6 +74,9 @@ export default function Settings() {
           <T style={{ fontFamily: fonts.semibold }}>{me?.name}</T>
           <T tone="muted">{me?.email}</T>
         </Card>
+      </Section>
+      <Section title={t.lang.title}>
+        <LanguagePicker label={false} />
       </Section>
       <Section title={t.settings.newsroom}>
         <View style={styles.wrap}>

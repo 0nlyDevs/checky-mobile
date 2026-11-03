@@ -286,6 +286,7 @@ export const mg: Overrides = {
     demoConfirm: "Hosoloina dika vaovao ve ireo antontan-taratasy fanandramana?",
     signOutPending: (n: number) => `Zavatra ${n} mbola tsy lasa. Ho voafafa amin'ity finday ity izy ireo.`,
   },
+  lang: { title: "Fiteny", hint: "Fitenin'ny fampiharana" },
   verification: {
     banner: {
       none: "Tranom-gazety tsy voamarina: miasa mangina ianareo, tsy misy avoaka.",

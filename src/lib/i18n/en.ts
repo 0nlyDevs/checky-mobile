@@ -286,6 +286,7 @@ export const en: Overrides = {
     signOutPending: (n: number) =>
       n === 1 ? "1 item hasn't been sent yet. It will be erased from this phone." : `${n} items haven't been sent yet. They will be erased from this phone.`,
   },
+  lang: { title: "Language", hint: "App language" },
   verification: {
     banner: {
       none: "Newsroom not verified: you work privately, nothing is published.",
